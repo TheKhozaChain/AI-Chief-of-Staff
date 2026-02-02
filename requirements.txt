@@ -1,0 +1,9 @@
+# AI Chief of Staff Dependencies
+# Install with: pip install -r requirements.txt
+
+# LLM SDKs (install at least one)
+anthropic>=0.18.0
+openai>=1.12.0
+
+# Optional: for local development with .env files
+python-dotenv>=1.0.0

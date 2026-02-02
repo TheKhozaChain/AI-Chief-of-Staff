@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "last_updated": null,
+  "tasks": [
+    {
+      "id": 1,
+      "title": "Configure repository secrets",
+      "status": "pending",
+      "priority": "high",
+      "notes": "Add ANTHROPIC_API_KEY to GitHub Secrets"
+    },
+    {
+      "id": 2,
+      "title": "Run first morning brief manually",
+      "status": "pending",
+      "priority": "medium",
+      "notes": "Test the system locally before relying on automation"
+    },
+    {
+      "id": 3,
+      "title": "Review and customize prompts",
+      "status": "pending",
+      "priority": "low",
+      "notes": "Adjust prompts to better fit personal style after first few runs"
+    }
+  ]
+}

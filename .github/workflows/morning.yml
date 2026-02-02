@@ -1,0 +1,54 @@
+# Morning Brief - AI Chief of Staff
+# Runs daily at 08:00 AEDT (21:00 UTC previous day)
+#
+# To pause: comment out the 'schedule' block below
+# To resume: uncomment the 'schedule' block
+
+name: Morning Brief
+
+on:
+  # Schedule: 08:00 AEDT = 21:00 UTC (previous day)
+  # AEDT is UTC+11, so 08:00 AEDT = 21:00 UTC
+  schedule:
+    - cron: '0 21 * * *'
+
+  # Allow manual triggering for testing
+  workflow_dispatch:
+
+jobs:
+  generate-brief:
+    runs-on: ubuntu-latest
+
+    # Set timezone for accurate date display in outputs
+    env:
+      TZ: Australia/Sydney
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install anthropic openai
+
+      - name: Generate morning brief
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          LLM_PROVIDER: ${{ secrets.LLM_PROVIDER || 'anthropic' }}
+        run: |
+          python scripts/run_morning.py
+
+      - name: Commit output
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "AI Chief of Staff"
+          git add data/
+          git diff --staged --quiet || git commit -m "Morning brief - $(date +%Y-%m-%d)"
+          git push

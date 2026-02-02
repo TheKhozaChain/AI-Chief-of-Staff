@@ -1,0 +1,54 @@
+# Evening Review - AI Chief of Staff
+# Runs daily at 20:00 AEDT (09:00 UTC)
+#
+# To pause: comment out the 'schedule' block below
+# To resume: uncomment the 'schedule' block
+
+name: Evening Review
+
+on:
+  # Schedule: 20:00 AEDT = 09:00 UTC
+  # AEDT is UTC+11, so 20:00 AEDT = 09:00 UTC
+  schedule:
+    - cron: '0 9 * * *'
+
+  # Allow manual triggering for testing
+  workflow_dispatch:
+
+jobs:
+  generate-review:
+    runs-on: ubuntu-latest
+
+    # Set timezone for accurate date display in outputs
+    env:
+      TZ: Australia/Sydney
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install anthropic openai
+
+      - name: Generate evening review
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          LLM_PROVIDER: ${{ secrets.LLM_PROVIDER || 'anthropic' }}
+        run: |
+          python scripts/run_evening.py
+
+      - name: Commit output
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "AI Chief of Staff"
+          git add data/
+          git diff --staged --quiet || git commit -m "Evening review - $(date +%Y-%m-%d)"
+          git push
