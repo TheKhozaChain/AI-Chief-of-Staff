@@ -51,6 +51,8 @@ In GitHub → Settings → Secrets and variables → Actions, add:
 | `ANTHROPIC_API_KEY` | Your Anthropic API key (recommended) |
 | `OPENAI_API_KEY` | Your OpenAI API key (alternative) |
 | `LLM_PROVIDER` | `anthropic` or `openai` (default: `anthropic`) |
+| `RESEND_API_KEY` | (Optional) Resend API key for email delivery |
+| `EMAIL_TO` | (Optional) Your email address for receiving briefs |
 
 ### 3. Enable Actions
 
@@ -83,6 +85,18 @@ Uncomment the cron schedule or re-enable workflows.
 ## Manual Runs
 
 You can trigger either workflow manually via GitHub Actions → Select workflow → "Run workflow"
+
+## Email Delivery (Optional)
+
+To receive briefs in your inbox:
+
+1. Sign up at [resend.com](https://resend.com) (free tier: 100 emails/day)
+2. Create an API key
+3. Add these secrets to GitHub:
+   - `RESEND_API_KEY`: Your Resend API key
+   - `EMAIL_TO`: Your email address
+
+Emails are sent automatically if both secrets are set. If not set, the system still works—it just saves to files only.
 
 ## Evolution Path
 

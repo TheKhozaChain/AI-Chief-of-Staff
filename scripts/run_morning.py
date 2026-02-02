@@ -16,6 +16,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 
 from llm import generate
+from email_sender import send_email, markdown_to_html
 
 
 def get_repo_root() -> Path:
@@ -149,16 +150,13 @@ def main():
     output_path = save_output(root, full_output, "morning")
     print(f"Saved to: {output_path}")
 
-    # TODO: Optional integrations (uncomment and configure as needed)
-    #
-    # Email delivery:
-    # send_email(subject="Morning Brief", body=response)
-    #
-    # GitHub Issue:
-    # create_github_issue(title=f"Morning Brief - {date}", body=response)
-    #
-    # Slack/Discord webhook:
-    # post_to_webhook(url=os.environ["WEBHOOK_URL"], content=response)
+    # Send email if configured
+    date_str = datetime.now().strftime("%Y-%m-%d")
+    send_email(
+        subject=f"Morning Brief - {date_str}",
+        body=markdown_to_html(response),
+        html=True
+    )
 
     print()
     print("Morning brief complete.")
