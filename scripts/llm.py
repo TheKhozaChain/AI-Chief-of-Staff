@@ -39,8 +39,8 @@ def call_anthropic(prompt: str, system: str, api_key: str) -> str:
 
     client = anthropic.Anthropic(api_key=api_key)
 
-    # Use Claude Haiku for cost efficiency (or Sonnet for better quality)
-    model = os.environ.get("ANTHROPIC_MODEL", "claude-3-haiku-20240307")
+    # Use Claude Opus 4.5 for highest quality
+    model = os.environ.get("ANTHROPIC_MODEL", "claude-opus-4-5-20251101")
 
     message = client.messages.create(
         model=model,
