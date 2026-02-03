@@ -18,6 +18,8 @@ on:
 jobs:
   generate-review:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     # Set timezone for accurate date display in outputs
     env:

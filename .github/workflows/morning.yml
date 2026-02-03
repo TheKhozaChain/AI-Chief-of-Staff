@@ -18,6 +18,8 @@ on:
 jobs:
   generate-brief:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     # Set timezone for accurate date display in outputs
     env:
