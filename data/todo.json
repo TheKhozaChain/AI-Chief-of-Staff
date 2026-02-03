@@ -1,27 +1,71 @@
 {
-  "version": 1,
-  "last_updated": null,
-  "tasks": [
+  "version": 2,
+  "last_updated": "2026-02-03T12:55:00+11:00",
+  "note": "Structured data backing KANBAN.md. AI updates this; board renders from it.",
+  
+  "backlog": [
     {
-      "id": 1,
-      "title": "Configure repository secrets",
-      "status": "pending",
-      "priority": "high",
-      "notes": "Add ANTHROPIC_API_KEY to GitHub Secrets"
+      "id": "b1",
+      "title": "Fix Resend email delivery",
+      "owner": "ai",
+      "priority": 1,
+      "notes": "Cloudflare blocking. User-Agent fix deployed.",
+      "proposed": "2026-02-03"
     },
     {
-      "id": 2,
-      "title": "Run first morning brief manually",
-      "status": "pending",
-      "priority": "medium",
-      "notes": "Test the system locally before relying on automation"
+      "id": "b2",
+      "title": "Define first quant strategy hypothesis",
+      "owner": "ai",
+      "priority": 2,
+      "notes": "3-5 sentence thesis: instrument, timeframe, edge",
+      "proposed": "2026-02-03"
     },
     {
-      "id": 3,
-      "title": "Review and customize prompts",
-      "status": "pending",
-      "priority": "low",
-      "notes": "Adjust prompts to better fit personal style after first few runs"
+      "id": "b3",
+      "title": "Set up strategy backtesting scaffold",
+      "owner": "ai",
+      "priority": 3,
+      "notes": "Minimal Python + data pipeline",
+      "proposed": "2026-02-03"
+    },
+    {
+      "id": "b4",
+      "title": "Create weekly review prompt",
+      "owner": "ai",
+      "priority": 4,
+      "notes": "End-of-week reflection template",
+      "proposed": "2026-02-03"
+    }
+  ],
+  
+  "doing": [
+    {
+      "id": "d1",
+      "title": "Morning brief system setup",
+      "owner": "ai",
+      "started": "2026-02-02",
+      "status": "email_debugging",
+      "notes": "Briefs generating. Email blocked by Cloudflare."
+    }
+  ],
+  
+  "review": [],
+  
+  "done": [
+    {
+      "id": "x1",
+      "title": "Configure GitHub Actions workflows",
+      "completed": "2026-02-03"
+    },
+    {
+      "id": "x2",
+      "title": "Set up Anthropic API integration",
+      "completed": "2026-02-03"
+    },
+    {
+      "id": "x3",
+      "title": "Add workflow write permissions",
+      "completed": "2026-02-03"
     }
   ]
 }
