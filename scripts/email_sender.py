@@ -71,7 +71,11 @@ def send_email(subject: str, body: str, html: bool = False) -> bool:
             print(f"Email sent: {result.get('id', 'success')}")
             return True
     except error.HTTPError as e:
-        print(f"Email failed: {e.code} - {e.read().decode('utf-8')}")
+        error_body = e.read().decode('utf-8')
+        print(f"Email failed: {e.code}")
+        print(f"Error details: {error_body}")
+        print(f"Sender: {email_from}")
+        print(f"Recipient: {email_to}")
         return False
     except Exception as e:
         print(f"Email failed: {e}")
