@@ -1,38 +1,53 @@
 {
   "version": 2,
-  "last_updated": "2026-02-03T14:00:00+11:00",
+  "last_updated": "2026-02-03T14:30:00+11:00",
   "note": "Structured data backing KANBAN.md. AI updates this; board renders from it.",
   
   "backlog": [
     {
-      "id": "b2",
-      "title": "Define first quant strategy hypothesis",
-      "owner": "ai",
-      "priority": 1,
-      "notes": "3-5 sentence thesis: instrument, timeframe, edge",
-      "proposed": "2026-02-03"
-    },
-    {
-      "id": "b3",
-      "title": "Set up strategy backtesting scaffold",
-      "owner": "ai",
-      "priority": 2,
-      "notes": "Minimal Python + data pipeline",
-      "proposed": "2026-02-03"
-    },
-    {
       "id": "b4",
       "title": "Create weekly review prompt",
       "owner": "ai",
-      "priority": 3,
+      "priority": 1,
       "notes": "End-of-week reflection template",
+      "proposed": "2026-02-03"
+    },
+    {
+      "id": "b5",
+      "title": "Source historical forex data",
+      "owner": "ai",
+      "priority": 2,
+      "notes": "Get EUR/USD and GBP/USD 15-min data for backtesting",
+      "proposed": "2026-02-03"
+    },
+    {
+      "id": "b6",
+      "title": "Run first backtest on London breakout",
+      "owner": "ai",
+      "priority": 3,
+      "notes": "Execute strategy on historical data, document results",
       "proposed": "2026-02-03"
     }
   ],
   
   "doing": [],
   
-  "review": [],
+  "review": [
+    {
+      "id": "r1",
+      "title": "Review: Quant strategy hypothesis (HYPOTHESIS_001.md)",
+      "type": "document",
+      "notes": "London session breakout strategy. Check if thesis makes sense.",
+      "created": "2026-02-03"
+    },
+    {
+      "id": "r2",
+      "title": "Review: Backtesting scaffold",
+      "type": "code",
+      "notes": "strategies/backtest/ - data loader, engine, example strategy",
+      "created": "2026-02-03"
+    }
+  ],
   
   "done": [
     {
@@ -53,14 +68,12 @@
     {
       "id": "x4",
       "title": "Fix Resend email delivery",
-      "completed": "2026-02-03",
-      "notes": "Cloudflare 1010 error fixed with User-Agent header"
+      "completed": "2026-02-03"
     },
     {
       "id": "x5",
       "title": "Morning brief system setup",
-      "completed": "2026-02-03",
-      "notes": "Briefs generating and emailing successfully"
+      "completed": "2026-02-03"
     }
   ]
 }
