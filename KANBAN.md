@@ -1,61 +1,55 @@
 # AI Chief of Staff — Work Board
 
-> Last updated: 2026-02-03 by AI Chief of Staff
+> Last updated: 2026-02-03 14:00 AEDT by AI Chief of Staff
 
 ---
 
 ## Backlog
-*Proposed by AI Chief of Staff. Move to "Doing" to approve.*
+*Proposed by AI. Say "approve backlog 1" to move to Doing.*
 
-| Priority | Item | Owner | Notes |
-|:--------:|------|-------|-------|
-| 1 | Fix Resend email delivery | AI | Cloudflare blocking API calls; User-Agent fix deployed, awaiting confirmation |
-| 2 | Define first quant strategy hypothesis | AI | Write 3-5 sentence thesis: instrument, timeframe, edge. Seeds future research. |
-| 3 | Set up strategy backtesting scaffold | AI | Minimal Python + data pipeline for testing ideas. No live trading. |
-| 4 | Create weekly review prompt | AI | End-of-week reflection to capture learnings and adjust priorities |
+| # | Item | Owner | Notes |
+|:-:|------|:-----:|-------|
+| 1 | Define first quant strategy hypothesis | AI | 3-5 sentence thesis: instrument, timeframe, edge |
+| 2 | Set up strategy backtesting scaffold | AI | Minimal Python + data pipeline |
+| 3 | Create weekly review prompt | AI | End-of-week reflection template |
 
 ---
 
 ## Doing
-*Approved by Sipho. AI Chief of Staff actively working on these.*
+*Approved by Sipho. AI Chief of Staff working on these.*
 
 | Item | Owner | Started | Status |
-|------|-------|---------|--------|
-| Morning brief system setup | AI | 2026-02-02 | Email delivery debugging in progress |
+|------|:-----:|---------|--------|
+| — | — | — | Nothing in progress. Approve a backlog item to start. |
 
 ---
 
 ## Review
 *Awaiting Sipho's approval or feedback.*
 
-| Item | Type | Link/Details |
-|------|------|--------------|
+| Item | Type | Details |
+|------|------|---------|
 | — | — | Nothing pending |
 
 ---
 
 ## Done
-*Completed and approved.*
 
-| Item | Completed | Notes |
-|------|-----------|-------|
-| Configure GitHub Actions workflows | 2026-02-03 | morning.yml and evening.yml running |
-| Set up Anthropic API integration | 2026-02-03 | Working, briefs generating successfully |
-| Add workflow write permissions | 2026-02-03 | Commits now succeed |
+| Item | Completed |
+|------|-----------|
+| Morning brief system setup | 2026-02-03 |
+| Fix Resend email delivery | 2026-02-03 |
+| Add workflow write permissions | 2026-02-03 |
+| Set up Anthropic API integration | 2026-02-03 |
+| Configure GitHub Actions workflows | 2026-02-03 |
 
 ---
 
-## How This Board Works
+## Commands
 
-1. **AI proposes** → Items appear in Backlog with priority
-2. **Sipho approves** → Move item to Doing
-3. **AI works** → Updates status, moves to Review when output ready
-4. **Sipho reviews** → Approves PRs, decisions; moves to Done
-5. **Cycle repeats** → Morning brief proposes new backlog items
-
-**Legend:**
-- Owner `AI` = AI Chief of Staff executes
-- Owner `Sipho` = Requires human action
-- Owner `Both` = Collaborative
+Tell me in chat:
+- `approve backlog 1` → moves item 1 to Doing
+- `done with [item]` → moves to Done
+- `add to backlog: [description]` → I'll add it
 
 ---

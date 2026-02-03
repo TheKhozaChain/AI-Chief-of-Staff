@@ -1,22 +1,14 @@
 {
   "version": 2,
-  "last_updated": "2026-02-03T12:55:00+11:00",
+  "last_updated": "2026-02-03T14:00:00+11:00",
   "note": "Structured data backing KANBAN.md. AI updates this; board renders from it.",
   
   "backlog": [
     {
-      "id": "b1",
-      "title": "Fix Resend email delivery",
-      "owner": "ai",
-      "priority": 1,
-      "notes": "Cloudflare blocking. User-Agent fix deployed.",
-      "proposed": "2026-02-03"
-    },
-    {
       "id": "b2",
       "title": "Define first quant strategy hypothesis",
       "owner": "ai",
-      "priority": 2,
+      "priority": 1,
       "notes": "3-5 sentence thesis: instrument, timeframe, edge",
       "proposed": "2026-02-03"
     },
@@ -24,7 +16,7 @@
       "id": "b3",
       "title": "Set up strategy backtesting scaffold",
       "owner": "ai",
-      "priority": 3,
+      "priority": 2,
       "notes": "Minimal Python + data pipeline",
       "proposed": "2026-02-03"
     },
@@ -32,22 +24,13 @@
       "id": "b4",
       "title": "Create weekly review prompt",
       "owner": "ai",
-      "priority": 4,
+      "priority": 3,
       "notes": "End-of-week reflection template",
       "proposed": "2026-02-03"
     }
   ],
   
-  "doing": [
-    {
-      "id": "d1",
-      "title": "Morning brief system setup",
-      "owner": "ai",
-      "started": "2026-02-02",
-      "status": "email_debugging",
-      "notes": "Briefs generating. Email blocked by Cloudflare."
-    }
-  ],
+  "doing": [],
   
   "review": [],
   
@@ -66,6 +49,18 @@
       "id": "x3",
       "title": "Add workflow write permissions",
       "completed": "2026-02-03"
+    },
+    {
+      "id": "x4",
+      "title": "Fix Resend email delivery",
+      "completed": "2026-02-03",
+      "notes": "Cloudflare 1010 error fixed with User-Agent header"
+    },
+    {
+      "id": "x5",
+      "title": "Morning brief system setup",
+      "completed": "2026-02-03",
+      "notes": "Briefs generating and emailing successfully"
     }
   ]
 }
