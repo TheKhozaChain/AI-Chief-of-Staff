@@ -61,6 +61,7 @@ def send_email(subject: str, body: str, html: bool = False) -> bool:
         headers={
             "Authorization": f"Bearer {api_key}",
             "Content-Type": "application/json",
+            "User-Agent": "AI-Chief-of-Staff/1.0",
         },
         method="POST"
     )
