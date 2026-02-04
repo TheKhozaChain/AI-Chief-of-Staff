@@ -1,16 +1,22 @@
 {
   "version": 2,
-  "last_updated": "2026-02-04T16:40:00+11:00",
+  "last_updated": "2026-02-05T10:00:00+11:00",
   "schema_note": "Optimized for AI context retrieval, not human reading",
-  
+
   "active_context": {
     "current_focus": "quant_strategy_development",
-    "status": "hypothesis_002_shows_marginal_edge",
+    "status": "hypothesis_002_refining_oos_validation_next",
     "blockers": [],
-    "next_action": "decide_whether_to_refine_or_move_on"
+    "next_action": "run_oos_validation_dec2025_feb2026"
   },
-  
+
   "session_log": [
+    {
+      "date": "2026-02-05",
+      "summary": "Completed morning priorities 1-3. Decided to refine HYPOTHESIS_002 (not archive). Wrote detailed rationale and two-phase refinement plan: Phase 1 = OOS validation on Dec-Feb data, Phase 2 = time-of-day filter if OOS passes. Cleaned up mean_reversion.py (docstrings, date filtering support, readability). Updated strategies README.",
+      "decisions": ["hypothesis_002_refine_not_archive", "oos_validation_before_optimization", "time_of_day_filter_as_first_refinement"],
+      "artifacts": ["HYPOTHESIS_002.md", "backtest/mean_reversion.py", "strategies/README.md", "KANBAN.md"]
+    },
     {
       "date": "2026-02-04",
       "summary": "Tested two hypotheses. HYPOTHESIS_001 (London breakout) failed. HYPOTHESIS_002 (mean reversion) shows marginal edge (PF 1.04, +13.6%). Needs validation.",
@@ -30,19 +36,21 @@
       "artifacts": ["morning.yml", "evening.yml"]
     }
   ],
-  
+
   "strategies": {
     "active": [],
-    "research_queue": ["HYPOTHESIS_002_mean_reversion"],
+    "research_queue": ["HYPOTHESIS_002_mean_reversion_oos_validation"],
     "hypotheses": [
       {
         "id": "002",
         "name": "Intraday Mean Reversion",
-        "status": "marginal_edge",
+        "status": "refining",
         "instruments": ["BTCUSD"],
         "timeframe": "15m",
         "edge": "fade_extreme_extensions_from_MA",
-        "result": "47% win rate, PF 1.04, needs validation"
+        "result": "47% win rate, PF 1.04, needs OOS validation",
+        "next_step": "run_on_dec2025_feb2026_data_unchanged_params",
+        "refinement_plan": "phase1_oos_validation_then_phase2_time_of_day_filter"
       },
       {
         "id": "001",
@@ -56,33 +64,32 @@
     ],
     "archived": ["HYPOTHESIS_001"]
   },
-  
+
   "user_patterns": {
     "peak_hours": "09:00-13:00",
     "timezone": "Australia/Sydney",
     "communication": "direct_no_preamble",
     "work_blocks": "2-4h_focused"
   },
-  
+
   "system_state": {
     "morning_brief": "operational",
-    "evening_review": "not_tested",
+    "evening_review": "operational",
     "email_delivery": "working",
     "github_actions": "working",
     "kanban": "operational",
     "backtest_scaffold": "ready"
   },
-  
-  "pending_reviews": [
-    "HYPOTHESIS_001.md",
-    "strategies/backtest/"
-  ],
-  
+
+  "pending_reviews": [],
+
   "key_learnings": [
     "github_secrets_require_exact_names_no_prefix",
     "resend_testing_domain_only_sends_to_account_email",
     "cloudflare_blocks_requests_without_user_agent",
     "user_prefers_chat_commands_over_manual_file_edits",
-    "keep_backtest_simple_no_heavy_deps"
+    "keep_backtest_simple_no_heavy_deps",
+    "validate_oos_before_optimizing_parameters",
+    "pf_1.04_on_large_sample_is_weak_signal_not_noise"
   ]
 }

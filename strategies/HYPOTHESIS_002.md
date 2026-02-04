@@ -1,8 +1,9 @@
 # Strategy Hypothesis 002: Intraday Mean Reversion
 
-**Status:** Tested - Marginal Edge  
-**Created:** 2026-02-04  
-**Owner:** AI Chief of Staff  
+**Status:** Refine — Validating out-of-sample before optimization
+**Created:** 2026-02-04
+**Updated:** 2026-02-05
+**Owner:** AI Chief of Staff
 
 ---
 
@@ -79,7 +80,63 @@ BTCUSD frequently overshoots during intraday moves, creating mean reversion oppo
 - Further optimization or filtering may improve results
 - Worth exploring with additional validation before discarding
 
-**Next steps**: 
-1. Test on different time period (out-of-sample)
-2. Add transaction cost modeling
-3. Consider additional filters (volume, time of day)
+**Next steps**: See Decision and Refinement Plan below.
+
+---
+
+## Decision (2026-02-05)
+
+**Verdict: Refine — but validate out-of-sample first.**
+
+### Rationale
+
+The results are marginal but not zero. Here's why refine beats archive:
+
+1. **PF 1.04 on 1,410 trades is a weak signal, not noise.** A profit factor slightly above 1.0 on a large sample (1,410 trades) is more meaningful than a high PF on 50 trades. The sample size gives some confidence the edge isn't random — but it needs confirmation.
+
+2. **The thesis is sound.** Mean reversion in high-volatility intraday crypto is a well-documented phenomenon. Unlike HYPOTHESIS_001 (London breakout applied to a 24/7 market — conceptual mismatch), the mean reversion thesis fits the instrument.
+
+3. **Reward:risk ratio is positive.** Avg win $476 vs avg loss $406 (1.17:1) means the strategy lets winners run slightly further than losers. The 47% win rate drags it down, but filtering for higher-probability setups could shift this.
+
+4. **Max drawdown is a concern.** $16,739 drawdown on ~$89K starting capital (~18.7%) is steep for a marginal edge. Any refinement must address this.
+
+5. **The evening review's warning stands.** Before touching parameters, we must confirm the edge survives out-of-sample. Optimization without validation is curve-fitting.
+
+### What would make me archive instead
+
+- OOS profit factor below 0.95 (edge collapses = it was noise)
+- OOS max drawdown exceeds 25% of capital
+- Fewer than 200 trades in OOS window (insufficient signal)
+
+---
+
+## Refinement Plan (2026-02-05)
+
+### Phase 1: Out-of-sample validation (do this FIRST)
+
+Split existing 6-month data (Aug 2025 – Feb 2026) into:
+- **In-sample:** Aug 2025 – Nov 2025 (first ~4 months)
+- **Out-of-sample:** Dec 2025 – Feb 2026 (last ~2 months)
+
+Run current strategy parameters (unchanged) on OOS data only.
+
+**Pass criteria:**
+- PF >= 1.0 on OOS data
+- Win rate within 5 percentage points of in-sample (42%–52%)
+- Edge direction consistent (positive total P&L)
+
+**If pass → proceed to Phase 2.**
+**If fail → archive HYPOTHESIS_002, move to HYPOTHESIS_003.**
+
+### Phase 2: ONE refinement — time-of-day filter
+
+If OOS validates, test adding a **time-of-day filter**. Hypothesis: mean reversion signals are stronger during high-liquidity hours (US market overlap, ~14:00–21:00 UTC) and weaker during low-volume Asian hours.
+
+- **Test:** Only take signals between 14:00–21:00 UTC
+- **Expected outcome:** Fewer trades but higher PF (filtering out low-quality setups)
+- **Fail criteria:** If PF doesn't improve above 1.15, the filter doesn't help — try a different refinement or archive
+
+### NOT doing (yet)
+- Parameter optimization (MA period, std threshold) — premature without validation
+- Transaction cost modeling — useful but won't change the refine/archive decision
+- Volume filters — data quality uncertain, save for later

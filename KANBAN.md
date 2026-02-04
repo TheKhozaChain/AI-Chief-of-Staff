@@ -1,6 +1,6 @@
 # AI Chief of Staff — Work Board
 
-> Last updated: 2026-02-04 16:40 AEDT by AI Chief of Staff
+> Last updated: 2026-02-05 AEDT by AI Chief of Staff
 
 ---
 
@@ -10,6 +10,7 @@
 | # | Item | Owner | Notes |
 |:-:|------|:-----:|-------|
 | 1 | Create weekly review prompt | AI | End-of-week reflection template |
+| 2 | Add backtest run logger (CSV: date, params, PF, win rate) | AI | Compare iterations easily |
 
 ---
 
@@ -18,7 +19,7 @@
 
 | Item | Owner | Started | Status |
 |------|:-----:|---------|--------|
-| — | — | — | Nothing in progress |
+| HYPOTHESIS_002 OOS validation | Sipho | 2026-02-05 | Run current params on Dec 2025–Feb 2026 data |
 
 ---
 
@@ -27,7 +28,7 @@
 
 | # | Item | Type | Details |
 |:-:|------|------|---------|
-| 1 | HYPOTHESIS_002 (Mean Reversion) | Strategy | Marginal edge found (PF 1.04). Worth further validation? |
+| — | — | — | Nothing awaiting review |
 
 ---
 
@@ -35,6 +36,9 @@
 
 | Item | Completed |
 |------|-----------|
+| HYPOTHESIS_002 decision: refine with OOS validation first | 2026-02-05 |
+| HYPOTHESIS_002 refinement plan written | 2026-02-05 |
+| Backtest folder cleanup (docstrings, readability) | 2026-02-05 |
 | HYPOTHESIS_002 backtest (Mean Reversion) | 2026-02-04 |
 | HYPOTHESIS_001 backtest (London breakout) | 2026-02-04 |
 | Source BTCUSD 15m data (6 months) | 2026-02-04 |
