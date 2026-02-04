@@ -5,17 +5,17 @@
   
   "active_context": {
     "current_focus": "quant_strategy_development",
-    "status": "ready_for_next_hypothesis",
+    "status": "hypothesis_002_shows_marginal_edge",
     "blockers": [],
-    "next_action": "design_hypothesis_002"
+    "next_action": "decide_whether_to_refine_or_move_on"
   },
   
   "session_log": [
     {
       "date": "2026-02-04",
-      "summary": "Ran first backtest. HYPOTHESIS_001 failed on BTCUSD (33% win rate, -29.6% P&L). Scaffold works. Data pipeline operational.",
-      "decisions": ["hypothesis_001_does_not_work_on_btcusd", "move_to_next_hypothesis"],
-      "artifacts": ["data/BTCUSD_15m.csv", "backtest/fetch_btc_data.py"]
+      "summary": "Tested two hypotheses. HYPOTHESIS_001 (London breakout) failed. HYPOTHESIS_002 (mean reversion) shows marginal edge (PF 1.04, +13.6%). Needs validation.",
+      "decisions": ["hypothesis_001_failed", "hypothesis_002_marginal_edge", "parameter_optimization_helped"],
+      "artifacts": ["data/BTCUSD_15m.csv", "backtest/fetch_btc_data.py", "backtest/mean_reversion.py", "HYPOTHESIS_002.md"]
     },
     {
       "date": "2026-02-03",
@@ -33,8 +33,17 @@
   
   "strategies": {
     "active": [],
-    "research_queue": [],
+    "research_queue": ["HYPOTHESIS_002_mean_reversion"],
     "hypotheses": [
+      {
+        "id": "002",
+        "name": "Intraday Mean Reversion",
+        "status": "marginal_edge",
+        "instruments": ["BTCUSD"],
+        "timeframe": "15m",
+        "edge": "fade_extreme_extensions_from_MA",
+        "result": "47% win rate, PF 1.04, needs validation"
+      },
       {
         "id": "001",
         "name": "London Session Momentum Breakout",

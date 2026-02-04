@@ -11,22 +11,28 @@
       "priority": 1,
       "notes": "End-of-week reflection template",
       "proposed": "2026-02-03"
-    },
-    {
-      "id": "b7",
-      "title": "Design HYPOTHESIS_002",
-      "owner": "ai",
-      "priority": 2,
-      "notes": "Next strategy hypothesis after London breakout failed on BTCUSD",
-      "proposed": "2026-02-04"
     }
   ],
   
   "doing": [],
   
-  "review": [],
+  "review": [
+    {
+      "id": "r3",
+      "title": "HYPOTHESIS_002 (Mean Reversion)",
+      "type": "strategy",
+      "notes": "Marginal edge found (PF 1.04, +13.6%). Worth further validation?",
+      "created": "2026-02-04"
+    }
+  ],
   
   "done": [
+    {
+      "id": "x9",
+      "title": "HYPOTHESIS_002 backtest (Mean Reversion)",
+      "completed": "2026-02-04",
+      "result": "Marginal edge - 47% win rate, PF 1.04"
+    },
     {
       "id": "x6",
       "title": "HYPOTHESIS_001 backtest (London breakout)",

@@ -10,7 +10,6 @@
 | # | Item | Owner | Notes |
 |:-:|------|:-----:|-------|
 | 1 | Create weekly review prompt | AI | End-of-week reflection template |
-| 2 | Design HYPOTHESIS_002 | AI | Next strategy hypothesis after London breakout failed |
 
 ---
 
@@ -28,7 +27,7 @@
 
 | # | Item | Type | Details |
 |:-:|------|------|---------|
-| — | — | — | Nothing pending review |
+| 1 | HYPOTHESIS_002 (Mean Reversion) | Strategy | Marginal edge found (PF 1.04). Worth further validation? |
 
 ---
 
@@ -36,6 +35,7 @@
 
 | Item | Completed |
 |------|-----------|
+| HYPOTHESIS_002 backtest (Mean Reversion) | 2026-02-04 |
 | HYPOTHESIS_001 backtest (London breakout) | 2026-02-04 |
 | Source BTCUSD 15m data (6 months) | 2026-02-04 |
 | Review backtesting scaffold | 2026-02-04 |
