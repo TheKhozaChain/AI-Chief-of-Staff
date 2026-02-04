@@ -1,6 +1,6 @@
 # Strategy Hypothesis 001: London Session Momentum Breakout
 
-**Status:** Research  
+**Status:** Tested - Negative Result  
 **Created:** 2026-02-03  
 **Owner:** AI Chief of Staff  
 
@@ -57,3 +57,25 @@ BTCUSD exhibits predictable volatility expansion at the London open (08:00 GMT) 
 ## Notes
 
 *This is a starting hypothesis, not a proven strategy. The goal is to test quickly and either validate or discard.*
+
+---
+
+## Backtest Results (2026-02-04)
+
+**Data**: BTCUSD 15m, Aug 2025 - Feb 2026 (17,276 bars)
+
+| Metric | Value |
+|--------|-------|
+| Total Trades | 48 |
+| Win Rate | 33.3% |
+| Total P&L | -$30,194 (-29.6%) |
+| Avg Win | $1,731 |
+| Avg Loss | -$1,809 |
+| Profit Factor | 0.48 |
+| Max Drawdown | $32,936 |
+
+**Conclusion**: Strategy does not work as-is on BTCUSD. The edge hypothesis (institutional flow at London open) may not apply to crypto markets the same way it does to forex. Consider:
+1. Archiving this hypothesis for BTCUSD
+2. Testing different session definitions (e.g., US market open)
+3. Adding trend filters or volatility conditions
+4. Moving to next hypothesis

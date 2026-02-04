@@ -34,9 +34,9 @@ class Trade:
             return (self.entry_price - self.exit_price) * self.size
     
     @property
-    def pnl_pips(self) -> float:
-        """P&L in pips (assumes 4-decimal forex)."""
-        return self.pnl * 10000
+    def pnl_pct(self) -> float:
+        """P&L as percentage of entry price."""
+        return (self.pnl / self.entry_price) * 100
 
 
 @dataclass
@@ -78,8 +78,9 @@ class BacktestResult:
         return sum(t.pnl for t in self.trades)
     
     @property
-    def total_pnl_pips(self) -> float:
-        return sum(t.pnl_pips for t in self.trades)
+    def total_pnl_pct(self) -> float:
+        """Total P&L as sum of percentage returns."""
+        return sum(t.pnl_pct for t in self.trades)
     
     @property
     def avg_win(self) -> float:
@@ -126,11 +127,11 @@ Total Trades: {self.total_trades}
 Winners: {self.winners} ({self.win_rate:.1%})
 Losers: {self.losers}
 
-Total P&L: {self.total_pnl:.4f} ({self.total_pnl_pips:.1f} pips)
-Avg Win: {self.avg_win:.4f}
-Avg Loss: {self.avg_loss:.4f}
+Total P&L: ${self.total_pnl:,.2f} ({self.total_pnl_pct:.2f}%)
+Avg Win: ${self.avg_win:,.2f}
+Avg Loss: ${self.avg_loss:,.2f}
 Profit Factor: {self.profit_factor:.2f}
-Max Drawdown: {self.max_drawdown:.4f}
+Max Drawdown: ${self.max_drawdown:,.2f}
 """
 
 

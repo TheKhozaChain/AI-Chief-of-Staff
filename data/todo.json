@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "last_updated": "2026-02-03T14:30:00+11:00",
+  "last_updated": "2026-02-04T16:40:00+11:00",
   "note": "Structured data backing KANBAN.md. AI updates this; board renders from it.",
   
   "backlog": [
@@ -13,43 +13,36 @@
       "proposed": "2026-02-03"
     },
     {
-      "id": "b5",
-      "title": "Source historical crypto data",
+      "id": "b7",
+      "title": "Design HYPOTHESIS_002",
       "owner": "ai",
       "priority": 2,
-      "notes": "Get BTCUSD 15-min data for backtesting",
-      "proposed": "2026-02-03"
-    },
-    {
-      "id": "b6",
-      "title": "Run first backtest on London breakout",
-      "owner": "ai",
-      "priority": 3,
-      "notes": "Execute strategy on historical data, document results",
-      "proposed": "2026-02-03"
+      "notes": "Next strategy hypothesis after London breakout failed on BTCUSD",
+      "proposed": "2026-02-04"
     }
   ],
   
   "doing": [],
   
-  "review": [
-    {
-      "id": "r1",
-      "title": "Review: Quant strategy hypothesis (HYPOTHESIS_001.md)",
-      "type": "document",
-      "notes": "London session breakout strategy. Check if thesis makes sense.",
-      "created": "2026-02-03"
-    },
-    {
-      "id": "r2",
-      "title": "Review: Backtesting scaffold",
-      "type": "code",
-      "notes": "strategies/backtest/ - data loader, engine, example strategy",
-      "created": "2026-02-03"
-    }
-  ],
+  "review": [],
   
   "done": [
+    {
+      "id": "x6",
+      "title": "HYPOTHESIS_001 backtest (London breakout)",
+      "completed": "2026-02-04",
+      "result": "Failed - 33% win rate, PF 0.48"
+    },
+    {
+      "id": "x7",
+      "title": "Source BTCUSD 15m data (6 months)",
+      "completed": "2026-02-04"
+    },
+    {
+      "id": "x8",
+      "title": "Review backtesting scaffold",
+      "completed": "2026-02-04"
+    },
     {
       "id": "x1",
       "title": "Configure GitHub Actions workflows",

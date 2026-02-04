@@ -1,6 +1,6 @@
 # AI Chief of Staff — Work Board
 
-> Last updated: 2026-02-03 14:30 AEDT by AI Chief of Staff
+> Last updated: 2026-02-04 16:40 AEDT by AI Chief of Staff
 
 ---
 
@@ -10,8 +10,7 @@
 | # | Item | Owner | Notes |
 |:-:|------|:-----:|-------|
 | 1 | Create weekly review prompt | AI | End-of-week reflection template |
-| 2 | Source historical crypto data | AI | Get BTCUSD 15-min data |
-| 3 | Run first backtest on London breakout | AI | Execute strategy, document results |
+| 2 | Design HYPOTHESIS_002 | AI | Next strategy hypothesis after London breakout failed |
 
 ---
 
@@ -29,10 +28,7 @@
 
 | # | Item | Type | Details |
 |:-:|------|------|---------|
-| 1 | Quant strategy hypothesis | Doc | `strategies/HYPOTHESIS_001.md` — London breakout thesis |
-| 2 | Backtesting scaffold | Code | `strategies/backtest/` — engine, data loader, example |
-
-**To approve:** Say "approve review 1" or "approve review 1 and 2" to move to Done.
+| — | — | — | Nothing pending review |
 
 ---
 
@@ -40,6 +36,9 @@
 
 | Item | Completed |
 |------|-----------|
+| HYPOTHESIS_001 backtest (London breakout) | 2026-02-04 |
+| Source BTCUSD 15m data (6 months) | 2026-02-04 |
+| Review backtesting scaffold | 2026-02-04 |
 | Morning brief system setup | 2026-02-03 |
 | Fix Resend email delivery | 2026-02-03 |
 | Add workflow write permissions | 2026-02-03 |
