@@ -33,7 +33,7 @@
         "id": "001",
         "name": "London Session Momentum Breakout",
         "status": "pending_review",
-        "instruments": ["EURUSD", "GBPUSD"],
+        "instruments": ["BTCUSD"],
         "timeframe": "15m",
         "edge": "asian_range_breakout_at_london_open"
       }

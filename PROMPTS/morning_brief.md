@@ -68,7 +68,7 @@ Wednesday mid-week. Good day for deep work—no Monday ramp-up, not yet Friday w
 ### Top 3 Priorities
 
 1. **Backtest the mean-reversion variant**
-   - Run the modified parameters on EURUSD hourly data
+   - Run the modified parameters on BTCUSD hourly data
    - Why: This is the current bottleneck in strategy validation
    - Done when: Results logged, decision made on whether to proceed
 

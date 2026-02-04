@@ -14,10 +14,10 @@
     },
     {
       "id": "b5",
-      "title": "Source historical forex data",
+      "title": "Source historical crypto data",
       "owner": "ai",
       "priority": 2,
-      "notes": "Get EUR/USD and GBP/USD 15-min data for backtesting",
+      "notes": "Get BTCUSD 15-min data for backtesting",
       "proposed": "2026-02-03"
     },
     {

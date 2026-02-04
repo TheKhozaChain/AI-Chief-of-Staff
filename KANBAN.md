@@ -10,7 +10,7 @@
 | # | Item | Owner | Notes |
 |:-:|------|:-----:|-------|
 | 1 | Create weekly review prompt | AI | End-of-week reflection template |
-| 2 | Source historical forex data | AI | Get EUR/USD, GBP/USD 15-min data |
+| 2 | Source historical crypto data | AI | Get BTCUSD 15-min data |
 | 3 | Run first backtest on London breakout | AI | Execute strategy, document results |
 
 ---

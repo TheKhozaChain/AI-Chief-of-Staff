@@ -4,7 +4,7 @@ London Session Momentum Breakout Strategy
 Implements HYPOTHESIS_001: Breakout of Asian session range at London open.
 
 Usage:
-    python london_breakout.py data/EURUSD_15m.csv
+    python london_breakout.py data/BTCUSD_15m.csv
 """
 
 from datetime import datetime, time
@@ -17,7 +17,7 @@ from engine import Backtest
 ASIAN_START = time(0, 0)   # 00:00 GMT
 ASIAN_END = time(8, 0)     # 08:00 GMT
 LONDON_END = time(12, 0)   # 12:00 GMT - stop looking for entries
-MAX_ASIAN_RANGE_PIPS = 60  # Skip if range > 60 pips
+MAX_ASIAN_RANGE_PCT = 3.0  # Skip if range > 3% of price
 REWARD_RATIO = 1.5         # TP = 1.5x risk
 
 
@@ -69,12 +69,13 @@ class LondonBreakoutStrategy:
         if bar_time >= LONDON_END:
             return None
         
-        # Calculate range
+        # Calculate range as percentage of price
         asian_range = self.asian_high - self.asian_low
-        asian_range_pips = asian_range * 10000
+        mid_price = (self.asian_high + self.asian_low) / 2
+        asian_range_pct = (asian_range / mid_price) * 100
         
         # Skip if range too wide
-        if asian_range_pips > MAX_ASIAN_RANGE_PIPS:
+        if asian_range_pct > MAX_ASIAN_RANGE_PCT:
             return None
         
         # Check for breakout (close above/below range)
@@ -125,11 +126,11 @@ if __name__ == "__main__":
         print("Usage: python london_breakout.py <data_file.csv>")
         print("\nExpected CSV format:")
         print("datetime,open,high,low,close,volume")
-        print("2024-01-01 00:00:00,1.1050,1.1055,1.1045,1.1052,1000")
-        print("\nTo get data, you can use:")
-        print("- Dukascopy (free historical): dukascopy.com")
-        print("- OANDA API (if you have account)")
-        print("- Yahoo Finance (for indices/stocks)")
+        print("2024-01-01 00:00:00,42000.50,42100.00,41900.00,42050.00,1000")
+        print("\nTo get BTCUSD data, you can use:")
+        print("- Binance API (free historical)")
+        print("- CoinGecko API")
+        print("- Yahoo Finance (BTC-USD)")
         sys.exit(1)
     
     run_backtest(sys.argv[1])
