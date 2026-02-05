@@ -8,7 +8,7 @@
 
 ## Thesis (5 sentences)
 
-BTCUSD frequently overshoots during intraday moves, creating mean reversion opportunities when price extends too far from a short-term average. When price moves more than 2 standard deviations from a 20-period moving average on 15-minute bars, there's often a snap-back toward the mean within the next few hours. A strategy that fades these extreme extensions—selling when overbought, buying when oversold—with tight stops beyond the extension should capture this reversion. This edge exists because retail traders chase momentum into extended moves, providing liquidity for the reversal. The strategy uses defined risk with stops just beyond the extreme.
+BTCUSD frequently overshoots during intraday moves, creating mean reversion opportunities when price extends too far from a short-term average. When price moves more than 2 standard deviations from a 12-period moving average on 15-minute bars, there's often a snap-back toward the mean within the next few hours. A strategy that fades these extreme extensions—selling when overbought, buying when oversold—with tight stops beyond the extension should capture this reversion. This edge exists because retail traders chase momentum into extended moves, providing liquidity for the reversal. The strategy uses defined risk with stops just beyond the extreme.
 
 ---
 
