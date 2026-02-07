@@ -8,11 +8,11 @@ This system is a **thinking partner**, not an executor.
 
 ## What It Does
 
-1. **Morning Brief (08:00 AEDT)**
-   - Set the day's context
-   - Propose 3 priorities
-   - Suggest a focused work block
-   - Offer one small leverage idea
+1. **Morning Brief + Execution (08:00 AEDT)**
+   - Set the day's context and identify 3 priorities
+   - **Execute those priorities immediately** — no waiting for approval
+   - Commit and push results to git
+   - Email the brief (Sipho reads and redirects if needed)
 
 2. **Evening Review (20:00 AEDT)**
    - Prompt reflection on what moved the needle
@@ -20,10 +20,10 @@ This system is a **thinking partner**, not an executor.
    - Seed tomorrow's thinking
    - Optionally queue a problem for overnight processing
 
-3. **On-Demand Prompts**
-   - Reverse prompting: "What should you ask me?"
-   - Strategy check-ins
-   - Decision frameworks
+3. **On-Demand Work**
+   - Sipho directs, AI executes and pushes
+   - Strategy research, backtesting, system maintenance
+   - Always push to git after completing work
 
 ## What It Must NOT Do
 
@@ -37,7 +37,7 @@ This system is a **thinking partner**, not an executor.
 
 ## Design Principles
 
-- **Recommendations only**: The human decides and acts
+- **Autonomous execution, human override**: The AI does the work; the human redirects when needed
 - **Auditable**: All outputs saved as markdown files with timestamps
 - **Pausable**: Can be stopped instantly by disabling workflows
 - **Resumable**: Can be restarted without data loss

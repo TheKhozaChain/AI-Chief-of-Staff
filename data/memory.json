@@ -5,9 +5,10 @@
   
   "active_context": {
     "current_focus": "quant_strategy_development",
-    "status": "hypothesis_003_scoped_ready_for_implementation",
+    "status": "hypothesis_003_data_ready_implement_next",
     "blockers": [],
-    "next_action": "implement_vol_contraction_py_and_run_baseline_backtest"
+    "next_action": "implement_vol_contraction_py_and_run_baseline_backtest",
+    "execution_model": "autonomous_execute_then_inform"
   },
   
   "session_log": [
@@ -101,8 +102,12 @@
     "weekly_review": "template_created_first_review_done",
     "email_delivery": "working",
     "github_actions": "working",
-    "kanban": "operational",
-    "backtest_scaffold": "ready"
+    "kanban": "operational_autonomous_model",
+    "backtest_scaffold": "ready",
+    "data": {
+      "BTCUSD_15m": "105115_bars_3_years_2023-02-08_to_2026-02-07",
+      "BTCUSD_1h": "26279_bars_3_years_2023-02-08_to_2026-02-07"
+    }
   },
   
   "pending_reviews": [],
@@ -120,6 +125,9 @@
     "gross_pf_below_1.3_on_crypto_is_dead_after_costs",
     "walk_forward_validation_is_non_negotiable",
     "wider_profit_targets_required_to_survive_transaction_costs",
-    "design_strategy_around_cost_floor_not_into_it"
+    "design_strategy_around_cost_floor_not_into_it",
+    "6_months_data_is_too_thin_use_2_to_3_years_minimum",
+    "always_have_multiple_timeframes_ready_not_just_one",
+    "execute_autonomously_push_to_git_dont_wait_for_approval"
   ]
 }

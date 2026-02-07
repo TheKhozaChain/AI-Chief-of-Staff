@@ -4,31 +4,21 @@
 
 ---
 
-## Backlog
-*Proposed by AI. Say "approve backlog 1" to move to Doing.*
-
-| # | Item | Owner | Notes |
-|:-:|------|:-----:|-------|
-| 1 | Test evening review workflow end-to-end | AI | Has been "not tested" since day one |
-| 2 | Source extended BTCUSD history (12+ months) | AI | Current 6 months may not give enough 4H bars for H003 significance |
-
----
-
 ## Doing
-*Approved by Sipho. AI Chief of Staff working on these.*
+*AI Chief of Staff executes these autonomously. Sipho reviews and redirects if needed.*
 
 | Item | Owner | Started | Status |
 |------|:-----:|---------|--------|
-| Implement and backtest HYPOTHESIS_003 | AI | 2026-02-07 | Scoped. Ready for vol_contraction.py implementation. |
+| Implement and backtest HYPOTHESIS_003 | AI | 2026-02-07 | Data ready (3y 15m + 1h). Next: vol_contraction.py |
 
 ---
 
-## Review
-*Awaiting Sipho's approval or feedback.*
+## Up Next
+*Queued for execution. AI picks these up after current work is done.*
 
-| # | Item | Type | Details |
-|:-:|------|------|---------|
-| — | — | — | Nothing pending review |
+| # | Item | Notes |
+|:-:|------|-------|
+| 1 | Test evening review workflow end-to-end | Has been "not tested" since day one |
 
 ---
 
@@ -36,10 +26,12 @@
 
 | Item | Completed |
 |------|-----------|
+| Fetch 3 years BTCUSD data (15m: 105K bars, 1h: 26K bars) | 2026-02-07 |
+| Generic resample utility (any timeframe from 1h to daily) | 2026-02-07 |
+| Autonomous execution model (no more approval gates) | 2026-02-07 |
 | Scope HYPOTHESIS_003 (4H Vol Contraction Breakout) | 2026-02-07 |
 | Create weekly review prompt template | 2026-02-07 |
 | Run first weekly review (week ending Feb 7) | 2026-02-07 |
-| Add resample_to_4h() utility | 2026-02-07 |
 | HYPOTHESIS_002 refinement + archive (Mean Reversion) | 2026-02-06 |
 | Backtest folder cleanup (docstrings, readability) | 2026-02-06 |
 | HYPOTHESIS_002 backtest (Mean Reversion) | 2026-02-04 |
@@ -57,9 +49,8 @@
 ## Commands
 
 Tell me in chat:
-- `approve backlog 1` → moves item to Doing
-- `approve review 1` → moves item to Done
-- `done with [item]` → moves to Done  
-- `add to backlog: [description]` → I'll add it
+- `redirect: [new priority]` → I'll pivot immediately
+- `stop [item]` → I'll pause and wait for input
+- `add: [description]` → queued to Up Next
 
 ---

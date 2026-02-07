@@ -26,5 +26,6 @@ Thumbs.db
 # Local testing outputs (optional - remove if you want to track all outputs)
 # data/*.md
 
-# Strategy data files (large CSVs)
+# Strategy data files (large CSVs — regenerate with fetch_btc_data.py)
 strategies/data/
+data/BTCUSD_*.csv
