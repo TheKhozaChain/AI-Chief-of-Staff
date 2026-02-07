@@ -1,42 +1,51 @@
 """
-London Session Momentum Breakout Strategy
+London Session Momentum Breakout Strategy (HYPOTHESIS_001)
 
-Implements HYPOTHESIS_001: Breakout of Asian session range at London open.
+Enters on a breakout of the Asian session (00:00-08:00 UTC) high/low during
+the London session (08:00-12:00 UTC) on BTCUSD 15m bars.
+
+Status: Archived — negative result (PF 0.48, 33% win rate).
+See strategies/HYPOTHESIS_001.md for full analysis.
 
 Usage:
-    python london_breakout.py data/BTCUSD_15m.csv
+    python london_breakout.py <data_file.csv>
 """
 
-from datetime import datetime, time
+from datetime import time
 from typing import Dict, List, Optional
 from data_loader import load_csv
 from engine import Backtest
 
 
+# ---------------------------------------------------------------------------
 # Strategy parameters
-ASIAN_START = time(0, 0)   # 00:00 GMT
-ASIAN_END = time(8, 0)     # 08:00 GMT
-LONDON_END = time(12, 0)   # 12:00 GMT - stop looking for entries
-MAX_ASIAN_RANGE_PCT = 3.0  # Skip if range > 3% of price
-REWARD_RATIO = 1.5         # TP = 1.5x risk
+# ---------------------------------------------------------------------------
+ASIAN_START = time(0, 0)    # Asian session start (UTC)
+ASIAN_END = time(8, 0)      # Asian session end / London open (UTC)
+LONDON_END = time(12, 0)    # Stop looking for entries after this (UTC)
+MAX_ASIAN_RANGE_PCT = 3.0   # Skip if Asian range > 3% of price
+REWARD_RATIO = 1.5          # Take profit = 1.5x the risk (Asian range)
 
 
 class LondonBreakoutStrategy:
+    """Trade breakouts of the Asian session range during London hours.
+
+    Logic:
+        1. During 00:00-08:00 UTC, track the session high and low.
+        2. During 08:00-12:00 UTC, if price closes above the Asian high → long;
+           if below the Asian low → short.
+        3. Stop loss at the opposite side of the Asian range; TP at 1.5x risk.
+        4. One trade per day maximum.
     """
-    Tracks Asian session range and generates breakout signals.
-    """
-    
+
     def __init__(self):
-        self.asian_high = None
-        self.asian_low = None
+        self.asian_high: Optional[float] = None
+        self.asian_low: Optional[float] = None
         self.current_date = None
         self.traded_today = False
-    
+
     def __call__(self, bar: Dict, prev_bars: List[Dict], position) -> Optional[Dict]:
-        """
-        Called on each bar by the backtest engine.
-        Returns signal dict or None.
-        """
+        """Evaluate a single bar and return a trade signal or None."""
         bar_time = bar['datetime'].time()
         bar_date = bar['datetime'].date()
         
@@ -104,33 +113,37 @@ class LondonBreakoutStrategy:
         return None
 
 
-def run_backtest(data_file: str):
-    """Run the backtest on given data file."""
+COST_PCT = 0.1  # Round-trip transaction cost (%)
+
+
+def run_backtest(data_file: str, cost_pct: float = COST_PCT):
+    """Load data and run the London breakout backtest.
+
+    Args:
+        data_file: Path to a CSV with columns: datetime, open, high, low, close, volume.
+        cost_pct: Round-trip transaction cost as % of trade value.
+
+    Returns:
+        BacktestResult with trade-level details.
+    """
     print(f"Loading data from {data_file}...")
     data = load_csv(data_file)
     print(f"Loaded {len(data)} bars")
-    
-    print("Running backtest...")
+
     strategy = LondonBreakoutStrategy()
-    bt = Backtest(data)
+    bt = Backtest(data, cost_pct=cost_pct)
     bt.run(strategy)
-    
+
     print(bt.result.summary())
     return bt.result
 
 
 if __name__ == "__main__":
     import sys
-    
+
     if len(sys.argv) < 2:
         print("Usage: python london_breakout.py <data_file.csv>")
-        print("\nExpected CSV format:")
-        print("datetime,open,high,low,close,volume")
-        print("2024-01-01 00:00:00,42000.50,42100.00,41900.00,42050.00,1000")
-        print("\nTo get BTCUSD data, you can use:")
-        print("- Binance API (free historical)")
-        print("- CoinGecko API")
-        print("- Yahoo Finance (BTC-USD)")
+        print("\nExpected CSV columns: datetime, open, high, low, close, volume")
         sys.exit(1)
-    
+
     run_backtest(sys.argv[1])

@@ -60,6 +60,43 @@ def filter_by_date(
     return filtered
 
 
+def resample_to_4h(data: List[Dict]) -> List[Dict]:
+    """
+    Resample 15-minute data to 4-hour OHLCV bars.
+
+    Aligns to standard 4H boundaries: 00:00, 04:00, 08:00, 12:00, 16:00, 20:00 UTC.
+    Each 4H bar aggregates up to 16 × 15m bars.
+
+    Returns sorted list of 4H bar dicts.
+    """
+    if not data:
+        return []
+
+    buckets: Dict = {}
+    for bar in data:
+        dt = bar['datetime']
+        # Align to 4H boundary: floor hour to nearest multiple of 4
+        aligned_hour = (dt.hour // 4) * 4
+        bucket_key = dt.replace(hour=aligned_hour, minute=0, second=0, microsecond=0)
+
+        if bucket_key not in buckets:
+            buckets[bucket_key] = {
+                'datetime': bucket_key,
+                'open': bar['open'],
+                'high': bar['high'],
+                'low': bar['low'],
+                'close': bar['close'],
+                'volume': bar['volume'],
+            }
+        else:
+            buckets[bucket_key]['high'] = max(buckets[bucket_key]['high'], bar['high'])
+            buckets[bucket_key]['low'] = min(buckets[bucket_key]['low'], bar['low'])
+            buckets[bucket_key]['close'] = bar['close']
+            buckets[bucket_key]['volume'] += bar['volume']
+
+    return sorted(buckets.values(), key=lambda x: x['datetime'])
+
+
 def resample_to_daily(data: List[Dict]) -> List[Dict]:
     """
     Resample intraday data to daily OHLC.

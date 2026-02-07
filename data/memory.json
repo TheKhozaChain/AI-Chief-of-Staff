@@ -1,16 +1,28 @@
 {
-  "version": 2,
-  "last_updated": "2026-02-04T16:40:00+11:00",
+  "version": 4,
+  "last_updated": "2026-02-07T14:00:00+11:00",
   "schema_note": "Optimized for AI context retrieval, not human reading",
   
   "active_context": {
     "current_focus": "quant_strategy_development",
-    "status": "hypothesis_002_shows_marginal_edge",
+    "status": "hypothesis_003_scoped_ready_for_implementation",
     "blockers": [],
-    "next_action": "decide_whether_to_refine_or_move_on"
+    "next_action": "implement_vol_contraction_py_and_run_baseline_backtest"
   },
   
   "session_log": [
+    {
+      "date": "2026-02-07",
+      "summary": "Created weekly review prompt template (PROMPTS/weekly_review.md). Scoped HYPOTHESIS_003: 4H Volatility Contraction Breakout on BTCUSD — wider targets (4%), fewer trades, designed to survive transaction costs. Added resample_to_4h() to data_loader.py. Ran first weekly review covering Feb 3-7.",
+      "decisions": ["hypothesis_003_scoped_4h_vol_contraction", "weekly_review_template_created", "resample_4h_utility_added"],
+      "artifacts": ["PROMPTS/weekly_review.md", "strategies/HYPOTHESIS_003.md", "backtest/data_loader.py", "data/weekly_review_2026-02-07.md"]
+    },
+    {
+      "date": "2026-02-06",
+      "summary": "Refined HYPOTHESIS_002 with time-of-day filter. Tested 6 time windows. Best: 20-23 UTC (PF 1.18, 55.4% win rate, drawdown cut 67%). Still below 1.2 PF target — archived. Cleaned up backtest folder with docstrings and readability improvements.",
+      "decisions": ["hypothesis_002_refined_then_archived", "time_of_day_filter_confirmed_meaningful", "20_23_utc_best_window", "backtest_code_cleaned"],
+      "artifacts": ["HYPOTHESIS_002.md", "backtest/mean_reversion.py", "backtest/london_breakout.py", "backtest/engine.py"]
+    },
     {
       "date": "2026-02-04",
       "summary": "Tested two hypotheses. HYPOTHESIS_001 (London breakout) failed. HYPOTHESIS_002 (mean reversion) shows marginal edge (PF 1.04, +13.6%). Needs validation.",
@@ -33,28 +45,47 @@
   
   "strategies": {
     "active": [],
-    "research_queue": ["HYPOTHESIS_002_mean_reversion"],
+    "research_queue": [
+      {
+        "id": "003",
+        "name": "4H Volatility Contraction Breakout",
+        "status": "scoped",
+        "instruments": ["BTCUSD"],
+        "timeframe": "4H",
+        "edge": "breakout_from_bollinger_squeeze_on_higher_timeframe",
+        "key_design": "wider_targets_4pct_to_survive_transaction_costs"
+      }
+    ],
     "hypotheses": [
+      {
+        "id": "003",
+        "name": "4H Volatility Contraction Breakout",
+        "status": "scoped",
+        "instruments": ["BTCUSD"],
+        "timeframe": "4H",
+        "edge": "breakout_from_bollinger_squeeze_on_higher_timeframe",
+        "key_design": "wider_targets_4pct_to_survive_transaction_costs"
+      },
       {
         "id": "002",
         "name": "Intraday Mean Reversion",
-        "status": "marginal_edge",
+        "status": "archived",
         "instruments": ["BTCUSD"],
         "timeframe": "15m",
         "edge": "fade_extreme_extensions_from_MA",
-        "result": "47% win rate, PF 1.04, needs validation"
+        "result": "Best: PF 1.18 (20-23 UTC filter), 55.4% win rate. Not viable for live."
       },
       {
         "id": "001",
         "name": "London Session Momentum Breakout",
-        "status": "failed",
+        "status": "archived",
         "instruments": ["BTCUSD"],
         "timeframe": "15m",
         "edge": "asian_range_breakout_at_london_open",
         "result": "33% win rate, PF 0.48, not viable"
       }
     ],
-    "archived": ["HYPOTHESIS_001"]
+    "archived": ["HYPOTHESIS_001", "HYPOTHESIS_002"]
   },
   
   "user_patterns": {
@@ -67,21 +98,28 @@
   "system_state": {
     "morning_brief": "operational",
     "evening_review": "not_tested",
+    "weekly_review": "template_created_first_review_done",
     "email_delivery": "working",
     "github_actions": "working",
     "kanban": "operational",
     "backtest_scaffold": "ready"
   },
   
-  "pending_reviews": [
-    "HYPOTHESIS_002.md"
-  ],
+  "pending_reviews": [],
   
   "key_learnings": [
     "github_secrets_require_exact_names_no_prefix",
     "resend_testing_domain_only_sends_to_account_email",
     "cloudflare_blocks_requests_without_user_agent",
     "user_prefers_chat_commands_over_manual_file_edits",
-    "keep_backtest_simple_no_heavy_deps"
+    "keep_backtest_simple_no_heavy_deps",
+    "time_of_day_is_meaningful_filter_for_mean_reversion_on_crypto",
+    "asian_session_not_best_for_mean_reversion_contrary_to_expectation",
+    "20_23_utc_is_best_mean_reversion_window_for_btcusd_15m",
+    "reducing_trade_count_80pct_improved_every_metric_except_total_pnl",
+    "gross_pf_below_1.3_on_crypto_is_dead_after_costs",
+    "walk_forward_validation_is_non_negotiable",
+    "wider_profit_targets_required_to_survive_transaction_costs",
+    "design_strategy_around_cost_floor_not_into_it"
   ]
 }

@@ -1,5 +1,8 @@
 """
-Fetch BTCUSD historical data from Yahoo Finance.
+Fetch BTCUSD historical 15m OHLCV data from Binance public API.
+
+Downloads 6 months of candlestick data and saves as CSV compatible
+with the backtest data_loader.
 
 Usage:
     python fetch_btc_data.py

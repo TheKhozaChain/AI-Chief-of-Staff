@@ -1,6 +1,6 @@
 # AI Chief of Staff — Work Board
 
-> Last updated: 2026-02-04 16:40 AEDT by AI Chief of Staff
+> Last updated: 2026-02-07 by AI Chief of Staff
 
 ---
 
@@ -9,7 +9,8 @@
 
 | # | Item | Owner | Notes |
 |:-:|------|:-----:|-------|
-| 1 | Create weekly review prompt | AI | End-of-week reflection template |
+| 1 | Test evening review workflow end-to-end | AI | Has been "not tested" since day one |
+| 2 | Source extended BTCUSD history (12+ months) | AI | Current 6 months may not give enough 4H bars for H003 significance |
 
 ---
 
@@ -18,7 +19,7 @@
 
 | Item | Owner | Started | Status |
 |------|:-----:|---------|--------|
-| — | — | — | Nothing in progress |
+| Implement and backtest HYPOTHESIS_003 | AI | 2026-02-07 | Scoped. Ready for vol_contraction.py implementation. |
 
 ---
 
@@ -27,7 +28,7 @@
 
 | # | Item | Type | Details |
 |:-:|------|------|---------|
-| 1 | HYPOTHESIS_002 (Mean Reversion) | Strategy | Marginal edge found (PF 1.04). Worth further validation? |
+| — | — | — | Nothing pending review |
 
 ---
 
@@ -35,6 +36,12 @@
 
 | Item | Completed |
 |------|-----------|
+| Scope HYPOTHESIS_003 (4H Vol Contraction Breakout) | 2026-02-07 |
+| Create weekly review prompt template | 2026-02-07 |
+| Run first weekly review (week ending Feb 7) | 2026-02-07 |
+| Add resample_to_4h() utility | 2026-02-07 |
+| HYPOTHESIS_002 refinement + archive (Mean Reversion) | 2026-02-06 |
+| Backtest folder cleanup (docstrings, readability) | 2026-02-06 |
 | HYPOTHESIS_002 backtest (Mean Reversion) | 2026-02-04 |
 | HYPOTHESIS_001 backtest (London breakout) | 2026-02-04 |
 | Source BTCUSD 15m data (6 months) | 2026-02-04 |

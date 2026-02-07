@@ -1,32 +1,76 @@
 {
-  "version": 2,
-  "last_updated": "2026-02-04T16:40:00+11:00",
+  "version": 4,
+  "last_updated": "2026-02-07T14:00:00+11:00",
   "note": "Structured data backing KANBAN.md. AI updates this; board renders from it.",
   
   "backlog": [
     {
-      "id": "b4",
-      "title": "Create weekly review prompt",
+      "id": "b6",
+      "title": "Test evening review workflow end-to-end",
       "owner": "ai",
       "priority": 1,
-      "notes": "End-of-week reflection template",
-      "proposed": "2026-02-03"
-    }
-  ],
-  
-  "doing": [],
-  
-  "review": [
+      "notes": "Evening workflow has been 'not tested' since day one. Validate it works.",
+      "proposed": "2026-02-07"
+    },
     {
-      "id": "r3",
-      "title": "HYPOTHESIS_002 (Mean Reversion)",
-      "type": "strategy",
-      "notes": "Marginal edge found (PF 1.04, +13.6%). Worth further validation?",
-      "created": "2026-02-04"
+      "id": "b7",
+      "title": "Source extended BTCUSD history (12+ months)",
+      "owner": "ai",
+      "priority": 2,
+      "notes": "Current 6 months may not give enough 4H bars for statistical significance on H003. Consider fetching 2024 data.",
+      "proposed": "2026-02-07"
     }
   ],
+  
+  "doing": [
+    {
+      "id": "d1",
+      "title": "Implement and backtest HYPOTHESIS_003",
+      "owner": "ai",
+      "started": "2026-02-07",
+      "status": "Scoped. Ready for vol_contraction.py implementation.",
+      "notes": "4H Volatility Contraction Breakout on BTCUSD. resample_to_4h() utility added."
+    }
+  ],
+  
+  "review": [],
   
   "done": [
+    {
+      "id": "x13",
+      "title": "Scope HYPOTHESIS_003 (4H Vol Contraction Breakout)",
+      "completed": "2026-02-07",
+      "result": "Full hypothesis doc written. 4H timeframe, wider targets (4%), fewer trades. Addresses cost problem from H002."
+    },
+    {
+      "id": "x14",
+      "title": "Create weekly review prompt template",
+      "completed": "2026-02-07",
+      "result": "PROMPTS/weekly_review.md created. End-of-week reflection template."
+    },
+    {
+      "id": "x15",
+      "title": "Run first weekly review (week ending Feb 7)",
+      "completed": "2026-02-07",
+      "result": "data/weekly_review_2026-02-07.md — full week summary, learnings, and next-week focus."
+    },
+    {
+      "id": "x12",
+      "title": "Add resample_to_4h() utility",
+      "completed": "2026-02-07",
+      "result": "Added to data_loader.py. Aggregates 15m bars to 4H aligned to standard boundaries."
+    },
+    {
+      "id": "x11",
+      "title": "HYPOTHESIS_002 refinement + archive (Mean Reversion)",
+      "completed": "2026-02-06",
+      "result": "Time-of-day filter tested. Best: 20-23 UTC (PF 1.18, 55.4% WR). Archived — edge too thin for live."
+    },
+    {
+      "id": "x10",
+      "title": "Backtest folder cleanup (docstrings, readability)",
+      "completed": "2026-02-06"
+    },
     {
       "id": "x9",
       "title": "HYPOTHESIS_002 backtest (Mean Reversion)",
