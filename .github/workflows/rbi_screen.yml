@@ -1,0 +1,106 @@
+# RBI Pipeline - Automated Strategy Screening
+# Runs weekly on Sunday at 12:00 AEDT (01:00 UTC)
+# Also runs on manual trigger (workflow_dispatch)
+#
+# What it does:
+# 1. Refreshes BTCUSD data from Binance
+# 2. Screens all 'new' ideas in RESEARCH_BACKLOG.md
+# 3. Optionally sources new ideas via LLM
+# 4. Commits updated backlog and results
+
+name: RBI Pipeline
+
+on:
+  # Weekly: Sunday 12:00 AEDT = Saturday 01:00 UTC
+  schedule:
+    - cron: '0 1 * * 0'
+
+  # Manual trigger with options
+  workflow_dispatch:
+    inputs:
+      refresh_data:
+        description: 'Refresh BTCUSD data from Binance'
+        required: false
+        default: 'true'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+      source_ideas:
+        description: 'Generate new ideas via LLM'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+      specific_ids:
+        description: 'Specific idea IDs to screen (comma-separated, empty = all new)'
+        required: false
+        default: ''
+        type: string
+
+jobs:
+  rbi-pipeline:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    timeout-minutes: 30
+
+    env:
+      TZ: Australia/Sydney
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install anthropic openai
+
+      - name: Restore cached data
+        id: cache-data
+        uses: actions/cache@v4
+        with:
+          path: data/BTCUSD_*.csv
+          key: btcusd-data-${{ github.run_number }}
+          restore-keys: btcusd-data-
+
+      - name: Run RBI Pipeline
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          LLM_PROVIDER: ${{ secrets.LLM_PROVIDER || 'anthropic' }}
+        run: |
+          ARGS=""
+
+          # Refresh data (default true for scheduled, configurable for dispatch)
+          if [ "${{ github.event_name }}" = "schedule" ] || [ "${{ inputs.refresh_data }}" = "true" ]; then
+            ARGS="$ARGS --refresh-data"
+          fi
+
+          # Source ideas (default false for scheduled, configurable for dispatch)
+          if [ "${{ inputs.source_ideas }}" = "true" ]; then
+            ARGS="$ARGS --source-ideas"
+          fi
+
+          # Specific IDs
+          if [ -n "${{ inputs.specific_ids }}" ]; then
+            ARGS="$ARGS --ids ${{ inputs.specific_ids }}"
+          fi
+
+          echo "Running: python scripts/run_rbi.py $ARGS"
+          python scripts/run_rbi.py $ARGS
+
+      - name: Commit results
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "AI Chief of Staff"
+          git add strategies/RESEARCH_BACKLOG.md
+          git add data/rbi_*.json data/rbi_*.md
+          git diff --staged --quiet || git commit -m "RBI screening session — $(date +%Y-%m-%d)"
+          git push

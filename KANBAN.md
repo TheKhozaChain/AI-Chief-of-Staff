@@ -9,7 +9,7 @@
 
 | Item | Owner | Started | Status |
 |------|:-----:|---------|--------|
-| Screen R009/R011 from research backlog | AI | 2026-02-08 | Next session — Donchian breakout + daily timeframe |
+| Walk-forward validate R007/R009/R011 (promoted strategies) | AI | 2026-02-08 | Next session — full validation on 3 promoted |
 
 ---
 
@@ -18,9 +18,10 @@
 
 | # | Item | RBI Phase | Notes |
 |:-:|------|:---------:|-------|
-| 1 | Source external research ideas (papers, repos) | R | Pipeline needs non-internal ideas |
-| 2 | Fetch ETH/SOL data for multi-asset screens | R | Enables R010 |
-| 3 | Test evening review workflow end-to-end | — | Has been "not tested" since day one |
+| 1 | Create HYPOTHESIS_004/005/006 docs for promoted R007/R009/R011 | B | Standard hypothesis docs with walk-forward results |
+| 2 | Source external research ideas (papers, repos) via LLM | R | Run `run_rbi.py --source-ideas` |
+| 3 | Fetch ETH/SOL data for multi-asset screens | R | Enables R010 |
+| 4 | Test evening review workflow end-to-end | — | Has been "not tested" since day one |
 
 ---
 
@@ -28,6 +29,9 @@
 
 | Item | Completed |
 |------|-----------|
+| Build automated RBI pipeline (archetypes + screen runner + orchestrator) | 2026-02-08 |
+| Wire RBI pipeline into GitHub Actions (weekly schedule) | 2026-02-08 |
+| Automated screen: R003 killed (PF 1.02), R007 promoted (PF 1.46), R009 promoted (PF 1.31), R011 promoted (PF 1.90) | 2026-02-08 |
 | Screen R006 — Trend Following Long (best: PF 1.26, below threshold) | 2026-02-08 |
 | Screen R008 — Long Dip Buy (PF 0.81, killed) | 2026-02-08 |
 | Screen R005 — Weekend Gap Fade (PF 0.73, killed) | 2026-02-08 |
