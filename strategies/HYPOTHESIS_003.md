@@ -1,8 +1,9 @@
 # Strategy Hypothesis 003: 4H Volatility Contraction Breakout
 
-**Status:** Scoped — Ready for implementation  
-**Created:** 2026-02-07  
-**Owner:** AI Chief of Staff  
+**Status:** ARCHIVED — Gross PF 0.98, no edge
+**Created:** 2026-02-07
+**Archived:** 2026-02-08
+**Owner:** AI Chief of Staff
 
 ---
 
@@ -131,8 +132,37 @@ This is well within the backtest engine's tracking capability.
 
 ---
 
-## Postmortem Template (to complete after testing)
+## Backtest Results (Quick Screen — 2026-02-08)
 
-1. **Expected:** [Fill after backtest]
-2. **What happened:** [Fill after backtest]
-3. **Learned:** [Fill after backtest]
+| Metric | Gross (0% costs) | Net (0.1% costs) |
+|--------|-------------------|-------------------|
+| Total Trades | 149 | 149 |
+| Win Rate | 26.8% | 26.8% |
+| Profit Factor | 0.98 | 0.89 |
+| Net P&L | -$2,314 (-3.5%) | -$12,343 (-18.4%) |
+| Avg Win | $2,693 | $2,626 |
+| Avg Loss | -$1,009 | -$1,077 |
+| Expectancy | -$15.53/trade | -$82.84/trade |
+| Max Drawdown | $18,468 | $23,480 |
+| Max DD Duration | 408 days | 408 days |
+| Sharpe | -0.07 | -0.36 |
+| Buy & Hold | +$47,040 (+203%) | +$47,040 (+203%) |
+| Live Readiness | 1/7 | 1/7 |
+
+Data: 6,571 4H bars (3 years, Feb 2023 — Feb 2026).
+
+**Decision: KILL.** Gross PF < 1.0. No edge exists.
+
+---
+
+## Postmortem
+
+1. **Expected:** Squeeze → expansion with directional predictability. ~40% WR at 2.67:1 R:R would yield PF ~1.4. Wider targets (4%) would make costs negligible.
+
+2. **What happened:** Squeeze detection worked (149 trades, reasonable frequency). R:R worked (avg win $2,693 vs avg loss $1,009 = 2.67:1). But win rate was 26.8% — the breakout direction after a squeeze is essentially random. Gross PF 0.98 means no edge before costs.
+
+3. **Learned:**
+   - **Volatility contraction predicts expansion magnitude, not direction.** This is a known property of squeeze-based strategies. The squeeze tells you a big move is coming, but NOT which way.
+   - **The R:R ratio was correctly designed** — avg win/loss confirmed the 2.67:1 target. The problem was entirely in direction prediction.
+   - **Fix the direction problem.** If we could predict direction even slightly (35%+ WR), the existing R:R structure would be profitable. This suggests combining squeeze detection with a directional filter (trend, momentum, order flow).
+   - **Quick screen worked as intended.** 30 minutes, clear result, no wasted effort on full validation.

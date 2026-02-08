@@ -392,7 +392,7 @@ class Backtest:
             - 'take_profit': price level
         """
         for i, bar in enumerate(self.data):
-            prev_bars = self.data[max(0, i - 100):i]
+            prev_bars = self.data[max(0, i - 300):i]
 
             # Check if position hit SL/TP
             if self.position:

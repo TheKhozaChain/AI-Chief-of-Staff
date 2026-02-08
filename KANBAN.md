@@ -9,7 +9,7 @@
 
 | Item | Owner | Started | Status |
 |------|:-----:|---------|--------|
-| Implement and backtest HYPOTHESIS_003 | AI | 2026-02-07 | Data ready (3y 15m + 1h). Next: vol_contraction.py |
+| Screen R009/R011 from research backlog | AI | 2026-02-08 | Next session — Donchian breakout + daily timeframe |
 
 ---
 
@@ -18,8 +18,8 @@
 
 | # | Item | RBI Phase | Notes |
 |:-:|------|:---------:|-------|
-| 1 | Quick-screen R002-R005 from research backlog | B (screen) | 30 min each, kill or promote |
-| 2 | Source 3 new external research ideas | R | Papers, communities, market observations |
+| 1 | Source external research ideas (papers, repos) | R | Pipeline needs non-internal ideas |
+| 2 | Fetch ETH/SOL data for multi-asset screens | R | Enables R010 |
 | 3 | Test evening review workflow end-to-end | — | Has been "not tested" since day one |
 
 ---
@@ -28,6 +28,13 @@
 
 | Item | Completed |
 |------|-----------|
+| Screen R006 — Trend Following Long (best: PF 1.26, below threshold) | 2026-02-08 |
+| Screen R008 — Long Dip Buy (PF 0.81, killed) | 2026-02-08 |
+| Screen R005 — Weekend Gap Fade (PF 0.73, killed) | 2026-02-08 |
+| Screen R004 — MTF Momentum (PF 1.06, killed) | 2026-02-08 |
+| Implement + screen H003 — Vol Contraction (PF 0.98, killed) | 2026-02-08 |
+| Expand engine prev_bars limit from 100 to 300 | 2026-02-08 |
+| Add 3 new research ideas (R009-R011) from screening insights | 2026-02-08 |
 | Integrate RBI philosophy into all system documents | 2026-02-08 |
 | Create RESEARCH_BACKLOG.md (R phase pipeline) | 2026-02-08 |
 | Fetch 3 years BTCUSD data (15m: 105K bars, 1h: 26K bars) | 2026-02-07 |
