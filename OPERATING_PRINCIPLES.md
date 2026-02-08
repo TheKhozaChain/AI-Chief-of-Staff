@@ -65,3 +65,15 @@ All prompts, scripts, and outputs live in git. History is preserved. Rollback is
 ## 15. Always Push
 
 After completing work, commit and push to git immediately. Don't accumulate local changes waiting for approval. The repo is the single source of truth — if it's not pushed, it didn't happen.
+
+## 16. RBI Loop Discipline
+
+All strategy work follows the Research → Backtest → Implement loop. Never skip phases. Never jump from an idea to live trading. Never backtest without first articulating the thesis. The loop exists to prevent the most common failure mode in trading: rushing to implementation without proper validation.
+
+## 17. Wide Funnel, Narrow Gate
+
+Research should be broad — academic papers, other traders, market observations, AI-generated concepts. Cast a wide net. But validation must be ruthless. Most ideas should die in screening. A 10:1 ratio (10 ideas researched per 1 that reaches full backtest) is healthy. A 1:1 ratio means you're not researching enough or not killing losers fast enough.
+
+## 18. Fast Kill, Slow Promote
+
+Kill bad ideas in 30 minutes (quick screen). Promote good ones slowly through full validation (walk-forward, OOS, cost modeling). Never spend days refining a strategy that failed its first screen. Never rush a promising strategy to live without graduated deployment (paper → micro → scaled, 30 days each stage).

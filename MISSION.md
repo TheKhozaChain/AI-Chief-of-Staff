@@ -6,16 +6,36 @@ Provide Sipho with structured daily direction that reduces cognitive load, incre
 
 This system is a **thinking partner**, not an executor.
 
+## Quant Philosophy: The RBI Loop
+
+All strategy development follows the **RBI loop** — Research, Backtest, Implement. This is the engine that drives our quant work.
+
+```
+  ┌──────────┐     ┌──────────┐     ┌──────────┐
+  │ RESEARCH │ ──→ │ BACKTEST │ ──→ │IMPLEMENT │
+  └──────────┘     └──────────┘     └──────────┘
+       ↑                                  │
+       └──────────── archive/learn ───────┘
+```
+
+- **Research (R):** Cast a wide net. Source ideas from academic papers, other traders, books, market observations, AI-generated concepts. Feed the pipeline with volume. Most ideas will die — that's the point.
+- **Backtest (B):** Validate ruthlessly. Quick-screen first (30 min), full validation only for survivors. Walk-forward, out-of-sample, transaction costs from day one. No shortcuts.
+- **Implement (I):** Graduate carefully. Paper trade first. Then micro-size live for 30 days. Then scale. Never skip steps.
+
+The loop runs continuously. There should always be ideas in Research, strategies in Backtest, and (eventually) systems in Implementation. An empty pipeline at any stage is a problem.
+
 ## What It Does
 
 1. **Morning Brief + Execution (08:00 AEDT)**
    - Set the day's context and identify 3 priorities
    - **Execute those priorities immediately** — no waiting for approval
+   - Identify which phase of the RBI loop is active today
    - Commit and push results to git
    - Email the brief (Sipho reads and redirects if needed)
 
 2. **Evening Review (20:00 AEDT)**
    - Prompt reflection on what moved the needle
+   - Track RBI pipeline health (ideas in → strategies out)
    - Identify what to stop doing
    - Seed tomorrow's thinking
    - Optionally queue a problem for overnight processing
@@ -23,6 +43,7 @@ This system is a **thinking partner**, not an executor.
 3. **On-Demand Work**
    - Sipho directs, AI executes and pushes
    - Strategy research, backtesting, system maintenance
+   - RBI loop progression — always moving ideas through the pipeline
    - Always push to git after completing work
 
 ## What It Must NOT Do
@@ -62,10 +83,21 @@ This system is working if:
 
 ## Evolution
 
-This system should remain simple. Future extensions:
-- Quant strategy journaling
-- Backtest result summaries
+This system should remain simple. Future extensions follow the RBI loop maturity path:
+
+**Near-term (R+B maturity):**
+- Research backlog automation (scan sources, extract testable ideas)
+- Batch screening mode (rapid hypothesis testing)
+- Strategy postmortem database (structured learnings)
+
+**Mid-term (I readiness):**
+- Paper trading integration
 - Prop-firm compliance checklists
-- Project milestone tracking
+- Risk agent (continuous portfolio guard before any trade)
+
+**Long-term (full loop):**
+- Graduated live deployment (micro → small → scaled)
+- Performance tracking and live vs. backtest comparison
+- Automated research pipeline (AI agents sourcing and screening ideas)
 
 All extensions follow the same pattern: scheduled prompt → LLM → markdown output. No new architecture required.

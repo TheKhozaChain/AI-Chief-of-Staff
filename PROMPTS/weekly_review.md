@@ -11,7 +11,8 @@ Review all available context:
 - Session logs from the week (memory.json)
 - Completed items (todo.json done list)
 - Current KANBAN state
-- Strategy research progress
+- Strategy research progress (RESEARCH_BACKLOG.md)
+- RBI loop health and pipeline flow
 - System health
 
 ## Output Format
@@ -47,6 +48,25 @@ List items that were planned or expected but didn't get done. For each:
 - Whether it still matters
 
 This section prevents silent scope drift. Not everything needs to get done, but unfinished work should be acknowledged.
+
+### RBI Pipeline Report
+
+Summarize the week's pipeline flow:
+
+| Metric | This Week | All-Time |
+|--------|-----------|----------|
+| Ideas sourced (R) | ? | ? |
+| Quick screens run (B1) | ? | ? |
+| Screens killed | ? | ? |
+| Promoted to hypothesis (B2) | ? | ? |
+| Hypotheses archived | ? | ? |
+| Strategies live-ready (I) | ? | ? |
+
+Assess pipeline health:
+- **Is the funnel wide enough?** (Are we sourcing enough ideas, or running dry?)
+- **Is screening fast enough?** (Are ideas piling up unscreened?)
+- **Are we learning from kills?** (Do postmortems feed back into better research?)
+- **Any RBI anti-patterns this week?** (Skipping phases, endless refinement, stale backlog)
 
 ### Numbers That Matter
 
@@ -115,6 +135,21 @@ Testing week focused on validating HYPOTHESIS_002. Ran three backtest iterations
 | Profit Factor | 1.04 | 1.18 | 0.69 |
 | Net P&L | +13.6% | +8.6% | -20.3% |
 
+### RBI Pipeline Report
+
+| Metric | This Week | All-Time |
+|--------|-----------|----------|
+| Ideas sourced (R) | 1 (H003 scoped from H001/H002 learnings) | 3 |
+| Quick screens run (B1) | 0 | 2 (H001, H002) |
+| Screens killed | 0 | 2 |
+| Promoted to hypothesis (B2) | 1 (H003) | 1 |
+| Hypotheses archived | 2 (H001, H002) | 2 |
+| Strategies live-ready (I) | 0 | 0 |
+
+**Pipeline health:** Research funnel too narrow — all ideas sourced internally. Need to scan external sources next week. Screening pace was good (fast kill on H001/H002). Learning loop is working (cost floor rule extracted from failures).
+
+**Anti-pattern detected:** Research and screening are the same person generating and testing ideas. Need to separate idea sourcing from idea validation to avoid confirmation bias.
+
 ### Learnings
 
 1. Gross PF < 1.3 on crypto = dead after costs. This is now a hard filter for all future hypotheses.
@@ -124,14 +159,17 @@ Testing week focused on validating HYPOTHESIS_002. Ran three backtest iterations
 
 ### Next Week's Focus
 
-1. **Primary**: Scope and begin testing HYPOTHESIS_003 — different timeframe or instrument to address the transaction cost problem.
-2. **Supporting**: Aggregate 15m data to higher timeframes (1H, 4H) if the new hypothesis uses longer bars.
-3. **Debt**: Create the weekly review template so this becomes a repeatable ritual.
+1. **Primary (B)**: Quick-screen HYPOTHESIS_003 on 4H BTCUSD data. 30-minute time-box — kill or promote to full validation.
+2. **Supporting (R)**: Source 3 new ideas from external sources (papers, communities). Add to RESEARCH_BACKLOG.md.
+3. **Debt**: Test evening review workflow end-to-end.
+
+Frame next week's plan in RBI terms: which phases will be active and why.
 
 ### Open Questions
 
 1. Should HYPOTHESIS_003 change instruments (lower-cost markets like forex) or change timeframes (longer holds to absorb costs)?
 2. Is the backtest engine flexible enough for multi-timeframe strategies, or does it need changes?
+3. Can we automate the Research phase — use AI to scan papers and extract testable ideas?
 ```
 
 ---

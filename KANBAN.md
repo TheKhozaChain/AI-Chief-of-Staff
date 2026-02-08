@@ -1,6 +1,6 @@
 # AI Chief of Staff — Work Board
 
-> Last updated: 2026-02-07 by AI Chief of Staff
+> Last updated: 2026-02-08 by AI Chief of Staff
 
 ---
 
@@ -16,9 +16,11 @@
 ## Up Next
 *Queued for execution. AI picks these up after current work is done.*
 
-| # | Item | Notes |
-|:-:|------|-------|
-| 1 | Test evening review workflow end-to-end | Has been "not tested" since day one |
+| # | Item | RBI Phase | Notes |
+|:-:|------|:---------:|-------|
+| 1 | Quick-screen R002-R005 from research backlog | B (screen) | 30 min each, kill or promote |
+| 2 | Source 3 new external research ideas | R | Papers, communities, market observations |
+| 3 | Test evening review workflow end-to-end | — | Has been "not tested" since day one |
 
 ---
 
@@ -26,6 +28,8 @@
 
 | Item | Completed |
 |------|-----------|
+| Integrate RBI philosophy into all system documents | 2026-02-08 |
+| Create RESEARCH_BACKLOG.md (R phase pipeline) | 2026-02-08 |
 | Fetch 3 years BTCUSD data (15m: 105K bars, 1h: 26K bars) | 2026-02-07 |
 | Generic resample utility (any timeframe from 1h to daily) | 2026-02-07 |
 | Autonomous execution model (no more approval gates) | 2026-02-07 |

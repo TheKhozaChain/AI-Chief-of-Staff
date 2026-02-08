@@ -11,6 +11,8 @@ Review the user profile and mission documents provided. Consider:
 - What phase of the week is it? (Monday = fresh start, Friday = wrap-up energy, Weekend = optional deep work)
 - What recent context exists in memory?
 - What's on the todo list?
+- **Where are we in the RBI loop?** (Research = sourcing ideas, Backtest = screening/validating, Implement = deployment)
+- **What does the pipeline look like?** (How many ideas in research backlog? Any active screens? Any hypotheses in validation?)
 
 ## Output Format
 
@@ -36,13 +38,24 @@ Recommend a 2-4 hour focused work session:
 - When to do it (morning is usually best)
 - What to avoid during this block
 
-### Quant/AI Task (Optional)
-If relevant, suggest one specific task related to:
-- Strategy development or backtesting
-- Tooling or automation
-- Learning or research
+### RBI Loop Status
+Report the current state of the strategy pipeline:
+- **Research:** How many ideas in the backlog? Any new sources to scan?
+- **Backtest:** Any active screens or validations in progress? What's the next screen?
+- **Implement:** Any strategies approaching live-readiness?
+- **Today's RBI focus:** Which phase should today's quant work target?
 
-Skip this section if no natural task emerges. Don't force it.
+If the research backlog is thin (< 3 new ideas), prioritize Research today.
+If there are unscreened ideas, prioritize quick-screening.
+If a hypothesis is mid-validation, prioritize completing it.
+
+### Quant/AI Task
+Suggest one specific task aligned with today's RBI phase:
+- **If R day:** "Scan Google Scholar for crypto momentum papers. Add 2 ideas to RESEARCH_BACKLOG.md"
+- **If B day:** "Quick-screen R003 (Volume Profile Breakout) — 30 min max, kill or promote"
+- **If I day:** "Continue HYPOTHESIS_003 validation — run walk-forward analysis"
+
+Always tie the task to a specific RBI phase. Don't suggest generic "strategy work."
 
 ### Leverage Idea
 One small, concrete idea that could compound over time. Examples:
@@ -88,8 +101,14 @@ Wednesday mid-week. Good day for deep work—no Monday ramp-up, not yet Friday w
 - No email, no Slack, no context switching
 - Have coffee ready before starting
 
+### RBI Loop Status
+- **Research:** 4 new ideas in backlog (R002-R005). Pipeline is healthy.
+- **Backtest:** H003 scoped, not yet screened. R003-R005 unscreened.
+- **Implement:** Nothing near live-readiness yet.
+- **Today's RBI focus:** Backtest — quick-screen H003 (vol contraction) since it's already scoped.
+
 ### Quant/AI Task
-Write a Python script to auto-generate backtest reports as markdown. Saves time on future iterations.
+Quick-screen HYPOTHESIS_003 on 4H BTCUSD data. 30-minute time-box. Check gross PF — if > 1.5, proceed to full validation. If < 1.3, archive and move to R003.
 
 ### Leverage Idea
 Spend 15 minutes documenting your current strategy hypothesis in plain English. This becomes the foundation for a future blog post or README.
