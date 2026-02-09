@@ -304,19 +304,7 @@ def action_fetch_multi_asset(assets: str = "ETHUSDT,SOLUSDT", **kwargs) -> Tuple
         output_path = DATA_DIR / f"{clean_name}_1h.csv"
 
         print(f"  Fetching 1h data for {symbol}...")
-        # Use the fetch_btc_data module directly
         try:
-            fetch_script = REPO_ROOT / "strategies" / "backtest" / "fetch_btc_data.py"
-            result = subprocess.run(
-                [sys.executable, str(fetch_script), "--interval", "1h", "--days", "1095"],
-                capture_output=True, text=True, timeout=300,
-                env={
-                    **os.environ,
-                    "PYTHONPATH": str(REPO_ROOT / "strategies" / "backtest"),
-                },
-            )
-            # The script saves to BTCUSD_{interval}.csv by default,
-            # but we need it for different symbols. Use custom fetch.
             _fetch_symbol(symbol, "1h", 1095, output_path)
             fetched.append(clean_name)
         except Exception as e:
