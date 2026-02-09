@@ -17,10 +17,8 @@
 
 | # | Item | RBI Phase | Notes |
 |:-:|------|:---------:|-------|
-| 1 | Create HYPOTHESIS_004/005/006 docs for promoted R007/R009/R011 | B | Standard hypothesis docs with walk-forward results |
-| 2 | Source external research ideas (papers, repos) via LLM | R | Run `run_rbi.py --source-ideas` |
-| 3 | Fetch ETH/SOL data for multi-asset screens | R | Enables R010 |
-| 4 | Test evening review workflow end-to-end | — | Has been "not tested" since day one |
+| 1 | Fetch ETH/SOL data for multi-asset screens | R | Enables R010 |
+| 2 | Test evening review workflow end-to-end | — | Has been "not tested" since day one |
 
 ---
 
@@ -28,6 +26,8 @@
 
 | Item | Completed |
 |------|-----------|
+| Create HYPOTHESIS_004/005/006 docs for promoted R007/R009/R011 | 2026-02-09 |
+| Source external research ideas (papers, repos) via LLM | 2026-02-09 |
 | Walk-forward validate R007/R009/R011 (promoted strategies) | 2026-02-09 |
 | Build automated RBI pipeline (archetypes + screen runner + orchestrator) | 2026-02-08 |
 | Wire RBI pipeline into GitHub Actions (weekly schedule) | 2026-02-08 |
