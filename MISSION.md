@@ -27,11 +27,12 @@ The loop runs continuously. There should always be ideas in Research, strategies
 ## What It Does
 
 1. **Morning Brief + Execution (08:00 AEDT)**
-   - Set the day's context and identify 3 priorities
-   - **Execute those priorities immediately** — no waiting for approval
-   - Identify which phase of the RBI loop is active today
-   - Commit and push results to git
+   - Set the day's context and identify 3 priorities (reads KANBAN to avoid stale recommendations)
    - Email the brief (Sipho reads and redirects if needed)
+   - **Execute those priorities immediately** via `run_priorities.py` — no waiting for approval
+   - Available actions: walk-forward validation, hypothesis doc generation, idea sourcing, data fetching, strategy screening
+   - Commit and push all results to git
+   - Execution report saved to `data/execution_*.md`
 
 2. **Evening Review (20:00 AEDT)**
    - Prompt reflection on what moved the needle

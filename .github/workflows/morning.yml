@@ -1,10 +1,12 @@
-# Morning Brief - AI Chief of Staff
+# Morning Brief + Priority Execution - AI Chief of Staff
 # Runs daily at 08:00 AEDT (21:00 UTC previous day)
+#
+# Flow: Generate brief → Email → Execute top 3 priorities → Commit all results
 #
 # To pause: comment out the 'schedule' block below
 # To resume: uncomment the 'schedule' block
 
-name: Morning Brief
+name: Morning Brief + Execute
 
 on:
   # Schedule: 08:00 AEDT = 21:00 UTC (previous day)
@@ -14,9 +16,22 @@ on:
 
   # Allow manual triggering for testing
   workflow_dispatch:
+    inputs:
+      skip_execution:
+        description: 'Skip priority execution (brief only)'
+        required: false
+        default: 'false'
+      max_priorities:
+        description: 'Max priorities to execute (default: 3)'
+        required: false
+        default: '3'
+      dry_run:
+        description: 'Dry run (show plan, don''t execute)'
+        required: false
+        default: 'false'
 
 jobs:
-  generate-brief:
+  morning-brief-and-execute:
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -49,10 +64,38 @@ jobs:
         run: |
           python scripts/run_morning.py
 
-      - name: Commit output
+      - name: Commit morning brief
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "AI Chief of Staff"
           git add data/
           git diff --staged --quiet || git commit -m "Morning brief - $(date +%Y-%m-%d)"
+
+      - name: Execute priorities
+        if: ${{ github.event.inputs.skip_execution != 'true' }}
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          LLM_PROVIDER: ${{ secrets.LLM_PROVIDER || 'anthropic' }}
+          PYTHONPATH: strategies/backtest
+        run: |
+          MAX="${{ github.event.inputs.max_priorities || '3' }}"
+          DRY="${{ github.event.inputs.dry_run || 'false' }}"
+          CMD="python scripts/run_priorities.py --max $MAX"
+          if [ "$DRY" = "true" ]; then
+            CMD="$CMD --dry-run"
+          fi
+          echo "Running: $CMD"
+          $CMD
+
+      - name: Commit execution results
+        if: ${{ github.event.inputs.skip_execution != 'true' }}
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "AI Chief of Staff"
+          git add -A
+          git diff --staged --quiet || git commit -m "Execute priorities - $(date +%Y-%m-%d)"
+
+      - name: Push all changes
+        run: |
           git push

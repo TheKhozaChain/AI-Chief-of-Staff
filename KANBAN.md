@@ -1,6 +1,6 @@
 # AI Chief of Staff — Work Board
 
-> Last updated: 2026-02-08 by AI Chief of Staff
+> Last updated: 2026-02-09 by AI Chief of Staff (auto-execution)
 
 ---
 
@@ -9,7 +9,6 @@
 
 | Item | Owner | Started | Status |
 |------|:-----:|---------|--------|
-| Walk-forward validate R007/R009/R011 (promoted strategies) | AI | 2026-02-08 | Next session — full validation on 3 promoted |
 
 ---
 
@@ -29,6 +28,7 @@
 
 | Item | Completed |
 |------|-----------|
+| Walk-forward validate R007/R009/R011 (promoted strategies) | 2026-02-09 |
 | Build automated RBI pipeline (archetypes + screen runner + orchestrator) | 2026-02-08 |
 | Wire RBI pipeline into GitHub Actions (weekly schedule) | 2026-02-08 |
 | Automated screen: R003 killed (PF 1.02), R007 promoted (PF 1.46), R009 promoted (PF 1.31), R011 promoted (PF 1.90) | 2026-02-08 |

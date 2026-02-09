@@ -9,7 +9,7 @@ Designed to run via GitHub Actions at 08:00 AEDT.
 import os
 import sys
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 
 # Add scripts directory to path for imports
@@ -82,6 +82,35 @@ def build_user_prompt(root: Path) -> str:
 
     # Add context if available
     context_parts = []
+
+    # CRITICAL: Load KANBAN for current state of work
+    # This prevents stale briefs that recommend already-completed items
+    kanban_text = load_file(root / "KANBAN.md")
+    if kanban_text:
+        context_parts.append(f"## Current Work Board (KANBAN.md)\n"
+                             f"IMPORTANT: Use this to determine what's already done "
+                             f"and what's actually queued. Do NOT recommend items that "
+                             f"appear in the Done section.\n\n{kanban_text}")
+
+    # Load research backlog for RBI status
+    backlog_text = load_file(root / "strategies" / "RESEARCH_BACKLOG.md")
+    if backlog_text:
+        context_parts.append(f"## Research Backlog\n{backlog_text[:3000]}")
+
+    # Load yesterday's evening review if it exists
+    yesterday = (now - timedelta(days=1)).strftime("%Y-%m-%d")
+    evening_files = sorted(root.glob(f"data/evening_{yesterday}*"))
+    if evening_files:
+        evening_text = load_file(evening_files[-1])
+        if evening_text:
+            context_parts.append(f"## Yesterday's Evening Review\n{evening_text[:2000]}")
+
+    # Load most recent execution report
+    exec_files = sorted(root.glob("data/execution_*"))
+    if exec_files:
+        exec_text = load_file(exec_files[-1])
+        if exec_text:
+            context_parts.append(f"## Most Recent Execution Report\n{exec_text[:1500]}")
 
     if memory:
         context_parts.append(f"## Recent Memory\n```json\n{json.dumps(memory, indent=2)}\n```")
