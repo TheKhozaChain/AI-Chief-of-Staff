@@ -29,7 +29,7 @@ def send_email(subject: str, body: str, html: bool = False) -> bool:
     """
     api_key = os.environ.get("RESEND_API_KEY")
     email_to = os.environ.get("EMAIL_TO")
-    email_from = os.environ.get("EMAIL_FROM", "onboarding@resend.dev")
+    email_from = os.environ.get("EMAIL_FROM") or "onboarding@resend.dev"
 
     if not api_key:
         print("Email skipped: RESEND_API_KEY not set")

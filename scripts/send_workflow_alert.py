@@ -9,6 +9,7 @@ from urllib import request, error
 def main():
     api_key = os.environ.get("RESEND_API_KEY", "")
     email_to = os.environ.get("EMAIL_TO", "")
+    email_from = os.environ.get("EMAIL_FROM") or "onboarding@resend.dev"
     repo = os.environ.get("GITHUB_REPOSITORY", "unknown/repo")
     run_id = os.environ.get("GITHUB_RUN_ID", "0")
     workflow = os.environ.get("GITHUB_WORKFLOW", "unknown")
@@ -20,7 +21,7 @@ def main():
     run_url = f"https://github.com/{repo}/actions/runs/{run_id}"
 
     payload = {
-        "from": "onboarding@resend.dev",
+        "from": email_from,
         "to": [email_to],
         "subject": f"[ALERT] {workflow} FAILED",
         "html": (
