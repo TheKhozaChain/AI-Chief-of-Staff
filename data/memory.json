@@ -1,133 +1,143 @@
 {
-  "version": 4,
-  "last_updated": "2026-02-07T14:00:00+11:00",
+  "version": 5,
+  "last_updated": "2026-02-10T21:00:00+11:00",
   "schema_note": "Optimized for AI context retrieval, not human reading",
-  
+
   "active_context": {
-    "current_focus": "quant_strategy_development",
-    "status": "hypothesis_003_data_ready_implement_next",
+    "current_focus": "walk_forward_validation_of_promoted_strategies",
+    "status": "3_strategies_promoted_awaiting_validation_4_new_ideas_queued",
     "blockers": [],
-    "next_action": "implement_vol_contraction_py_and_run_baseline_backtest",
-    "execution_model": "autonomous_execute_then_inform"
+    "next_action": "walk_forward_validate_H004_H005_H006_then_screen_R010_R012_R013_R014",
+    "execution_model": "autonomous_execute_then_inform",
+    "rbi_phase": "backtest_validation"
   },
-  
+
   "session_log": [
     {
+      "date": "2026-02-10",
+      "summary": "Added MultiAssetMomentum archetype for R010. Fixed pipeline reliability (timeouts, fail-fast, failure email alerts). Fixed workflow YAML alert extraction. Fetched ETH/SOL 1h data (26K candles each).",
+      "decisions": ["multi_asset_archetype_added", "pipeline_reliability_hardened", "eth_sol_data_fetched"],
+      "artifacts": ["strategies/backtest/archetypes.py", ".github/workflows/morning.yml", "scripts/send_workflow_alert.py"]
+    },
+    {
+      "date": "2026-02-09",
+      "summary": "Evening review generated. Weekly pipeline continuing. R012-R014 ideas sourced by automated pipeline (AMB, ABF, MTBC concepts).",
+      "decisions": ["new_ideas_auto_sourced_r012_r014"],
+      "artifacts": ["data/evening_2026-02-09_2102.md", "strategies/RESEARCH_BACKLOG.md"]
+    },
+    {
+      "date": "2026-02-08",
+      "summary": "Major build day: Integrated RBI loop into all systems. Built automated pipeline (archetypes registry, screen_runner, pipeline orchestrator). Screened R003-R009 via parameter sweeps. Promoted R007 (PF 1.46), R009 (PF 1.31), R011 (PF 1.90). Killed R003-R006, R008. Created H004/H005/H006 from promoted strategies. Updated MISSION.md, OPERATING_PRINCIPLES.md with RBI philosophy.",
+      "decisions": ["rbi_loop_integrated", "automated_pipeline_built", "3_strategies_promoted", "5_strategies_killed", "github_actions_weekly_screen"],
+      "artifacts": ["strategies/backtest/archetypes.py", "strategies/backtest/screen_runner.py", "strategies/backtest/pipeline.py", "scripts/run_rbi.py", ".github/workflows/rbi_screen.yml", "HYPOTHESIS_004.md", "HYPOTHESIS_005.md", "HYPOTHESIS_006.md"]
+    },
+    {
       "date": "2026-02-07",
-      "summary": "Created weekly review prompt template (PROMPTS/weekly_review.md). Scoped HYPOTHESIS_003: 4H Volatility Contraction Breakout on BTCUSD — wider targets (4%), fewer trades, designed to survive transaction costs. Added resample_to_4h() to data_loader.py. Ran first weekly review covering Feb 3-7.",
-      "decisions": ["hypothesis_003_scoped_4h_vol_contraction", "weekly_review_template_created", "resample_4h_utility_added"],
+      "summary": "Created weekly review prompt template. Scoped HYPOTHESIS_003: 4H Volatility Contraction Breakout. Added resample_to_4h() to data_loader.py. Ran first weekly review.",
+      "decisions": ["hypothesis_003_scoped_4h_vol_contraction", "weekly_review_template_created"],
       "artifacts": ["PROMPTS/weekly_review.md", "strategies/HYPOTHESIS_003.md", "backtest/data_loader.py", "data/weekly_review_2026-02-07.md"]
     },
     {
       "date": "2026-02-06",
-      "summary": "Refined HYPOTHESIS_002 with time-of-day filter. Tested 6 time windows. Best: 20-23 UTC (PF 1.18, 55.4% win rate, drawdown cut 67%). Still below 1.2 PF target — archived. Cleaned up backtest folder with docstrings and readability improvements.",
-      "decisions": ["hypothesis_002_refined_then_archived", "time_of_day_filter_confirmed_meaningful", "20_23_utc_best_window", "backtest_code_cleaned"],
-      "artifacts": ["HYPOTHESIS_002.md", "backtest/mean_reversion.py", "backtest/london_breakout.py", "backtest/engine.py"]
-    },
-    {
-      "date": "2026-02-04",
-      "summary": "Tested two hypotheses. HYPOTHESIS_001 (London breakout) failed. HYPOTHESIS_002 (mean reversion) shows marginal edge (PF 1.04, +13.6%). Needs validation.",
-      "decisions": ["hypothesis_001_failed", "hypothesis_002_marginal_edge", "parameter_optimization_helped"],
-      "artifacts": ["data/BTCUSD_15m.csv", "backtest/fetch_btc_data.py", "backtest/mean_reversion.py", "HYPOTHESIS_002.md"]
-    },
-    {
-      "date": "2026-02-03",
-      "summary": "System operational. Created HYPOTHESIS_001 (London breakout). Built backtesting scaffold. Kanban workflow active.",
-      "decisions": ["london_breakout_as_first_strategy", "simple_python_backtest_no_deps"],
-      "artifacts": ["HYPOTHESIS_001.md", "backtest/engine.py", "backtest/london_breakout.py"]
-    },
-    {
-      "date": "2026-02-02",
-      "summary": "Initial system scaffolding.",
-      "decisions": [],
-      "artifacts": ["morning.yml", "evening.yml"]
+      "summary": "Refined HYPOTHESIS_002 with time-of-day filter. Best: 20-23 UTC (PF 1.18, 55.4% win rate). Archived — edge too thin.",
+      "decisions": ["hypothesis_002_refined_then_archived"],
+      "artifacts": ["HYPOTHESIS_002.md", "backtest/mean_reversion.py"]
     }
   ],
-  
+
   "strategies": {
-    "active": [],
+    "promoted_awaiting_validation": [
+      {
+        "hypothesis": "H004",
+        "research_id": "R007",
+        "name": "Volatility-Adjusted Trend Following",
+        "gross_pf": 1.46,
+        "trades": 87,
+        "win_rate": "44.8%",
+        "sharpe": 1.18,
+        "timeframe": "1H",
+        "params": {"ma_period": 30, "atr_period": 20, "stop_atr_mult": 3.0, "target_atr_mult": 6.0, "trend_filter_period": 80, "long_only": true},
+        "next_step": "walk_forward_validation"
+      },
+      {
+        "hypothesis": "H005",
+        "research_id": "R009",
+        "name": "Donchian Channel Breakout",
+        "gross_pf": 1.31,
+        "trades": 134,
+        "win_rate": "33.6%",
+        "timeframe": "1H",
+        "params": {"channel_period": 20, "stop_pct": 2.0, "target_pct": 6.0, "long_only": true},
+        "next_step": "walk_forward_validation"
+      },
+      {
+        "hypothesis": "H006",
+        "research_id": "R011",
+        "name": "Daily Timeframe Trend",
+        "gross_pf": 1.90,
+        "trades": 20,
+        "win_rate": "35.0%",
+        "timeframe": "daily",
+        "params": {"fast_period": 5, "slow_period": 40, "stop_pct": 6.0, "target_pct": 24.0, "long_only": true},
+        "note": "low_sample_size",
+        "next_step": "walk_forward_validation"
+      }
+    ],
     "research_queue": [
-      {
-        "id": "003",
-        "name": "4H Volatility Contraction Breakout",
-        "status": "scoped",
-        "instruments": ["BTCUSD"],
-        "timeframe": "4H",
-        "edge": "breakout_from_bollinger_squeeze_on_higher_timeframe",
-        "key_design": "wider_targets_4pct_to_survive_transaction_costs"
-      }
+      {"id": "R010", "name": "Multi-Asset Momentum", "status": "new", "note": "ETH/SOL data ready. Archetype built."},
+      {"id": "R012", "name": "Adaptive Momentum Burst (AMB)", "status": "new", "note": "Auto-sourced. Custom archetype needed."},
+      {"id": "R013", "name": "Acceleration Breakout Filter (ABF)", "status": "new", "note": "Auto-sourced. Custom archetype needed."},
+      {"id": "R014", "name": "Multi-Timeframe Breakout Confluence (MTBC)", "status": "new", "note": "Auto-sourced. Custom archetype needed."}
     ],
-    "hypotheses": [
-      {
-        "id": "003",
-        "name": "4H Volatility Contraction Breakout",
-        "status": "scoped",
-        "instruments": ["BTCUSD"],
-        "timeframe": "4H",
-        "edge": "breakout_from_bollinger_squeeze_on_higher_timeframe",
-        "key_design": "wider_targets_4pct_to_survive_transaction_costs"
-      },
-      {
-        "id": "002",
-        "name": "Intraday Mean Reversion",
-        "status": "archived",
-        "instruments": ["BTCUSD"],
-        "timeframe": "15m",
-        "edge": "fade_extreme_extensions_from_MA",
-        "result": "Best: PF 1.18 (20-23 UTC filter), 55.4% win rate. Not viable for live."
-      },
-      {
-        "id": "001",
-        "name": "London Session Momentum Breakout",
-        "status": "archived",
-        "instruments": ["BTCUSD"],
-        "timeframe": "15m",
-        "edge": "asian_range_breakout_at_london_open",
-        "result": "33% win rate, PF 0.48, not viable"
-      }
+    "parked": [
+      {"id": "R002", "name": "Funding Rate Mean Reversion", "reason": "needs_funding_rate_data"}
     ],
-    "archived": ["HYPOTHESIS_001", "HYPOTHESIS_002"]
+    "killed": ["H001/R001 (London Breakout, PF 0.48)", "H002 (Mean Reversion, net PF 0.69)", "H003/R001 (Vol Contraction, PF 0.98)", "R003 (Vol Profile, PF 1.02)", "R004 (Multi-TF Momentum, PF 1.06)", "R005 (Weekend Gap, PF 0.73)", "R006 (Trend Following, PF 1.26)", "R008 (Long Dip Buy, PF 0.81)"],
+    "archived": ["HYPOTHESIS_001", "HYPOTHESIS_002", "HYPOTHESIS_003"]
   },
-  
+
   "user_patterns": {
     "peak_hours": "09:00-13:00",
     "timezone": "Australia/Sydney",
     "communication": "direct_no_preamble",
     "work_blocks": "2-4h_focused"
   },
-  
+
   "system_state": {
     "morning_brief": "operational",
-    "evening_review": "not_tested",
-    "weekly_review": "template_created_first_review_done",
-    "email_delivery": "working",
+    "evening_review": "operational",
+    "weekly_review": "operational",
+    "email_delivery": "working_via_resend",
     "github_actions": "working",
-    "kanban": "operational_autonomous_model",
+    "automated_rbi_pipeline": "operational",
+    "pipeline_components": ["archetypes.py", "screen_runner.py", "pipeline.py", "run_rbi.py", "rbi_screen.yml"],
     "backtest_scaffold": "ready",
     "data": {
-      "BTCUSD_15m": "105115_bars_3_years_2023-02-08_to_2026-02-07",
-      "BTCUSD_1h": "26279_bars_3_years_2023-02-08_to_2026-02-07"
+      "BTCUSD_15m": "3yr_2023-02-08_to_2026-02-07",
+      "BTCUSD_1h": "3yr_2023-02-08_to_2026-02-07",
+      "ETHUSD_1h": "26K_candles_fetched_2026-02-10",
+      "SOLUSD_1h": "26K_candles_fetched_2026-02-10"
     }
   },
-  
+
   "pending_reviews": [],
-  
+
   "key_learnings": [
-    "github_secrets_require_exact_names_no_prefix",
-    "resend_testing_domain_only_sends_to_account_email",
-    "cloudflare_blocks_requests_without_user_agent",
-    "user_prefers_chat_commands_over_manual_file_edits",
-    "keep_backtest_simple_no_heavy_deps",
-    "time_of_day_is_meaningful_filter_for_mean_reversion_on_crypto",
-    "asian_session_not_best_for_mean_reversion_contrary_to_expectation",
-    "20_23_utc_is_best_mean_reversion_window_for_btcusd_15m",
-    "reducing_trade_count_80pct_improved_every_metric_except_total_pnl",
     "gross_pf_below_1.3_on_crypto_is_dead_after_costs",
     "walk_forward_validation_is_non_negotiable",
     "wider_profit_targets_required_to_survive_transaction_costs",
     "design_strategy_around_cost_floor_not_into_it",
-    "6_months_data_is_too_thin_use_2_to_3_years_minimum",
-    "always_have_multiple_timeframes_ready_not_just_one",
+    "dont_import_fx_assumptions_to_crypto",
+    "asian_session_not_range_bound_for_btc",
+    "one_refinement_iteration_max_then_archive",
+    "transaction_costs_0.1pct_minimum_from_day_one",
+    "squeeze_predicts_magnitude_not_direction",
+    "trend_following_long_only_is_structural_edge_in_btc",
+    "volatility_adjustment_adds_meaningful_alpha",
+    "longer_timeframes_and_wider_targets_survive_costs",
+    "automate_screening_to_avoid_analysis_paralysis",
+    "fast_kill_30min_slow_promote_30days",
+    "6_months_data_too_thin_use_3_years_minimum",
     "execute_autonomously_push_to_git_dont_wait_for_approval"
   ]
 }

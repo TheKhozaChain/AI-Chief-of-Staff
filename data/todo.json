@@ -1,122 +1,124 @@
 {
-  "version": 4,
-  "last_updated": "2026-02-07T14:00:00+11:00",
+  "version": 5,
+  "last_updated": "2026-02-10T21:00:00+11:00",
   "note": "Structured data backing KANBAN.md. AI updates this; board renders from it.",
-  
+
   "backlog": [
     {
-      "id": "b6",
-      "title": "Test evening review workflow end-to-end",
-      "owner": "ai",
-      "priority": 1,
-      "notes": "Evening workflow has been 'not tested' since day one. Validate it works.",
-      "proposed": "2026-02-07"
-    },
-    {
-      "id": "b7",
-      "title": "Source extended BTCUSD history (12+ months)",
+      "id": "b8",
+      "title": "Screen R010 (Multi-Asset Momentum)",
       "owner": "ai",
       "priority": 2,
-      "notes": "Current 6 months may not give enough 4H bars for statistical significance on H003. Consider fetching 2024 data.",
-      "proposed": "2026-02-07"
-    }
-  ],
-  
-  "doing": [
-    {
-      "id": "d1",
-      "title": "Implement and backtest HYPOTHESIS_003",
-      "owner": "ai",
-      "started": "2026-02-07",
-      "status": "Scoped. Ready for vol_contraction.py implementation.",
-      "notes": "4H Volatility Contraction Breakout on BTCUSD. resample_to_4h() utility added."
-    }
-  ],
-  
-  "review": [],
-  
-  "done": [
-    {
-      "id": "x13",
-      "title": "Scope HYPOTHESIS_003 (4H Vol Contraction Breakout)",
-      "completed": "2026-02-07",
-      "result": "Full hypothesis doc written. 4H timeframe, wider targets (4%), fewer trades. Addresses cost problem from H002."
+      "notes": "ETH/SOL data fetched. MultiAssetMomentum archetype built. Ready to screen.",
+      "proposed": "2026-02-10"
     },
     {
-      "id": "x14",
-      "title": "Create weekly review prompt template",
-      "completed": "2026-02-07",
-      "result": "PROMPTS/weekly_review.md created. End-of-week reflection template."
+      "id": "b9",
+      "title": "Screen R012-R014 (AMB, ABF, MTBC)",
+      "owner": "ai",
+      "priority": 3,
+      "notes": "Auto-sourced ideas. Need custom archetypes or manual screen scripts.",
+      "proposed": "2026-02-10"
+    },
+    {
+      "id": "b10",
+      "title": "Set up custom Resend sending domain",
+      "owner": "sipho",
+      "priority": 3,
+      "notes": "Currently sending from onboarding@resend.dev (sandbox). Set EMAIL_FROM secret after domain verification.",
+      "proposed": "2026-02-10"
+    }
+  ],
+
+  "doing": [
+    {
+      "id": "d2",
+      "title": "Walk-forward validation on H004 (Vol-Adjusted Trend)",
+      "owner": "ai",
+      "started": "2026-02-10",
+      "status": "Queued. Best promoted strategy (PF 1.46, Sharpe 1.18).",
+      "notes": "Split 3yr data into train/test windows. Non-negotiable before live deployment."
+    },
+    {
+      "id": "d3",
+      "title": "Walk-forward validation on H005 (Donchian Breakout)",
+      "owner": "ai",
+      "started": "2026-02-10",
+      "status": "Queued. Highest trade count of promoted (134 trades).",
+      "notes": "Most statistically significant sample. Good candidate for validation."
+    },
+    {
+      "id": "d4",
+      "title": "Walk-forward validation on H006 (Daily Trend)",
+      "owner": "ai",
+      "started": "2026-02-10",
+      "status": "Queued. Highest PF (1.90) but only 20 trades.",
+      "notes": "Low sample is a concern. Validation will reveal if edge is real or noise."
+    }
+  ],
+
+  "review": [],
+
+  "done": [
+    {
+      "id": "x20",
+      "title": "Build automated RBI pipeline",
+      "completed": "2026-02-08",
+      "result": "archetypes.py (5 archetypes), screen_runner.py, pipeline.py, run_rbi.py, rbi_screen.yml (weekly Sunday 12:00 AEDT)"
+    },
+    {
+      "id": "x19",
+      "title": "Screen R003-R009 via automated pipeline",
+      "completed": "2026-02-08",
+      "result": "4 screened, 3 promoted (R007/R009/R011), 5 killed (R003-R006/R008)"
+    },
+    {
+      "id": "x18",
+      "title": "Create H004/H005/H006 from promoted strategies",
+      "completed": "2026-02-08",
+      "result": "Full hypothesis docs with parameters, risk metrics, live-readiness criteria"
+    },
+    {
+      "id": "x17",
+      "title": "Integrate RBI loop into mission and principles",
+      "completed": "2026-02-08",
+      "result": "MISSION.md updated with RBI diagram. OPERATING_PRINCIPLES.md principles 16-18 added."
+    },
+    {
+      "id": "x16",
+      "title": "Fetch 3yr BTCUSD data (15m + 1h)",
+      "completed": "2026-02-08",
+      "result": "105K 15m bars, 26K 1h bars covering 2023-02-08 to 2026-02-07"
     },
     {
       "id": "x15",
       "title": "Run first weekly review (week ending Feb 7)",
       "completed": "2026-02-07",
-      "result": "data/weekly_review_2026-02-07.md — full week summary, learnings, and next-week focus."
+      "result": "data/weekly_review_2026-02-07.md"
     },
     {
-      "id": "x12",
-      "title": "Add resample_to_4h() utility",
+      "id": "x14",
+      "title": "Create weekly review prompt template",
       "completed": "2026-02-07",
-      "result": "Added to data_loader.py. Aggregates 15m bars to 4H aligned to standard boundaries."
+      "result": "PROMPTS/weekly_review.md created"
+    },
+    {
+      "id": "x13",
+      "title": "Scope HYPOTHESIS_003 (4H Vol Contraction Breakout)",
+      "completed": "2026-02-07",
+      "result": "Later killed: PF 0.98 gross. Squeeze predicts magnitude not direction."
     },
     {
       "id": "x11",
       "title": "HYPOTHESIS_002 refinement + archive (Mean Reversion)",
       "completed": "2026-02-06",
-      "result": "Time-of-day filter tested. Best: 20-23 UTC (PF 1.18, 55.4% WR). Archived — edge too thin for live."
-    },
-    {
-      "id": "x10",
-      "title": "Backtest folder cleanup (docstrings, readability)",
-      "completed": "2026-02-06"
-    },
-    {
-      "id": "x9",
-      "title": "HYPOTHESIS_002 backtest (Mean Reversion)",
-      "completed": "2026-02-04",
-      "result": "Marginal edge - 47% win rate, PF 1.04"
+      "result": "Time-of-day filter tested. Best: 20-23 UTC (PF 1.18, 55.4% WR). Archived — edge too thin."
     },
     {
       "id": "x6",
       "title": "HYPOTHESIS_001 backtest (London breakout)",
       "completed": "2026-02-04",
-      "result": "Failed - 33% win rate, PF 0.48"
-    },
-    {
-      "id": "x7",
-      "title": "Source BTCUSD 15m data (6 months)",
-      "completed": "2026-02-04"
-    },
-    {
-      "id": "x8",
-      "title": "Review backtesting scaffold",
-      "completed": "2026-02-04"
-    },
-    {
-      "id": "x1",
-      "title": "Configure GitHub Actions workflows",
-      "completed": "2026-02-03"
-    },
-    {
-      "id": "x2",
-      "title": "Set up Anthropic API integration",
-      "completed": "2026-02-03"
-    },
-    {
-      "id": "x3",
-      "title": "Add workflow write permissions",
-      "completed": "2026-02-03"
-    },
-    {
-      "id": "x4",
-      "title": "Fix Resend email delivery",
-      "completed": "2026-02-03"
-    },
-    {
-      "id": "x5",
-      "title": "Morning brief system setup",
-      "completed": "2026-02-03"
+      "result": "Failed — 33% win rate, PF 0.48"
     }
   ]
 }
