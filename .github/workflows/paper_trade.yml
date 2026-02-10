@@ -1,0 +1,81 @@
+# H004 Paper Trading Monitor
+# Runs every 4 hours to match the 4H strategy timeframe.
+# Fetches live BTCUSD data, processes new bars, tracks simulated positions.
+#
+# To pause: comment out the 'schedule' block below
+# To resume: uncomment the 'schedule' block
+
+name: Paper Trade H004
+
+on:
+  schedule:
+    # Every 4 hours at :10 past (offset to avoid API congestion on the hour)
+    - cron: '10 */4 * * *'
+
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'Action to perform'
+        required: false
+        default: 'run'
+        type: choice
+        options:
+          - run
+          - status
+          - reset
+
+jobs:
+  paper-trade:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    env:
+      TZ: Australia/Sydney
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run paper trading monitor
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}
+          EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+          PYTHONPATH: strategies/backtest
+        run: |
+          ACTION="${{ github.event.inputs.action || 'run' }}"
+          if [ "$ACTION" = "status" ]; then
+            python3 scripts/paper_trade.py --status
+          elif [ "$ACTION" = "reset" ]; then
+            python3 scripts/paper_trade.py --reset
+          else
+            python3 scripts/paper_trade.py
+          fi
+
+      - name: Commit state changes
+        if: ${{ github.event.inputs.action != 'status' }}
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "AI Chief of Staff"
+          git add data/paper_trade_state.json data/paper_trade_log.md
+          git diff --staged --quiet || git commit -m "Paper trade update - $(date +%Y-%m-%d\ %H:%M)"
+
+      - name: Push changes
+        if: ${{ github.event.inputs.action != 'status' }}
+        run: |
+          git pull --rebase origin main
+          git push
+
+      - name: Alert on failure
+        if: failure()
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}
+          EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+        run: python3 scripts/send_workflow_alert.py
