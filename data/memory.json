@@ -1,22 +1,21 @@
 {
-  "version": 6,
-  "last_updated": "2026-02-11T08:51:15.259724+11:00",
+  "version": 7,
+  "last_updated": "2026-02-11T09:50:00+11:00",
   "schema_note": "Optimized for AI context retrieval, not human reading",
   "active_context": {
-    "current_focus": "walk_forward_validation_of_promoted_strategies",
-    "status": "pipeline_ran_2026-02-11_3_screened",
+    "current_focus": "H004_validated_paper_trading_next_screen_new_ideas",
+    "status": "validation_complete_H004_passed_H005_H006_archived",
     "blockers": [],
-    "next_action": "walk_forward_validate_H004_H005_H006_then_screen_R010_R012_R013_R014",
+    "next_action": "paper_trade_H004_and_screen_R010_R012_R013_R014",
     "execution_model": "autonomous_execute_then_inform",
-    "rbi_phase": "backtest_validation"
+    "rbi_phase": "implement_paper_trading"
   },
   "session_log": [
     {
       "date": "2026-02-11",
-      "summary": "Pipeline screened 3 ideas.",
-      "decisions": [],
-      "artifacts": [],
-      "source": "automated_rbi_pipeline"
+      "summary": "Walk-forward validation on 3 promoted strategies. H004 (Vol-Adjusted Trend) VALIDATED 3/4: walk-forward PASS (4/6 profitable), sensitivity PASS, cost-stress PASS, OOS FAIL (PF decay -37.9%). H005 (Donchian) FAILED 2/4: edge too thin after costs (net PF 1.23). H006 (Daily Trend) FAILED 2/4: only 20 trades, statistically meaningless. H004 proceeds to paper trading. H005/H006 archived.",
+      "decisions": ["H004_validated_proceed_paper_trading", "H005_archived_edge_too_thin", "H006_archived_insufficient_sample"],
+      "artifacts": ["data/validation_20260211.md", "strategies/HYPOTHESIS_004.md", "strategies/HYPOTHESIS_005.md", "strategies/HYPOTHESIS_006.md"]
     },
     {
       "date": "2026-02-10",
@@ -91,16 +90,19 @@
     }
   ],
   "strategies": {
-    "promoted_awaiting_validation": [
+    "validated": [
       {
         "hypothesis": "H004",
         "research_id": "R007",
         "name": "Volatility-Adjusted Trend Following",
         "gross_pf": 1.46,
+        "net_pf": 1.40,
+        "oos_pf": 1.09,
         "trades": 87,
         "win_rate": "44.8%",
         "sharpe": 1.18,
-        "timeframe": "1H",
+        "timeframe": "4H",
+        "validation": "3/4 passed (walk-forward, sensitivity, cost-stress). OOS failed (-37.9% PF decay).",
         "params": {
           "ma_period": 30,
           "atr_period": 20,
@@ -109,42 +111,12 @@
           "trend_filter_period": 80,
           "long_only": true
         },
-        "next_step": "walk_forward_validation"
-      },
-      {
-        "hypothesis": "H005",
-        "research_id": "R009",
-        "name": "Donchian Channel Breakout",
-        "gross_pf": 1.31,
-        "trades": 134,
-        "win_rate": "33.6%",
-        "timeframe": "1H",
-        "params": {
-          "channel_period": 20,
-          "stop_pct": 2.0,
-          "target_pct": 6.0,
-          "long_only": true
-        },
-        "next_step": "walk_forward_validation"
-      },
-      {
-        "hypothesis": "H006",
-        "research_id": "R011",
-        "name": "Daily Timeframe Trend",
-        "gross_pf": 1.9,
-        "trades": 20,
-        "win_rate": "35.0%",
-        "timeframe": "daily",
-        "params": {
-          "fast_period": 5,
-          "slow_period": 40,
-          "stop_pct": 6.0,
-          "target_pct": 24.0,
-          "long_only": true
-        },
-        "note": "low_sample_size",
-        "next_step": "walk_forward_validation"
+        "next_step": "paper_trading_30_days"
       }
+    ],
+    "failed_validation": [
+      "H005/R009 (Donchian Breakout): net PF 1.23, OOS PF 1.07. Edge too thin after costs.",
+      "H006/R011 (Daily Trend): 20 trades, OOS PF 1.13, -41% decay. Insufficient sample."
     ],
     "research_queue": [
       {

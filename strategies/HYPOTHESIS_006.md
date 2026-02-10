@@ -1,6 +1,6 @@
 # Strategy Hypothesis 006: Daily Timeframe Trend
 
-**Status:** PROMOTED — awaiting full validation  
+**Status:** FAILED VALIDATION — insufficient sample size
 **Created:** 2026-02-09  
 **Promoted:** 2026-02-09  
 **Owner:** AI Chief of Staff  
@@ -134,4 +134,44 @@ Daily bar = {
 
 ### Phase 2: Robustness Testing (Week 1)
 - [ ] Parameter sweep: Fast MA [4,5,6], Slow MA [35,40,45]
-- [ ] Stop loss sensitivity: [4%, 
+- [ ] Stop loss sensitivity: [4%, 5%, 6%, 7%]
+
+---
+
+## Walk-Forward Validation Results (2026-02-11)
+
+**FAILED: 2/4 tests passed**
+
+### Baseline (Daily bars, 1,096 bars, 0.1% costs)
+- **Net PF: 1.86** | Sharpe: 0.79 | **20 trades** | 35.0% WR
+- Net P&L: $41,994 | Max DD: $20,560 | Does NOT beat buy-and-hold ($47,122)
+- Live readiness: 2/7 — trade count far too low
+
+### Walk-Forward (6 × 6-month windows) — FAIL
+- Profitable windows: 3/6
+- **2-5 trades per window** — statistically meaningless
+- Windows show PF of 0.00, 2.65, inf — extreme variance from tiny samples
+- Cannot draw any conclusions from this data
+
+### Out-of-Sample (70/30 split) — FAIL
+- IS: PF 1.92 | OOS: PF 1.13 (degradation: **-41.0%**)
+- OOS has only **4 trades** — one trade difference changes everything
+- Severe overfitting warning
+
+### Parameter Sensitivity — PASS
+- All 8 variants above PF 1.0 (worst: slow_period=50 at PF 1.08)
+- Parameters are robust BUT with only 20-27 trades each, this means little
+
+### Cost Stress (0.15%) — PASS
+- PF barely changes (1.86 → 1.84) — costs are negligible at this timeframe
+- This is the one clear advantage of daily-timeframe strategies
+
+### Lessons
+- 20 trades over 3 years is not a strategy — it's 20 coin flips
+- The high PF (1.86) is almost certainly noise with this sample size
+- Daily timeframe eliminates cost concerns but creates sample size problems
+- Would need 10+ years of data to get 60+ trades for meaningful validation
+- The core insight (longer holds reduce cost drag) is valid but needs a higher-frequency implementation
+
+### Decision: ARCHIVE
+Cannot validate with available data. The daily timeframe produces too few trades for statistical significance. The insight about cost reduction through wider targets is captured better by H004's ATR-based approach.

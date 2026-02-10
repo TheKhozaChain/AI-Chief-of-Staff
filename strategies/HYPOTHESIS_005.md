@@ -1,6 +1,6 @@
 # Strategy Hypothesis 005: Donchian Channel Breakout
 
-**Status:** PROMOTED — awaiting full validation  
+**Status:** FAILED VALIDATION — archive
 **Created:** 2024-01-XX  
 **Promoted from:** Quick-screen R009 (PF 1.31 gross, 134 trades)  
 **Owner:** AI Research Team
@@ -115,3 +115,41 @@ The core design choice: **simplicity and asymmetry**. Single clear entry conditi
 - [ ] Implement Donchian channel calculation (rolling 20-bar high/low)
 - [ ] Code entry logic: `if close > high_20 and no_position: enter_long()`
 - [ ] Code exit logic: stop at entry - 2%, target at entry + 6%
+
+---
+
+## Walk-Forward Validation Results (2026-02-11)
+
+**FAILED: 2/4 tests passed**
+
+### Baseline (4H bars, 6,571 bars, 0.1% costs)
+- **Net PF: 1.23** (below 1.3 threshold after costs) | Sharpe: 1.04 | 134 trades | 33.6% WR
+- Net P&L: $30,033 | Max DD: $21,671 | Does NOT beat buy-and-hold ($47,040)
+- Live readiness: 3/7
+
+### Walk-Forward (6 × 6-month windows) — FAIL
+- Profitable windows: **3/6** (need ≥60%)
+- Mean PF: 1.41 (high variance, std 0.73)
+- Lost money in 3 of 6 periods including the most recent two (2025-H1, 2025-H2)
+- Edge appears to deteriorate over time
+
+### Out-of-Sample (70/30 split) — FAIL
+- IS: PF 1.37 | OOS: PF 1.07 (degradation: -21.6%)
+- OOS Sharpe collapses from 1.42 → 0.11
+- Edge is thin and does not hold out-of-sample
+
+### Parameter Sensitivity — PASS
+- 5/6 variants above PF 1.0. target_pct=7.0 breaks (PF 0.98)
+- Interesting: target_pct=5.0 actually has PF 1.30 (better than base)
+
+### Cost Stress (0.15%) — PASS
+- PF drops 1.23 → 1.19. Costs are not the primary issue.
+
+### Lessons
+- Gross PF 1.31 was right at our 1.3 threshold — not enough margin after costs (net 1.23)
+- The 3:1 R:R ratio is attractive but 33.6% WR means long losing streaks
+- Edge concentrates in bull markets (2023-H2, 2024-H2) and vanishes in sideways/bear periods
+- The simpler Donchian approach lacks the volatility adaptation that H004 has
+
+### Decision: ARCHIVE
+Edge is real but too thin for live deployment. The strategy works in trending markets but fails in ranging ones. H004's volatility-adjusted approach handles this better.

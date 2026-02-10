@@ -1,6 +1,6 @@
 {
-  "version": 5,
-  "last_updated": "2026-02-10T21:00:00+11:00",
+  "version": 6,
+  "last_updated": "2026-02-11T09:50:00+11:00",
   "note": "Structured data backing KANBAN.md. AI updates this; board renders from it.",
 
   "backlog": [
@@ -14,10 +14,10 @@
     },
     {
       "id": "b9",
-      "title": "Screen R012-R014 (AMB, ABF, MTBC)",
+      "title": "Build archetypes for R012-R014, then screen",
       "owner": "ai",
       "priority": 3,
-      "notes": "Auto-sourced ideas. Need custom archetypes or manual screen scripts.",
+      "notes": "R012 (AMB), R013 (ABF), R014 (MTBC) — all parked because no archetype mapping. Need custom implementations.",
       "proposed": "2026-02-10"
     },
     {
@@ -32,28 +32,12 @@
 
   "doing": [
     {
-      "id": "d2",
-      "title": "Walk-forward validation on H004 (Vol-Adjusted Trend)",
+      "id": "d5",
+      "title": "Paper trading setup for H004 (Vol-Adjusted Trend)",
       "owner": "ai",
-      "started": "2026-02-10",
-      "status": "Queued. Best promoted strategy (PF 1.46, Sharpe 1.18).",
-      "notes": "Split 3yr data into train/test windows. Non-negotiable before live deployment."
-    },
-    {
-      "id": "d3",
-      "title": "Walk-forward validation on H005 (Donchian Breakout)",
-      "owner": "ai",
-      "started": "2026-02-10",
-      "status": "Queued. Highest trade count of promoted (134 trades).",
-      "notes": "Most statistically significant sample. Good candidate for validation."
-    },
-    {
-      "id": "d4",
-      "title": "Walk-forward validation on H006 (Daily Trend)",
-      "owner": "ai",
-      "started": "2026-02-10",
-      "status": "Queued. Highest PF (1.90) but only 20 trades.",
-      "notes": "Low sample is a concern. Validation will reveal if edge is real or noise."
+      "started": "2026-02-11",
+      "status": "H004 validated 3/4. Next: set up paper trading monitor.",
+      "notes": "4H BTCUSD, params: ma=30, atr=20, stop=3×ATR, target=6×ATR, trend=80, long only. Monitor 30 days minimum."
     }
   ],
 
@@ -61,64 +45,34 @@
 
   "done": [
     {
+      "id": "x23",
+      "title": "Walk-forward validation: H004, H005, H006",
+      "completed": "2026-02-11",
+      "result": "H004 VALIDATED 3/4 (net PF 1.40, OOS PF 1.09). H005 FAILED 2/4 (net PF 1.23, edge too thin). H006 FAILED 2/4 (20 trades, insufficient sample). Report: data/validation_20260211.md"
+    },
+    {
+      "id": "x22",
+      "title": "Fix email delivery (empty EMAIL_FROM regression)",
+      "completed": "2026-02-11",
+      "result": "Changed os.environ.get default to 'or' pattern. All emails now deliver."
+    },
+    {
+      "id": "x21",
+      "title": "Update memory.json and todo.json (stale context fix)",
+      "completed": "2026-02-10",
+      "result": "Both files were frozen at Feb 7. Updated to reflect current RBI pipeline state."
+    },
+    {
       "id": "x20",
       "title": "Build automated RBI pipeline",
       "completed": "2026-02-08",
-      "result": "archetypes.py (5 archetypes), screen_runner.py, pipeline.py, run_rbi.py, rbi_screen.yml (weekly Sunday 12:00 AEDT)"
+      "result": "archetypes.py, screen_runner.py, pipeline.py, run_rbi.py, rbi_screen.yml"
     },
     {
       "id": "x19",
       "title": "Screen R003-R009 via automated pipeline",
       "completed": "2026-02-08",
-      "result": "4 screened, 3 promoted (R007/R009/R011), 5 killed (R003-R006/R008)"
-    },
-    {
-      "id": "x18",
-      "title": "Create H004/H005/H006 from promoted strategies",
-      "completed": "2026-02-08",
-      "result": "Full hypothesis docs with parameters, risk metrics, live-readiness criteria"
-    },
-    {
-      "id": "x17",
-      "title": "Integrate RBI loop into mission and principles",
-      "completed": "2026-02-08",
-      "result": "MISSION.md updated with RBI diagram. OPERATING_PRINCIPLES.md principles 16-18 added."
-    },
-    {
-      "id": "x16",
-      "title": "Fetch 3yr BTCUSD data (15m + 1h)",
-      "completed": "2026-02-08",
-      "result": "105K 15m bars, 26K 1h bars covering 2023-02-08 to 2026-02-07"
-    },
-    {
-      "id": "x15",
-      "title": "Run first weekly review (week ending Feb 7)",
-      "completed": "2026-02-07",
-      "result": "data/weekly_review_2026-02-07.md"
-    },
-    {
-      "id": "x14",
-      "title": "Create weekly review prompt template",
-      "completed": "2026-02-07",
-      "result": "PROMPTS/weekly_review.md created"
-    },
-    {
-      "id": "x13",
-      "title": "Scope HYPOTHESIS_003 (4H Vol Contraction Breakout)",
-      "completed": "2026-02-07",
-      "result": "Later killed: PF 0.98 gross. Squeeze predicts magnitude not direction."
-    },
-    {
-      "id": "x11",
-      "title": "HYPOTHESIS_002 refinement + archive (Mean Reversion)",
-      "completed": "2026-02-06",
-      "result": "Time-of-day filter tested. Best: 20-23 UTC (PF 1.18, 55.4% WR). Archived — edge too thin."
-    },
-    {
-      "id": "x6",
-      "title": "HYPOTHESIS_001 backtest (London breakout)",
-      "completed": "2026-02-04",
-      "result": "Failed — 33% win rate, PF 0.48"
+      "result": "4 screened, 3 promoted (R007/R009/R011), 5 killed"
     }
   ]
 }
