@@ -46,6 +46,7 @@ jobs:
           LLM_PROVIDER: ${{ secrets.LLM_PROVIDER || 'anthropic' }}
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           EMAIL_TO: ${{ secrets.EMAIL_TO }}
+          EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
         run: |
           python scripts/run_evening.py
 
@@ -56,3 +57,11 @@ jobs:
           git add data/
           git diff --staged --quiet || git commit -m "Evening review - $(date +%Y-%m-%d)"
           git push
+
+      - name: Alert on failure
+        if: failure()
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}
+          EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+        run: python scripts/send_workflow_alert.py
