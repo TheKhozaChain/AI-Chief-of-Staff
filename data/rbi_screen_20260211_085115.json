@@ -1,0 +1,31 @@
+{
+  "timestamp": "2026-02-11T08:51:15.259364",
+  "promoted": [],
+  "killed": [],
+  "parked": [
+    "R012",
+    "R013",
+    "R014"
+  ],
+  "summary": "\nRBI Pipeline Summary \u2014 2026-02-11\n============================================================\nScreened: 3 ideas\nPromoted: 0 (none)\nKilled: 0 (none)\nParked: 3 (R012, R013, R014)\n",
+  "screens": [
+    {
+      "idea_id": "R012",
+      "idea_name": "Adaptive Momentum Burst (AMB)",
+      "verdict": "park",
+      "reason": "No archetype mapping available."
+    },
+    {
+      "idea_id": "R013",
+      "idea_name": "Acceleration Breakout Filter (ABF)",
+      "verdict": "park",
+      "reason": "No archetype mapping available."
+    },
+    {
+      "idea_id": "R014",
+      "idea_name": "Multi-Timeframe Breakout Confluence (MTBC)",
+      "verdict": "park",
+      "reason": "No archetype mapping available."
+    }
+  ]
+}

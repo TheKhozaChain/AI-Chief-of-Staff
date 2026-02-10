@@ -1,6 +1,6 @@
 # AI Chief of Staff — Work Board
 
-> Last updated: 2026-02-10 by AI Chief of Staff (manual execution)
+> Last updated: 2026-02-11 by AI Chief of Staff (auto-execution)
 
 ---
 
@@ -17,8 +17,7 @@
 
 | # | Item | RBI Phase | Notes |
 |:-:|------|:---------:|-------|
-| 1 | Screen R012/R013/R014 (new ideas from LLM sourcing) | R | Three new ideas waiting to be screened |
-| 2 | Unpark R010 (Multi-Asset Momentum) — ETH/SOL data now available | R | Can now test cross-asset strategies |
+| 1 | Unpark R010 (Multi-Asset Momentum) — ETH/SOL data now available | R | Can now test cross-asset strategies |
 
 ---
 
@@ -26,6 +25,7 @@
 
 | Item | Completed |
 |------|-----------|
+| Screen R012/R013/R014 (new ideas from LLM sourcing) | 2026-02-11 |
 | Fetch ETH/SOL data for multi-asset screens (26K candles each) | 2026-02-10 |
 | Test evening review workflow end-to-end | 2026-02-10 |
 | Fix data fetch reliability (timeouts, fail-fast, request limits) | 2026-02-10 |
