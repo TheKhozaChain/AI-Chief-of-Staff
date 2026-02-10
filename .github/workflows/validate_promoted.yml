@@ -2,7 +2,7 @@ name: Validate Promoted Strategies
 
 on:
   workflow_run:
-    workflows: ["RBI Weekly Screen", "RBI Pipeline"]
+    workflows: ["RBI Pipeline"]
     types: [completed]
   workflow_dispatch:
 
