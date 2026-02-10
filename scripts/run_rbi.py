@@ -234,6 +234,146 @@ def _append_ideas_to_backlog(ideas: list, filepath: str):
     path.write_text('\n'.join(lines))
 
 
+def sync_memory(pipeline_results, new_ideas):
+    """Update data/memory.json with pipeline results.
+
+    Keeps memory.json in sync so morning/evening briefs have accurate context.
+    """
+    memory_path = DATA_DIR / 'memory.json'
+
+    try:
+        memory = json.loads(memory_path.read_text())
+    except (FileNotFoundError, json.JSONDecodeError):
+        print("Warning: Could not read memory.json, skipping sync.")
+        return
+
+    now = datetime.now()
+    today = now.strftime('%Y-%m-%d')
+
+    promoted = pipeline_results.get('promoted', [])
+    killed = pipeline_results.get('killed', [])
+    parked = pipeline_results.get('parked', [])
+    screened = pipeline_results.get('screened', [])
+
+    # Nothing happened — skip update
+    if not screened and not new_ideas:
+        return
+
+    # --- Update version and timestamp ---
+    memory['version'] = memory.get('version', 0) + 1
+    memory['last_updated'] = now.astimezone().isoformat()
+
+    # --- Update active_context ---
+    total_promoted = len(memory.get('strategies', {}).get('promoted_awaiting_validation', []))
+    parts = []
+    if screened:
+        parts.append(f"{len(screened)}_screened")
+    if promoted:
+        parts.append(f"{len(promoted)}_promoted")
+    if killed:
+        parts.append(f"{len(killed)}_killed")
+    if new_ideas:
+        parts.append(f"{len(new_ideas)}_new_ideas_sourced")
+
+    ctx = memory.setdefault('active_context', {})
+    ctx['status'] = f"pipeline_ran_{today}_{'_'.join(parts)}"
+    if promoted:
+        ctx['next_action'] = 'walk_forward_validate_newly_promoted_strategies'
+
+    # --- Add session_log entry ---
+    log = memory.setdefault('session_log', [])
+
+    summary_parts = []
+    if screened:
+        summary_parts.append(f"Pipeline screened {len(screened)} ideas.")
+    if promoted:
+        promo_details = []
+        for r in screened:
+            if r.get('verdict') == 'promote':
+                promo_details.append(f"{r['idea_id']} (PF {r.get('gross_pf', '?')})")
+        summary_parts.append(f"Promoted: {', '.join(promo_details)}.")
+    if killed:
+        kill_details = []
+        for r in screened:
+            if r.get('verdict') == 'kill':
+                kill_details.append(f"{r['idea_id']} (PF {r.get('gross_pf', '?')})")
+        summary_parts.append(f"Killed: {', '.join(kill_details)}.")
+    if new_ideas:
+        ids = [i['id'] for i in new_ideas]
+        summary_parts.append(f"New ideas sourced: {', '.join(ids)}.")
+
+    entry = {
+        'date': today,
+        'summary': ' '.join(summary_parts),
+        'decisions': [],
+        'artifacts': [],
+        'source': 'automated_rbi_pipeline',
+    }
+    if promoted:
+        entry['decisions'].extend(f"{pid}_promoted" for pid in promoted)
+    if killed:
+        entry['decisions'].extend(f"{kid}_killed" for kid in killed)
+
+    # Replace today's pipeline entry if one exists, otherwise prepend
+    replaced = False
+    for i, existing in enumerate(log):
+        if existing.get('date') == today and existing.get('source') == 'automated_rbi_pipeline':
+            log[i] = entry
+            replaced = True
+            break
+    if not replaced:
+        log.insert(0, entry)
+
+    # Keep log trimmed to 10 entries
+    memory['session_log'] = log[:10]
+
+    # --- Update strategies ---
+    strats = memory.setdefault('strategies', {})
+    promoted_list = strats.setdefault('promoted_awaiting_validation', [])
+    killed_list = strats.setdefault('killed', [])
+    research_queue = strats.setdefault('research_queue', [])
+
+    # Add newly promoted strategies
+    existing_promoted_ids = {s.get('research_id') for s in promoted_list}
+    for r in screened:
+        if r.get('verdict') == 'promote' and r.get('idea_id') not in existing_promoted_ids:
+            promoted_list.append({
+                'research_id': r['idea_id'],
+                'name': r.get('idea_name', ''),
+                'gross_pf': r.get('gross_pf', 0),
+                'trades': r.get('total_trades', 0),
+                'win_rate': f"{r.get('win_rate', 0):.1%}" if isinstance(r.get('win_rate'), float) else str(r.get('win_rate', '')),
+                'params': r.get('params', {}),
+                'next_step': 'walk_forward_validation',
+            })
+
+    # Add newly killed strategies
+    for r in screened:
+        if r.get('verdict') == 'kill':
+            kill_str = f"{r['idea_id']} ({r.get('idea_name', '')}, PF {r.get('gross_pf', '?')})"
+            if kill_str not in killed_list:
+                killed_list.append(kill_str)
+
+    # Remove promoted/killed from research queue
+    resolved_ids = set(promoted + killed)
+    research_queue[:] = [r for r in research_queue if r.get('id') not in resolved_ids]
+
+    # Add new ideas to research queue
+    existing_queue_ids = {r.get('id') for r in research_queue}
+    for idea in new_ideas:
+        if idea['id'] not in existing_queue_ids:
+            research_queue.append({
+                'id': idea['id'],
+                'name': idea.get('idea', ''),
+                'status': 'new',
+                'note': f"Auto-sourced. Archetype: {idea.get('archetype', 'custom')}.",
+            })
+
+    # --- Write back ---
+    memory_path.write_text(json.dumps(memory, indent=2, default=str) + '\n')
+    print(f"memory.json synced (v{memory['version']}): {', '.join(parts) if parts else 'no changes'}")
+
+
 def build_report(pipeline_results, new_ideas) -> str:
     """Build a formatted report for the morning brief."""
     lines = [
@@ -281,7 +421,10 @@ def main():
     if args.source_ideas:
         new_ideas = source_ideas(pipeline_results)
 
-    # Step 4: Build and save report
+    # Step 4: Sync memory.json with results
+    sync_memory(pipeline_results, new_ideas)
+
+    # Step 5: Build and save report
     report = build_report(pipeline_results, new_ideas)
     report_path = DATA_DIR / f"rbi_report_{datetime.now().strftime('%Y%m%d')}.md"
     report_path.write_text(report)

@@ -102,5 +102,6 @@ jobs:
           git config --local user.name "AI Chief of Staff"
           git add strategies/RESEARCH_BACKLOG.md
           git add data/rbi_*.json data/rbi_*.md
+          git add data/memory.json
           git diff --staged --quiet || git commit -m "RBI screening session — $(date +%Y-%m-%d)"
           git push
