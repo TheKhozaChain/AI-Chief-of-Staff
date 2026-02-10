@@ -1,0 +1,28 @@
+{
+  "active": [
+    {
+      "id": "H004",
+      "archetype": "vol_adjusted_trend",
+      "timeframe_hours": 4,
+      "params": {
+        "ma_period": 30,
+        "atr_period": 20,
+        "stop_atr_mult": 3.0,
+        "target_atr_mult": 6.0,
+        "trend_filter_period": 80,
+        "long_only": true
+      },
+      "started": "2026-02-10",
+      "graduation": {
+        "min_days": 30,
+        "min_trades": 5,
+        "min_net_pf": 1.0,
+        "max_drawdown_pct": 25,
+        "kill_pf_below": 0.7,
+        "kill_min_trades": 10
+      }
+    }
+  ],
+  "graduated": [],
+  "killed": []
+}

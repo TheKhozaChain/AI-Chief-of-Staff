@@ -12,6 +12,7 @@ Runs each strategy through:
 Output: Markdown report saved to data/validation_YYYYMMDD.md
 """
 
+import json
 import sys
 import os
 import statistics
@@ -336,6 +337,81 @@ def validate_strategy(hypothesis_id, data_1h, report_lines):
     }
 
 
+ARCHETYPE_KEY_MAP = {
+    VolAdjustedTrend: 'vol_adjusted_trend',
+    DonchianBreakout: 'donchian_breakout',
+    DailyTrend: 'daily_trend',
+}
+
+
+def register_for_paper_trading(hyp_id, config, result):
+    """Auto-register a validated strategy in the paper trade registry.
+
+    Adds the strategy to data/paper_trade_registry.json with its
+    validated params and default graduation criteria.
+    """
+    registry_path = REPO_ROOT / 'data' / 'paper_trade_registry.json'
+    try:
+        registry = json.loads(registry_path.read_text())
+    except (FileNotFoundError, json.JSONDecodeError):
+        registry = {"active": [], "graduated": [], "killed": []}
+
+    # Skip if already registered (active, graduated, or killed)
+    all_ids = set()
+    for section in ['active', 'graduated', 'killed']:
+        for s in registry.get(section, []):
+            all_ids.add(s['id'])
+
+    if hyp_id in all_ids:
+        print(f"  {hyp_id} already in paper trade registry, skipping.")
+        return False
+
+    archetype_key = ARCHETYPE_KEY_MAP.get(config['archetype'], 'unknown')
+
+    entry = {
+        "id": hyp_id,
+        "archetype": archetype_key,
+        "timeframe_hours": config['timeframe_hours'],
+        "params": config['params'],
+        "started": datetime.now().strftime('%Y-%m-%d'),
+        "graduation": {
+            "min_days": 30,
+            "min_trades": 5,
+            "min_net_pf": 1.0,
+            "max_drawdown_pct": 25,
+            "kill_pf_below": 0.7,
+            "kill_min_trades": 10,
+        },
+    }
+
+    registry['active'].append(entry)
+    registry_path.write_text(json.dumps(registry, indent=2) + '\n')
+    print(f"  {hyp_id} registered for paper trading.")
+
+    # Send notification email
+    try:
+        sys.path.insert(0, str(REPO_ROOT / 'scripts'))
+        from email_sender import send_email, markdown_to_html
+        body = (f"### Strategy Entering Paper Trading\n\n"
+                f"**{hyp_id}** ({config['name']}) has passed walk-forward validation "
+                f"and has been automatically registered for paper trading.\n\n"
+                f"- Baseline PF: {result['baseline_pf']:.2f}\n"
+                f"- OOS PF: {result['oos_pf']:.2f}\n"
+                f"- Tests passed: {result['passed_count']}/4\n"
+                f"- Timeframe: {config['timeframe_hours']}H\n\n"
+                f"Paper trading will run automatically every 4 hours. "
+                f"You will be emailed when the strategy is ready for live deployment.\n")
+        send_email(
+            subject=f"[RBI] {hyp_id} validated — entering paper trading",
+            body=markdown_to_html(body),
+            html=True,
+        )
+    except Exception as e:
+        print(f"  Notification email failed: {e}")
+
+    return True
+
+
 def main():
     print("=" * 60)
     print("WALK-FORWARD VALIDATION — PROMOTED STRATEGIES")
@@ -396,6 +472,12 @@ def main():
             report.append(f"- **{r['hypothesis']}**: {r['passed_count']}/4 tests. "
                          f"Archive or refine.")
     report.append("")
+
+    # Auto-register validated strategies for paper trading
+    for r in all_results:
+        if r['overall']:
+            config = STRATEGIES[r['hypothesis']]
+            register_for_paper_trading(r['hypothesis'], config, r)
 
     # Save report
     out_dir = REPO_ROOT / 'data'

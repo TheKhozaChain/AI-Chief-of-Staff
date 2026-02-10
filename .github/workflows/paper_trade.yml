@@ -1,11 +1,11 @@
-# H004 Paper Trading Monitor
-# Runs every 4 hours to match the 4H strategy timeframe.
-# Fetches live BTCUSD data, processes new bars, tracks simulated positions.
+# Multi-Strategy Paper Trading Monitor
+# Runs every 4 hours. Processes all active strategies from registry.
+# Auto-evaluates graduation criteria and emails when ready for live.
 #
 # To pause: comment out the 'schedule' block below
 # To resume: uncomment the 'schedule' block
 
-name: Paper Trade H004
+name: Paper Trading
 
 on:
   schedule:
@@ -22,7 +22,6 @@ on:
         options:
           - run
           - status
-          - reset
 
 jobs:
   paper-trade:
@@ -52,8 +51,6 @@ jobs:
           ACTION="${{ github.event.inputs.action || 'run' }}"
           if [ "$ACTION" = "status" ]; then
             python3 scripts/paper_trade.py --status
-          elif [ "$ACTION" = "reset" ]; then
-            python3 scripts/paper_trade.py --reset
           else
             python3 scripts/paper_trade.py
           fi
@@ -63,7 +60,8 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "AI Chief of Staff"
-          git add data/paper_trade_state.json data/paper_trade_log.md
+          git add data/paper_trade_registry.json
+          git add data/paper_trade_*_state.json data/paper_trade_*_log.md
           git diff --staged --quiet || git commit -m "Paper trade update - $(date +%Y-%m-%d\ %H:%M)"
 
       - name: Push changes
