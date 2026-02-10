@@ -19,6 +19,7 @@ import re
 import sys
 import json
 import subprocess
+import traceback
 from datetime import datetime
 from pathlib import Path
 from typing import List, Dict, Optional, Tuple
@@ -27,6 +28,7 @@ from typing import List, Dict, Optional, Tuple
 sys.path.insert(0, str(Path(__file__).parent))
 
 from llm import generate
+from email_sender import send_email, markdown_to_html
 
 REPO_ROOT = Path(__file__).parent.parent
 KANBAN_FILE = REPO_ROOT / "KANBAN.md"
@@ -295,30 +297,47 @@ def action_create_hypothesis_docs(idea_ids: str = "", **kwargs) -> Tuple[bool, s
 def action_fetch_multi_asset(assets: str = "ETHUSDT,SOLUSDT", **kwargs) -> Tuple[bool, str]:
     """Fetch data for additional crypto assets."""
     fetched = []
+    failed = []
     for symbol in assets.split(","):
         symbol = symbol.strip()
         if not symbol:
             continue
-        # Derive a clean name for the file
         clean_name = symbol.replace("USDT", "USD")
         output_path = DATA_DIR / f"{clean_name}_1h.csv"
 
         print(f"  Fetching 1h data for {symbol}...")
         try:
             _fetch_symbol(symbol, "1h", 1095, output_path)
-            fetched.append(clean_name)
+            if output_path.exists() and output_path.stat().st_size > 100:
+                fetched.append(clean_name)
+            else:
+                failed.append(f"{symbol}: empty output")
         except Exception as e:
             print(f"  Failed to fetch {symbol}: {e}")
+            failed.append(f"{symbol}: {e}")
+
+    msg_parts = []
+    if fetched:
+        msg_parts.append(f"Fetched: {', '.join(fetched)}")
+    if failed:
+        msg_parts.append(f"Failed: {', '.join(failed)}")
 
     if fetched:
-        return True, f"Fetched data for: {', '.join(fetched)}"
-    return False, "No data fetched"
+        return True, "; ".join(msg_parts)
+    return False, "; ".join(msg_parts) or "No data fetched"
+
+
+# Hard limits for data fetching (prevents hangs on CI)
+FETCH_MAX_REQUESTS = 200        # ~200K candles max
+FETCH_TIMEOUT_PER_REQ = 15      # seconds per HTTP request
+FETCH_TOTAL_TIMEOUT = 300       # 5 min hard ceiling per symbol
+FETCH_MAX_CONSECUTIVE_ERRORS = 5  # give up after 5 failures in a row
 
 
 def _fetch_symbol(symbol: str, interval: str, days: int, output_path: Path):
-    """Fetch OHLCV data for any Binance symbol."""
+    """Fetch OHLCV data for any Binance symbol with hard limits."""
     import csv
-    import time
+    import time as _time
     from datetime import timedelta
     import urllib.request
 
@@ -328,35 +347,55 @@ def _fetch_symbol(symbol: str, interval: str, days: int, output_path: Path):
     start_time = int((datetime.now() - timedelta(days=days)).timestamp() * 1000)
     current_start = start_time
     request_count = 0
+    consecutive_errors = 0
+    wall_start = _time.monotonic()
 
     print(f"  Fetching {days} days of {interval} data for {symbol}...")
+    print(f"  Limits: {FETCH_MAX_REQUESTS} requests, {FETCH_TOTAL_TIMEOUT}s total, "
+          f"{FETCH_MAX_CONSECUTIVE_ERRORS} consecutive errors max")
 
     while current_start < end_time:
+        # Hard limits
+        if request_count >= FETCH_MAX_REQUESTS:
+            print(f"  Hit request limit ({FETCH_MAX_REQUESTS}). Stopping.")
+            break
+        elapsed = _time.monotonic() - wall_start
+        if elapsed > FETCH_TOTAL_TIMEOUT:
+            print(f"  Hit time limit ({FETCH_TOTAL_TIMEOUT}s). Stopping.")
+            break
+
         url = (
             f"{base_url}?symbol={symbol}&interval={interval}"
             f"&startTime={current_start}&limit=1000"
         )
         try:
             req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
-            with urllib.request.urlopen(req, timeout=30) as response:
+            with urllib.request.urlopen(req, timeout=FETCH_TIMEOUT_PER_REQ) as response:
                 data = json.loads(response.read().decode())
                 if not data:
                     break
                 all_data.extend(data)
                 current_start = data[-1][0] + 1
                 request_count += 1
+                consecutive_errors = 0
                 if request_count % 10 == 0:
-                    print(f"    {len(all_data):,} candles fetched...")
+                    print(f"    {len(all_data):,} candles ({request_count} reqs, "
+                          f"{_time.monotonic() - wall_start:.0f}s elapsed)...")
                 if request_count % 50 == 0:
-                    time.sleep(1)
+                    _time.sleep(1)
         except Exception as e:
-            print(f"    Error: {e}, retrying...")
-            time.sleep(5)
+            consecutive_errors += 1
+            print(f"    Error ({consecutive_errors}/{FETCH_MAX_CONSECUTIVE_ERRORS}): {e}")
+            if consecutive_errors >= FETCH_MAX_CONSECUTIVE_ERRORS:
+                raise RuntimeError(
+                    f"Fetch aborted for {symbol}: {FETCH_MAX_CONSECUTIVE_ERRORS} "
+                    f"consecutive errors. Last: {e}"
+                )
+            _time.sleep(2)
             continue
 
     if not all_data:
-        print(f"  No data for {symbol}")
-        return
+        raise RuntimeError(f"No data received for {symbol} after {request_count} requests")
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     with open(output_path, "w", newline="") as f:
@@ -369,7 +408,8 @@ def _fetch_symbol(symbol: str, interval: str, days: int, output_path: Path):
                 candle[1], candle[2], candle[3], candle[4], candle[5],
             ])
 
-    print(f"  Saved {len(all_data):,} candles to {output_path}")
+    print(f"  Saved {len(all_data):,} candles to {output_path} "
+          f"({request_count} reqs, {_time.monotonic() - wall_start:.0f}s)")
 
 
 def action_test_evening_review(**kwargs) -> Tuple[bool, str]:
@@ -552,6 +592,43 @@ def save_execution_report(results: List[Dict]) -> Path:
 
 
 # ---------------------------------------------------------------------------
+# Failure Alerting
+# ---------------------------------------------------------------------------
+
+def _send_failure_alert(results: List[Dict], report_path: Path):
+    """Email Sipho when priority execution has failures."""
+    failed = [r for r in results if not r["success"]]
+    succeeded = [r for r in results if r["success"]]
+    today = datetime.now().strftime("%Y-%m-%d")
+
+    body = f"# Priority Execution Alert — {today}\n\n"
+    body += f"**{len(failed)} of {len(results)} priorities FAILED.**\n\n"
+
+    body += "## Failed\n\n"
+    for r in failed:
+        body += f"- **{r['item']}** — {r['message']}\n"
+
+    if succeeded:
+        body += "\n## Succeeded\n\n"
+        for r in succeeded:
+            body += f"- {r['item']}\n"
+
+    body += f"\n---\n*Automated alert from AI Chief of Staff. "
+    body += f"Report: {report_path.name}*\n"
+
+    print("\n--- Sending failure alert email ---")
+    sent = send_email(
+        subject=f"[ALERT] {len(failed)} priority execution failure(s) — {today}",
+        body=markdown_to_html(body),
+        html=True
+    )
+    if sent:
+        print("  Alert email sent.")
+    else:
+        print("  WARNING: Could not send alert email (check RESEND_API_KEY / EMAIL_TO)")
+
+
+# ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
 
@@ -612,13 +689,18 @@ def main():
 
     # Summary
     succeeded = sum(1 for r in results if r["success"])
+    failed_count = len(results) - succeeded
     print(f"\n{'=' * 60}")
     print("EXECUTION COMPLETE")
     print(f"  Executed: {len(results)} priorities")
     print(f"  Succeeded: {succeeded}")
-    print(f"  Failed: {len(results) - succeeded}")
+    print(f"  Failed: {failed_count}")
     print(f"  Report: {report_path}")
     print(f"{'=' * 60}")
+
+    # Send failure alert email if anything went wrong
+    if failed_count > 0 and not args.dry_run:
+        _send_failure_alert(results, report_path)
 
 
 if __name__ == "__main__":

@@ -73,10 +73,13 @@ jobs:
 
       - name: Execute priorities
         if: ${{ github.event.inputs.skip_execution != 'true' }}
+        timeout-minutes: 15
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           LLM_PROVIDER: ${{ secrets.LLM_PROVIDER || 'anthropic' }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}
           PYTHONPATH: strategies/backtest
         run: |
           MAX="${{ github.event.inputs.max_priorities || '3' }}"
@@ -99,3 +102,40 @@ jobs:
       - name: Push all changes
         run: |
           git push
+
+      - name: Alert on failure
+        if: failure()
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}
+        run: |
+          python3 -c "
+import os, json
+from urllib import request, error
+
+api_key = os.environ.get('RESEND_API_KEY', '')
+email_to = os.environ.get('EMAIL_TO', '')
+if not api_key or not email_to:
+    print('Cannot send alert: missing RESEND_API_KEY or EMAIL_TO')
+    exit(0)
+
+payload = {
+    'from': 'onboarding@resend.dev',
+    'to': [email_to],
+    'subject': '[ALERT] Morning workflow FAILED — $(date +%Y-%m-%d)',
+    'html': '<h2>Morning Brief + Execute workflow failed</h2>'
+            '<p>The GitHub Actions workflow failed or timed out.</p>'
+            '<p>Check: <a href=\"https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\">workflow run</a></p>'
+            '<p><em>Automated alert from AI Chief of Staff</em></p>'
+}
+data = json.dumps(payload).encode()
+req = request.Request('https://api.resend.com/emails', data=data, headers={
+    'Authorization': f'Bearer {api_key}',
+    'Content-Type': 'application/json',
+}, method='POST')
+try:
+    with request.urlopen(req, timeout=15) as resp:
+        print(f'Alert sent: {resp.read().decode()}')
+except Exception as e:
+    print(f'Alert failed: {e}')
+"
