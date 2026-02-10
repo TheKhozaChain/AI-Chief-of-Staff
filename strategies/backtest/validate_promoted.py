@@ -16,6 +16,7 @@ import json
 import sys
 import os
 import statistics
+import argparse
 from datetime import datetime
 from pathlib import Path
 
@@ -25,11 +26,12 @@ from engine import (
     Backtest, BacktestResult, walk_forward, walk_forward_summary,
     run_in_out_of_sample, in_out_of_sample_summary,
 )
-from archetypes import VolAdjustedTrend, DonchianBreakout, DailyTrend
+from archetypes import VolAdjustedTrend, DonchianBreakout, DailyTrend, ARCHETYPES
 from data_loader import load_csv, resample
 
 REPO_ROOT = Path(__file__).parent.parent.parent
 DATA_FILE = str(REPO_ROOT / 'data' / 'BTCUSD_1h.csv')
+PROMOTED_QUEUE_FILE = REPO_ROOT / 'data' / 'promoted_queue.json'
 COST_PCT = 0.1
 COST_STRESS = 0.15
 
@@ -342,6 +344,8 @@ ARCHETYPE_KEY_MAP = {
     DonchianBreakout: 'donchian_breakout',
     DailyTrend: 'daily_trend',
 }
+for _name, _klass in ARCHETYPES.items():
+    ARCHETYPE_KEY_MAP.setdefault(_klass, _name)
 
 
 def register_for_paper_trading(hyp_id, config, result):
@@ -410,6 +414,168 @@ def register_for_paper_trading(hyp_id, config, result):
         print(f"  Notification email failed: {e}")
 
     return True
+
+
+def _default_promoted_queue():
+    return {
+        'pending_validation': [],
+        'validated': [],
+        'failed': [],
+    }
+
+
+def _load_promoted_queue():
+    if not PROMOTED_QUEUE_FILE.exists():
+        return _default_promoted_queue()
+    try:
+        queue = json.loads(PROMOTED_QUEUE_FILE.read_text())
+        if not isinstance(queue, dict):
+            return _default_promoted_queue()
+        queue.setdefault('pending_validation', [])
+        queue.setdefault('validated', [])
+        queue.setdefault('failed', [])
+        return queue
+    except json.JSONDecodeError:
+        return _default_promoted_queue()
+
+
+def _save_promoted_queue(queue):
+    PROMOTED_QUEUE_FILE.parent.mkdir(parents=True, exist_ok=True)
+    PROMOTED_QUEUE_FILE.write_text(json.dumps(queue, indent=2) + '\n')
+
+
+def _build_sensitivity_from_params(params):
+    sensitivity = {}
+    for param, base in params.items():
+        if isinstance(base, bool):
+            continue
+        if isinstance(base, int):
+            values = [int(round(base * m)) for m in (0.8, 1.0, 1.2)]
+        elif isinstance(base, float):
+            values = [round(base * m, 6) for m in (0.8, 1.0, 1.2)]
+        else:
+            continue
+        # Keep order, remove duplicates.
+        deduped = list(dict.fromkeys(values))
+        if len(deduped) > 1:
+            sensitivity[param] = deduped
+    return sensitivity
+
+
+def _build_config_from_queue_entry(entry):
+    archetype_key = entry.get('archetype')
+    if archetype_key not in ARCHETYPES:
+        raise KeyError(f"Unknown archetype: {archetype_key}")
+
+    params = dict(entry.get('params') or {})
+    return {
+        'name': entry.get('name', entry['research_id']),
+        'research_id': entry['research_id'],
+        'archetype': ARCHETYPES[archetype_key],
+        'timeframe_hours': int(entry.get('timeframe_hours', 4)),
+        'params': params,
+        'sensitivity': _build_sensitivity_from_params(params),
+        'walk_forward_window': 182 if int(entry.get('timeframe_hours', 4)) >= 24 else 1095,
+    }
+
+
+def _append_queue_validation_summary(report, all_results):
+    report.append("\n## Summary\n")
+    report.append("| Strategy | Baseline PF | OOS PF | Walk-Fwd | OOS | Sensitivity | Cost Stress | **Verdict** |")
+    report.append("|----------|------------|--------|----------|-----|-------------|-------------|-------------|")
+    for r in all_results:
+        report.append(
+            f"| {r['hypothesis']} | {r['baseline_pf']:.2f} | {r['oos_pf']:.2f} | "
+            f"{'PASS' if r['wf_pass'] else 'FAIL'} | "
+            f"{'PASS' if r['oos_pass'] else 'FAIL'} | "
+            f"{'PASS' if r['sens_pass'] else 'FAIL'} | "
+            f"{'PASS' if r['cost_pass'] else 'FAIL'} | "
+            f"**{'VALIDATED' if r['overall'] else 'FAILED'}** |"
+        )
+    report.append("")
+
+
+def validate_from_queue():
+    print("=" * 60)
+    print("WALK-FORWARD VALIDATION — QUEUED PROMOTIONS")
+    print(f"Date: {datetime.now().strftime('%Y-%m-%d %H:%M')}")
+    print(f"Queue: {PROMOTED_QUEUE_FILE}")
+    print("=" * 60)
+
+    queue = _load_promoted_queue()
+    pending = list(queue.get('pending_validation', []))
+    if not pending:
+        print("nothing to validate")
+        return []
+
+    print("\nLoading 1H data...")
+    data_1h = load_csv(DATA_FILE)
+    print(f"  {len(data_1h):,} bars: {data_1h[0]['datetime']} → {data_1h[-1]['datetime']}")
+
+    report = [
+        f"# Walk-Forward Validation Report (Queue)",
+        f"",
+        f"**Date:** {datetime.now().strftime('%Y-%m-%d %H:%M')}  ",
+        f"**Data:** BTCUSD 1H, {len(data_1h):,} bars  ",
+        f"**Period:** {data_1h[0]['datetime'].strftime('%Y-%m-%d')} → {data_1h[-1]['datetime'].strftime('%Y-%m-%d')}  ",
+        f"**Base cost:** {COST_PCT}%  |  **Stress cost:** {COST_STRESS}%",
+        f"",
+        f"---",
+        f"",
+    ]
+
+    all_results = []
+    for entry in pending:
+        hyp_id = entry.get('hypothesis_id')
+        if not hyp_id:
+            entry['validation_error'] = 'Missing hypothesis_id.'
+            queue['failed'].append(entry)
+            continue
+
+        try:
+            config = _build_config_from_queue_entry(entry)
+            STRATEGIES[hyp_id] = config
+            result = validate_strategy(hyp_id, data_1h, report)
+            all_results.append(result)
+
+            audited_entry = dict(entry)
+            audited_entry['validated_date'] = datetime.now().strftime('%Y-%m-%d')
+            audited_entry['validation_passed_tests'] = result['passed_count']
+            audited_entry['validation_overall'] = result['overall']
+
+            if result['overall']:
+                queue['validated'].append(audited_entry)
+                register_for_paper_trading(hyp_id, config, result)
+            else:
+                queue['failed'].append(audited_entry)
+
+        except Exception as e:
+            entry['validation_error'] = str(e)
+            queue['failed'].append(entry)
+        finally:
+            # Preserve legacy strategies as-is; queue strategies are additive.
+            if hyp_id not in ('H004', 'H005', 'H006'):
+                STRATEGIES.pop(hyp_id, None)
+
+    queue['pending_validation'] = []
+    _save_promoted_queue(queue)
+
+    if all_results:
+        _append_queue_validation_summary(report, all_results)
+        out_dir = REPO_ROOT / 'data'
+        out_path = out_dir / f"validation_{datetime.now().strftime('%Y%m%d')}.md"
+        out_path.write_text('\n'.join(report))
+        print(f"\nReport saved to: {out_path}")
+
+    print(f"\n{'='*60}")
+    print("QUEUE VALIDATION COMPLETE")
+    for r in all_results:
+        status = "VALIDATED" if r['overall'] else "FAILED"
+        print(f"  {r['hypothesis']}: {status} ({r['passed_count']}/4) — "
+              f"PF {r['baseline_pf']:.2f}, OOS PF {r['oos_pf']:.2f}")
+    print(f"{'='*60}")
+
+    return all_results
 
 
 def main():
@@ -498,4 +664,15 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    parser = argparse.ArgumentParser(description='Walk-forward validator')
+    parser.add_argument(
+        '--from-queue',
+        action='store_true',
+        help='Validate promoted strategies from data/promoted_queue.json',
+    )
+    args = parser.parse_args()
+
+    if args.from_queue:
+        validate_from_queue()
+    else:
+        main()

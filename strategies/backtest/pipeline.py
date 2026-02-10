@@ -97,6 +97,89 @@ IDEA_ARCHETYPE_MAP = {
     },
 }
 
+REPO_ROOT = Path(__file__).parent.parent.parent
+PROMOTED_QUEUE_FILE = REPO_ROOT / 'data' / 'promoted_queue.json'
+
+
+def _default_promoted_queue() -> Dict:
+    return {
+        'pending_validation': [],
+        'validated': [],
+        'failed': [],
+    }
+
+
+def _load_promoted_queue() -> Dict:
+    if not PROMOTED_QUEUE_FILE.exists():
+        return _default_promoted_queue()
+    try:
+        queue = json.loads(PROMOTED_QUEUE_FILE.read_text())
+        if not isinstance(queue, dict):
+            return _default_promoted_queue()
+        queue.setdefault('pending_validation', [])
+        queue.setdefault('validated', [])
+        queue.setdefault('failed', [])
+        return queue
+    except json.JSONDecodeError:
+        return _default_promoted_queue()
+
+
+def _save_promoted_queue(queue: Dict):
+    PROMOTED_QUEUE_FILE.parent.mkdir(parents=True, exist_ok=True)
+    PROMOTED_QUEUE_FILE.write_text(json.dumps(queue, indent=2) + '\n')
+
+
+def _next_hypothesis_id(queue: Optional[Dict] = None) -> str:
+    highest = 0
+    for p in REPO_ROOT.glob('strategies/HYPOTHESIS_*.md'):
+        stem = p.stem  # HYPOTHESIS_004
+        try:
+            n = int(stem.split('_')[-1])
+            highest = max(highest, n)
+        except (ValueError, IndexError):
+            continue
+
+    if queue:
+        for section in ('pending_validation', 'validated', 'failed'):
+            for item in queue.get(section, []):
+                hyp_id = item.get('hypothesis_id', '')
+                if isinstance(hyp_id, str) and hyp_id.startswith('H'):
+                    try:
+                        highest = max(highest, int(hyp_id[1:]))
+                    except ValueError:
+                        continue
+
+    return f"H{highest + 1:03d}"
+
+
+def _queue_has_research_id(queue: Dict, research_id: str) -> bool:
+    for section in ('pending_validation', 'validated', 'failed'):
+        for item in queue.get(section, []):
+            if item.get('research_id') == research_id:
+                return True
+    return False
+
+
+def _queue_promoted_strategy(idea_id: str, idea_name: str, best: Dict, config: Dict):
+    queue = _load_promoted_queue()
+    if _queue_has_research_id(queue, idea_id):
+        print(f"  Queue: {idea_id} already tracked, skipping.")
+        return
+
+    queue['pending_validation'].append({
+        'hypothesis_id': _next_hypothesis_id(queue),
+        'research_id': idea_id,
+        'name': idea_name,
+        'archetype': config['archetype'],
+        'timeframe_hours': config.get('timeframe_hours', 4),
+        'params': best.get('params', {}),
+        'promoted_date': datetime.now().strftime('%Y-%m-%d'),
+        'screen_pf': best.get('gross_pf', best.get('profit_factor', 0)),
+        'screen_trades': best.get('total_trades', 0),
+    })
+    _save_promoted_queue(queue)
+    print(f"  Queue: added {idea_id} for validation.")
+
 
 def run_pipeline(
     data_file: str = DEFAULT_DATA,
@@ -219,6 +302,12 @@ def run_pipeline(
                 notes += f" {config['note']}"
             if update_backlog:
                 update_backlog_entry(idea_id, 'promoted', notes)
+            _queue_promoted_strategy(
+                idea_id=idea_id,
+                idea_name=idea_name,
+                best=best,
+                config=config,
+            )
 
         elif best['verdict'] == 'kill':
             killed.append(idea_id)

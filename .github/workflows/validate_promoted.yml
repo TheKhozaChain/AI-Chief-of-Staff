@@ -1,0 +1,87 @@
+name: Validate Promoted Strategies
+
+on:
+  workflow_run:
+    workflows: ["RBI Weekly Screen", "RBI Pipeline"]
+    types: [completed]
+  workflow_dispatch:
+
+jobs:
+  validate-promoted:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    env:
+      TZ: Australia/Sydney
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Check promoted queue
+        id: queue
+        run: |
+          python3 - << 'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          path = Path('data/promoted_queue.json')
+          has_pending = False
+          if path.exists():
+              try:
+                  queue = json.loads(path.read_text())
+                  has_pending = bool(queue.get('pending_validation', []))
+              except json.JSONDecodeError:
+                  has_pending = False
+
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+              f.write(f"has_pending={'true' if has_pending else 'false'}\\n")
+          print(f"Queue pending entries: {has_pending}")
+          PY
+
+      - name: Refresh market data
+        if: steps.queue.outputs.has_pending == 'true'
+        run: |
+          python3 -c "from scripts.run_rbi import refresh_data; refresh_data()"
+
+      - name: Validate promoted queue
+        if: steps.queue.outputs.has_pending == 'true'
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}
+          EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+          PYTHONPATH: strategies/backtest
+        run: |
+          python3 strategies/backtest/validate_promoted.py --from-queue
+
+      - name: Commit validation updates
+        if: steps.queue.outputs.has_pending == 'true'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "AI Chief of Staff"
+          git add data/promoted_queue.json
+          git add data/paper_trade_registry.json
+          git add data/validation_*.md
+          git diff --staged --quiet || git commit -m "Validate promoted strategies - $(date +%Y-%m-%d\ %H:%M)"
+
+      - name: Push changes
+        if: steps.queue.outputs.has_pending == 'true'
+        run: |
+          git pull --rebase origin main
+          git push
+
+      - name: Alert on failure
+        if: failure()
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}
+          EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+        run: python3 scripts/send_workflow_alert.py
