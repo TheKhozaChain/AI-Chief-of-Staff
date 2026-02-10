@@ -82,6 +82,19 @@ IDEA_ARCHETYPE_MAP = {
             'long_only': [True],
         },
     },
+    'R010': {
+        'archetype': 'multi_asset_momentum',
+        'timeframe_hours': 4,
+        'param_grid': {
+            'roc_period': [10, 20, 30],
+            'min_roc': [1.0, 2.0, 3.0],
+            'stop_pct': [2.0, 3.0, 4.0],
+            'target_pct': [6.0, 8.0, 12.0],
+            'aux_data_dir': [str(Path(__file__).parent.parent.parent / 'data')],
+            'aux_timeframe_hours': [4],
+            'long_only': [True],
+        },
+    },
 }
 
 

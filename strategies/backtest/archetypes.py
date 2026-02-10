@@ -318,6 +318,110 @@ class BollingerBreakout:
         return None
 
 
+class MultiAssetMomentum:
+    """Cross-asset momentum rotation — BTC filter via relative strength.
+
+    Compares rate-of-change (ROC) across BTC, ETH, and SOL.
+    Only goes long BTC when BTC has the strongest momentum among
+    all available assets AND exceeds a minimum threshold.
+
+    This is a momentum filter, not a full rotation strategy.
+    The engine trades BTC; ETH/SOL data is used purely for ranking.
+
+    Params:
+        roc_period: Lookback for rate of change (bars)
+        min_roc: Minimum BTC ROC to take a trade (%)
+        stop_pct: Stop loss percentage
+        target_pct: Take profit percentage
+        aux_data_dir: Directory containing ETHUSD_1h.csv and SOLUSD_1h.csv
+        aux_timeframe_hours: Resample aux data to this timeframe (must match main)
+        long_only: Only long signals (always True for this strategy)
+    """
+
+    def __init__(self, roc_period=20, min_roc=2.0, stop_pct=3.0, target_pct=8.0,
+                 aux_data_dir='', aux_timeframe_hours=4, long_only=True):
+        self.roc_period = roc_period
+        self.min_roc = min_roc
+        self.stop_pct = stop_pct
+        self.target_pct = target_pct
+        self.long_only = long_only
+
+        self._eth = self._load_aux(aux_data_dir, 'ETHUSD_1h.csv', aux_timeframe_hours)
+        self._sol = self._load_aux(aux_data_dir, 'SOLUSD_1h.csv', aux_timeframe_hours)
+
+    @staticmethod
+    def _load_aux(data_dir, filename, tf_hours):
+        """Load auxiliary asset data and build datetime-indexed lookup."""
+        import os
+        filepath = os.path.join(data_dir, filename)
+        if not os.path.exists(filepath):
+            return None
+
+        from data_loader import load_csv, resample
+        raw = load_csv(filepath)
+        bars = resample(raw, hours=tf_hours) if tf_hours > 1 else raw
+
+        lookup = {}
+        closes = []
+        for i, bar in enumerate(bars):
+            lookup[bar['datetime']] = i
+            closes.append(bar['close'])
+        return {'lookup': lookup, 'closes': closes}
+
+    def _get_roc(self, asset_data, dt):
+        """Get ROC for an auxiliary asset at a given datetime."""
+        if asset_data is None:
+            return None
+        idx = asset_data['lookup'].get(dt)
+        if idx is None or idx < self.roc_period:
+            return None
+        current = asset_data['closes'][idx]
+        past = asset_data['closes'][idx - self.roc_period]
+        if past == 0:
+            return None
+        return ((current - past) / past) * 100
+
+    def __call__(self, bar: Dict, prev_bars: List[Dict], position) -> Optional[Dict]:
+        if len(prev_bars) < self.roc_period:
+            return None
+
+        # BTC momentum
+        btc_current = bar['close']
+        btc_past = prev_bars[-self.roc_period]['close']
+        if btc_past == 0:
+            return None
+        btc_roc = ((btc_current - btc_past) / btc_past) * 100
+
+        # Aux asset momentum at the same point in time
+        dt = bar['datetime']
+        eth_roc = self._get_roc(self._eth, dt)
+        sol_roc = self._get_roc(self._sol, dt)
+
+        # Collect all valid ROCs for ranking
+        rocs = {'BTC': btc_roc}
+        if eth_roc is not None:
+            rocs['ETH'] = eth_roc
+        if sol_roc is not None:
+            rocs['SOL'] = sol_roc
+
+        # Need at least 2 assets to make a meaningful comparison
+        if len(rocs) < 2:
+            return None
+
+        # BTC must be the strongest AND above minimum threshold
+        strongest = max(rocs, key=rocs.get)
+        if strongest != 'BTC':
+            return None
+        if btc_roc < self.min_roc:
+            return None
+
+        return {
+            'action': 'buy',
+            'stop_loss': btc_current * (1 - self.stop_pct / 100),
+            'take_profit': btc_current * (1 + self.target_pct / 100),
+        }
+
+
 # Registry: maps archetype name to class for dynamic instantiation
 ARCHETYPES = {
     'ma_crossover': MACrossover,
@@ -325,4 +429,5 @@ ARCHETYPES = {
     'vol_adjusted_trend': VolAdjustedTrend,
     'daily_trend': DailyTrend,
     'bollinger_breakout': BollingerBreakout,
+    'multi_asset_momentum': MultiAssetMomentum,
 }
