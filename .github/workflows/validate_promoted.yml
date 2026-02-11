@@ -6,10 +6,15 @@ on:
     types: [completed]
   workflow_dispatch:
 
+concurrency:
+  group: repo-push
+  cancel-in-progress: false
+
 jobs:
   validate-promoted:
     if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     permissions:
       contents: write
 

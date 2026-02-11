@@ -49,7 +49,15 @@ def fetch_recent_1h(days=60):
     start_time = int((datetime.utcnow() - timedelta(days=days)).timestamp() * 1000)
     current = start_time
 
+    max_retries = 5
+    consecutive_errors = 0
+    wall_start = time.monotonic()
+    wall_timeout = 300  # 5 min hard ceiling
+
     while current < end_time:
+        if time.monotonic() - wall_start > wall_timeout:
+            print(f"  Hit time limit ({wall_timeout}s). Using {len(all_data)} candles fetched so far.")
+            break
         req_url = f"{url}?symbol=BTCUSDT&interval=1h&startTime={current}&limit=1000"
         try:
             req = urllib.request.Request(req_url, headers={"User-Agent": "Mozilla/5.0"})
@@ -59,9 +67,14 @@ def fetch_recent_1h(days=60):
                     break
                 all_data.extend(data)
                 current = data[-1][0] + 1
+                consecutive_errors = 0
                 time.sleep(0.2)
         except Exception as e:
-            print(f"  Fetch error: {e}, retrying...")
+            consecutive_errors += 1
+            print(f"  Fetch error ({consecutive_errors}/{max_retries}): {e}")
+            if consecutive_errors >= max_retries:
+                print(f"  Giving up after {max_retries} consecutive errors.")
+                break
             time.sleep(3)
             continue
 

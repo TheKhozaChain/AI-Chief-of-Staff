@@ -40,6 +40,10 @@ on:
         default: ''
         type: string
 
+concurrency:
+  group: repo-push
+  cancel-in-progress: false
+
 jobs:
   rbi-pipeline:
     runs-on: ubuntu-latest

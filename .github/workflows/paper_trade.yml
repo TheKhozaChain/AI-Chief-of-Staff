@@ -23,9 +23,14 @@ on:
           - run
           - status
 
+concurrency:
+  group: repo-push
+  cancel-in-progress: false
+
 jobs:
   paper-trade:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     permissions:
       contents: write
 

@@ -15,9 +15,14 @@ on:
   # Allow manual triggering for testing
   workflow_dispatch:
 
+concurrency:
+  group: repo-push
+  cancel-in-progress: false
+
 jobs:
   generate-review:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     permissions:
       contents: write
 
@@ -56,6 +61,7 @@ jobs:
           git config --local user.name "AI Chief of Staff"
           git add data/
           git diff --staged --quiet || git commit -m "Evening review - $(date +%Y-%m-%d)"
+          git pull --rebase origin main
           git push
 
       - name: Alert on failure
