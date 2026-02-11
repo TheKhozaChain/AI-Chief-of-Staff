@@ -66,7 +66,8 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "AI Chief of Staff"
           git add data/paper_trade_registry.json
-          git add data/paper_trade_*_state.json data/paper_trade_*_log.md
+          git add data/paper_trade_*_state.json || true
+          git add data/paper_trade_*_log.md || true
           git diff --staged --quiet || git commit -m "Paper trade update - $(date +%Y-%m-%d\ %H:%M)"
 
       - name: Push changes
