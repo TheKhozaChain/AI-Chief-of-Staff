@@ -1,5 +1,79 @@
 {
-  "pending_validation": [],
+  "pending_validation": [
+    {
+      "hypothesis_id": "H007",
+      "research_id": "R010",
+      "name": "Multi-Asset Momentum",
+      "archetype": "multi_asset_momentum",
+      "timeframe_hours": 4,
+      "params": {
+        "roc_period": 30,
+        "min_roc": 1.0,
+        "stop_pct": 2.0,
+        "target_pct": 12.0,
+        "aux_data_dir": "/Users/siphokhoza/ai-chief-of-staff/data",
+        "aux_timeframe_hours": 4,
+        "long_only": true
+      },
+      "promoted_date": "2026-02-11",
+      "screen_pf": 1.62,
+      "screen_trades": 82
+    },
+    {
+      "hypothesis_id": "H008",
+      "research_id": "R012",
+      "name": "Adaptive Momentum Burst (AMB)",
+      "archetype": "adaptive_momentum_burst",
+      "timeframe_hours": 4,
+      "params": {
+        "bb_period": 20,
+        "bb_std": 2.0,
+        "squeeze_lookback": 50,
+        "squeeze_pct": 20,
+        "min_squeeze_bars": 3,
+        "ma_period": 50,
+        "ma_slope_bars": 5,
+        "stop_pct": 2.0,
+        "target_pct": 12.0
+      },
+      "promoted_date": "2026-02-11",
+      "screen_pf": 1.66,
+      "screen_trades": 35
+    },
+    {
+      "hypothesis_id": "H009",
+      "research_id": "R013",
+      "name": "Acceleration Breakout Filter (ABF)",
+      "archetype": "acceleration_breakout",
+      "timeframe_hours": 4,
+      "params": {
+        "channel_period": 30,
+        "roc_short": 5,
+        "roc_long": 15,
+        "stop_pct": 2.0,
+        "target_pct": 12.0
+      },
+      "promoted_date": "2026-02-11",
+      "screen_pf": 2.34,
+      "screen_trades": 35
+    },
+    {
+      "hypothesis_id": "H010",
+      "research_id": "R014",
+      "name": "Multi-Timeframe Breakout Confluence (MTBC)",
+      "archetype": "mtf_breakout",
+      "timeframe_hours": 4,
+      "params": {
+        "channel_period": 15,
+        "trend_ma_period": 90,
+        "stop_pct": 4.0,
+        "target_pct": 6.0
+      },
+      "promoted_date": "2026-02-11",
+      "screen_pf": 1.39,
+      "screen_trades": 107
+    }
+  ],
   "validated": [],
   "failed": []
 }

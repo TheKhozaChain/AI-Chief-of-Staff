@@ -422,7 +422,207 @@ class MultiAssetMomentum:
         }
 
 
-# Registry: maps archetype name to class for dynamic instantiation
+class AdaptiveMomentumBurst:
+    """Squeeze breakout with trend confirmation.
+
+    Enters when price breaks out of a volatility compression zone
+    AND price is above a rising medium-term MA. Combines the squeeze
+    detection of BollingerBreakout with directional trend filtering.
+
+    Research idea R012.
+
+    Params:
+        bb_period: Bollinger Band lookback (bars)
+        bb_std: Standard deviation multiplier for bands
+        squeeze_lookback: Bars of bandwidth history for percentile calc
+        squeeze_pct: Bandwidth below this percentile = squeeze
+        min_squeeze_bars: Consecutive squeeze bars required to arm
+        ma_period: Trend MA period (price must be above this)
+        ma_slope_bars: Number of bars to measure MA slope (must be rising)
+        stop_pct: Stop loss percentage
+        target_pct: Take profit percentage
+    """
+
+    def __init__(self, bb_period=20, bb_std=2.0, squeeze_lookback=50,
+                 squeeze_pct=20, min_squeeze_bars=3, ma_period=50,
+                 ma_slope_bars=5, stop_pct=3.0, target_pct=8.0):
+        self.bb_period = bb_period
+        self.bb_std = bb_std
+        self.squeeze_lookback = squeeze_lookback
+        self.squeeze_pct = squeeze_pct
+        self.min_squeeze_bars = min_squeeze_bars
+        self.ma_period = ma_period
+        self.ma_slope_bars = ma_slope_bars
+        self.stop_pct = stop_pct
+        self.target_pct = target_pct
+
+    def __call__(self, bar: Dict, prev_bars: List[Dict], position) -> Optional[Dict]:
+        needed = max(self.bb_period + self.squeeze_lookback, self.ma_period + self.ma_slope_bars)
+        if len(prev_bars) < needed:
+            return None
+
+        closes = [b['close'] for b in prev_bars]
+        price = bar['close']
+
+        # Trend filter: MA must be rising and price above it
+        ma_now = statistics.mean(closes[-self.ma_period:])
+        ma_prev = statistics.mean(closes[-(self.ma_period + self.ma_slope_bars):-self.ma_slope_bars])
+        if price <= ma_now or ma_now <= ma_prev:
+            return None
+
+        # Bollinger Band squeeze detection
+        recent = closes[-self.bb_period:]
+        bb_ma = statistics.mean(recent)
+        bb_std = statistics.stdev(recent)
+        if bb_std == 0 or bb_ma == 0:
+            return None
+        upper = bb_ma + self.bb_std * bb_std
+
+        # Compute bandwidth history
+        bandwidths = []
+        for end_idx in range(len(prev_bars) - self.squeeze_lookback, len(prev_bars) + 1):
+            start_idx = end_idx - self.bb_period
+            if start_idx < 0:
+                continue
+            window = closes[start_idx:end_idx]
+            if len(window) < self.bb_period:
+                continue
+            w_ma = statistics.mean(window)
+            w_std = statistics.stdev(window) if len(window) > 1 else 0
+            if w_ma > 0 and w_std > 0:
+                bandwidths.append((2 * self.bb_std * w_std) / w_ma * 100)
+
+        if len(bandwidths) < 10:
+            return None
+
+        sorted_bw = sorted(bandwidths)
+        thresh_idx = max(0, int(len(sorted_bw) * self.squeeze_pct / 100))
+        squeeze_thresh = sorted_bw[min(thresh_idx, len(sorted_bw) - 1)]
+
+        squeeze_count = 0
+        for bw in reversed(bandwidths):
+            if bw <= squeeze_thresh:
+                squeeze_count += 1
+            else:
+                break
+
+        # Entry: squeeze armed + breakout above upper band + trend confirmed
+        if squeeze_count >= self.min_squeeze_bars and price > upper:
+            return {
+                'action': 'buy',
+                'stop_loss': price * (1 - self.stop_pct / 100),
+                'take_profit': price * (1 + self.target_pct / 100),
+            }
+
+        return None
+
+
+class AccelerationBreakoutFilter:
+    """Donchian breakout filtered by momentum acceleration.
+
+    Only enters Donchian channel breakouts when the rate of change (ROC)
+    is accelerating — i.e., short-term ROC exceeds long-term ROC,
+    indicating genuine momentum thrust rather than a slow grind.
+
+    Research idea R013.
+
+    Params:
+        channel_period: Donchian channel lookback (bars)
+        roc_short: Short ROC lookback (bars)
+        roc_long: Long ROC lookback (bars)
+        stop_pct: Stop loss percentage
+        target_pct: Take profit percentage
+    """
+
+    def __init__(self, channel_period=20, roc_short=5, roc_long=20,
+                 stop_pct=3.0, target_pct=9.0):
+        self.channel_period = channel_period
+        self.roc_short = roc_short
+        self.roc_long = roc_long
+        self.stop_pct = stop_pct
+        self.target_pct = target_pct
+
+    def __call__(self, bar: Dict, prev_bars: List[Dict], position) -> Optional[Dict]:
+        needed = max(self.channel_period, self.roc_long)
+        if len(prev_bars) < needed:
+            return None
+
+        price = bar['close']
+        closes = [b['close'] for b in prev_bars]
+
+        # Donchian breakout check
+        channel_high = max(b['high'] for b in prev_bars[-self.channel_period:])
+        if price <= channel_high:
+            return None
+
+        # ROC acceleration filter
+        if closes[-self.roc_short] == 0 or closes[-self.roc_long] == 0:
+            return None
+        roc_s = ((price - closes[-self.roc_short]) / closes[-self.roc_short]) * 100
+        roc_l = ((price - closes[-self.roc_long]) / closes[-self.roc_long]) * 100
+
+        # Short ROC must exceed long ROC (acceleration) and both must be positive
+        if roc_s <= roc_l or roc_s <= 0:
+            return None
+
+        return {
+            'action': 'buy',
+            'stop_loss': price * (1 - self.stop_pct / 100),
+            'take_profit': price * (1 + self.target_pct / 100),
+        }
+
+
+class MultiTimeframeBreakout:
+    """Donchian breakout with daily trend confirmation.
+
+    Enters on a shorter-period Donchian channel breakout ONLY when the
+    longer-term trend is bullish (price above a slow MA that approximates
+    the daily timeframe trend).
+
+    Run on 4H data: a 120-bar MA ≈ 20-day moving average.
+
+    Research idea R014.
+
+    Params:
+        channel_period: Donchian breakout lookback (bars, shorter)
+        trend_ma_period: Slow MA for daily trend proxy (bars, longer)
+        stop_pct: Stop loss percentage
+        target_pct: Take profit percentage
+    """
+
+    def __init__(self, channel_period=15, trend_ma_period=120,
+                 stop_pct=3.0, target_pct=9.0):
+        self.channel_period = channel_period
+        self.trend_ma_period = trend_ma_period
+        self.stop_pct = stop_pct
+        self.target_pct = target_pct
+
+    def __call__(self, bar: Dict, prev_bars: List[Dict], position) -> Optional[Dict]:
+        needed = max(self.channel_period, self.trend_ma_period)
+        if len(prev_bars) < needed:
+            return None
+
+        price = bar['close']
+        closes = [b['close'] for b in prev_bars]
+
+        # Daily trend filter: price must be above slow MA
+        trend_ma = statistics.mean(closes[-self.trend_ma_period:])
+        if price <= trend_ma:
+            return None
+
+        # Donchian breakout
+        channel_high = max(b['high'] for b in prev_bars[-self.channel_period:])
+        if price <= channel_high:
+            return None
+
+        return {
+            'action': 'buy',
+            'stop_loss': price * (1 - self.stop_pct / 100),
+            'take_profit': price * (1 + self.target_pct / 100),
+        }
+
+
+# Registry: maps strategy name to class for dynamic instantiation
 ARCHETYPES = {
     'ma_crossover': MACrossover,
     'donchian_breakout': DonchianBreakout,
@@ -430,4 +630,7 @@ ARCHETYPES = {
     'daily_trend': DailyTrend,
     'bollinger_breakout': BollingerBreakout,
     'multi_asset_momentum': MultiAssetMomentum,
+    'adaptive_momentum_burst': AdaptiveMomentumBurst,
+    'acceleration_breakout': AccelerationBreakoutFilter,
+    'mtf_breakout': MultiTimeframeBreakout,
 }

@@ -1,21 +1,42 @@
 {
-  "version": 7,
-  "last_updated": "2026-02-11T09:50:00+11:00",
+  "version": 8,
+  "last_updated": "2026-02-11T17:01:27.931689+11:00",
   "schema_note": "Optimized for AI context retrieval, not human reading",
   "active_context": {
     "current_focus": "H004_validated_paper_trading_next_screen_new_ideas",
-    "status": "validation_complete_H004_passed_H005_H006_archived",
+    "status": "pipeline_ran_2026-02-11_4_screened_4_promoted",
     "blockers": [],
-    "next_action": "paper_trade_H004_and_screen_R010_R012_R013_R014",
+    "next_action": "walk_forward_validate_newly_promoted_strategies",
     "execution_model": "autonomous_execute_then_inform",
     "rbi_phase": "implement_paper_trading"
   },
   "session_log": [
     {
       "date": "2026-02-11",
+      "summary": "Pipeline screened 4 ideas. Promoted: R010 (PF 1.62), R012 (PF 1.66), R013 (PF 2.34), R014 (PF 1.39).",
+      "decisions": [
+        "R010_promoted",
+        "R012_promoted",
+        "R013_promoted",
+        "R014_promoted"
+      ],
+      "artifacts": [],
+      "source": "automated_rbi_pipeline"
+    },
+    {
+      "date": "2026-02-11",
       "summary": "Walk-forward validation on 3 promoted strategies. H004 (Vol-Adjusted Trend) VALIDATED 3/4: walk-forward PASS (4/6 profitable), sensitivity PASS, cost-stress PASS, OOS FAIL (PF decay -37.9%). H005 (Donchian) FAILED 2/4: edge too thin after costs (net PF 1.23). H006 (Daily Trend) FAILED 2/4: only 20 trades, statistically meaningless. H004 proceeds to paper trading. H005/H006 archived.",
-      "decisions": ["H004_validated_proceed_paper_trading", "H005_archived_edge_too_thin", "H006_archived_insufficient_sample"],
-      "artifacts": ["data/validation_20260211.md", "strategies/HYPOTHESIS_004.md", "strategies/HYPOTHESIS_005.md", "strategies/HYPOTHESIS_006.md"]
+      "decisions": [
+        "H004_validated_proceed_paper_trading",
+        "H005_archived_edge_too_thin",
+        "H006_archived_insufficient_sample"
+      ],
+      "artifacts": [
+        "data/validation_20260211.md",
+        "strategies/HYPOTHESIS_004.md",
+        "strategies/HYPOTHESIS_005.md",
+        "strategies/HYPOTHESIS_006.md"
+      ]
     },
     {
       "date": "2026-02-10",
@@ -96,7 +117,7 @@
         "research_id": "R007",
         "name": "Volatility-Adjusted Trend Following",
         "gross_pf": 1.46,
-        "net_pf": 1.40,
+        "net_pf": 1.4,
         "oos_pf": 1.09,
         "trades": 87,
         "win_rate": "44.8%",
@@ -118,32 +139,7 @@
       "H005/R009 (Donchian Breakout): net PF 1.23, OOS PF 1.07. Edge too thin after costs.",
       "H006/R011 (Daily Trend): 20 trades, OOS PF 1.13, -41% decay. Insufficient sample."
     ],
-    "research_queue": [
-      {
-        "id": "R010",
-        "name": "Multi-Asset Momentum",
-        "status": "new",
-        "note": "ETH/SOL data ready. Archetype built."
-      },
-      {
-        "id": "R012",
-        "name": "Adaptive Momentum Burst (AMB)",
-        "status": "new",
-        "note": "Auto-sourced. Custom archetype needed."
-      },
-      {
-        "id": "R013",
-        "name": "Acceleration Breakout Filter (ABF)",
-        "status": "new",
-        "note": "Auto-sourced. Custom archetype needed."
-      },
-      {
-        "id": "R014",
-        "name": "Multi-Timeframe Breakout Confluence (MTBC)",
-        "status": "new",
-        "note": "Auto-sourced. Custom archetype needed."
-      }
-    ],
+    "research_queue": [],
     "parked": [
       {
         "id": "R002",
@@ -165,6 +161,73 @@
       "HYPOTHESIS_001",
       "HYPOTHESIS_002",
       "HYPOTHESIS_003"
+    ],
+    "promoted_awaiting_validation": [
+      {
+        "research_id": "R010",
+        "name": "Multi-Asset Momentum",
+        "gross_pf": 1.62,
+        "trades": 82,
+        "win_rate": "24.4%",
+        "params": {
+          "roc_period": 30,
+          "min_roc": 1.0,
+          "stop_pct": 2.0,
+          "target_pct": 12.0,
+          "aux_data_dir": "/Users/siphokhoza/ai-chief-of-staff/data",
+          "aux_timeframe_hours": 4,
+          "long_only": true
+        },
+        "next_step": "walk_forward_validation"
+      },
+      {
+        "research_id": "R012",
+        "name": "Adaptive Momentum Burst (AMB)",
+        "gross_pf": 1.66,
+        "trades": 35,
+        "win_rate": "22.9%",
+        "params": {
+          "bb_period": 20,
+          "bb_std": 2.0,
+          "squeeze_lookback": 50,
+          "squeeze_pct": 20,
+          "min_squeeze_bars": 3,
+          "ma_period": 50,
+          "ma_slope_bars": 5,
+          "stop_pct": 2.0,
+          "target_pct": 12.0
+        },
+        "next_step": "walk_forward_validation"
+      },
+      {
+        "research_id": "R013",
+        "name": "Acceleration Breakout Filter (ABF)",
+        "gross_pf": 2.34,
+        "trades": 35,
+        "win_rate": "25.7%",
+        "params": {
+          "channel_period": 30,
+          "roc_short": 5,
+          "roc_long": 15,
+          "stop_pct": 2.0,
+          "target_pct": 12.0
+        },
+        "next_step": "walk_forward_validation"
+      },
+      {
+        "research_id": "R014",
+        "name": "Multi-Timeframe Breakout Confluence (MTBC)",
+        "gross_pf": 1.39,
+        "trades": 107,
+        "win_rate": "50.5%",
+        "params": {
+          "channel_period": 15,
+          "trend_ma_period": 90,
+          "stop_pct": 4.0,
+          "target_pct": 6.0
+        },
+        "next_step": "walk_forward_validation"
+      }
     ]
   },
   "user_patterns": {

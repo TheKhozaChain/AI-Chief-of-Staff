@@ -95,10 +95,87 @@ IDEA_ARCHETYPE_MAP = {
             'long_only': [True],
         },
     },
+    'R012': {
+        'archetype': 'adaptive_momentum_burst',
+        'timeframe_hours': 4,
+        'param_grid': {
+            'bb_period': [20],
+            'bb_std': [1.5, 2.0],
+            'squeeze_lookback': [50],
+            'squeeze_pct': [20],
+            'min_squeeze_bars': [3],
+            'ma_period': [30, 50],
+            'ma_slope_bars': [5],
+            'stop_pct': [2.0, 3.0],
+            'target_pct': [6.0, 8.0, 12.0],
+        },
+    },
+    'R013': {
+        'archetype': 'acceleration_breakout',
+        'timeframe_hours': 4,
+        'param_grid': {
+            'channel_period': [10, 20, 30],
+            'roc_short': [3, 5],
+            'roc_long': [15, 20],
+            'stop_pct': [2.0, 3.0, 4.0],
+            'target_pct': [6.0, 9.0, 12.0],
+        },
+    },
+    'R014': {
+        'archetype': 'mtf_breakout',
+        'timeframe_hours': 4,
+        'param_grid': {
+            'channel_period': [10, 15, 20],
+            'trend_ma_period': [90, 120, 150],
+            'stop_pct': [2.0, 3.0, 4.0],
+            'target_pct': [6.0, 9.0, 12.0],
+        },
+    },
 }
 
 REPO_ROOT = Path(__file__).parent.parent.parent
 PROMOTED_QUEUE_FILE = REPO_ROOT / 'data' / 'promoted_queue.json'
+
+# Default param grids per strategy (used by auto-mapping)
+DEFAULT_PARAM_GRIDS = {
+    'ma_crossover': {'fast_period': [10, 20], 'slow_period': [40, 80], 'stop_pct': [3.0, 4.0], 'target_pct': [9.0, 12.0], 'long_only': [True]},
+    'donchian_breakout': {'channel_period': [10, 20, 30], 'stop_pct': [2.0, 3.0], 'target_pct': [6.0, 9.0], 'long_only': [True]},
+    'vol_adjusted_trend': {'ma_period': [20, 30], 'atr_period': [14, 20], 'stop_atr_mult': [2.0, 3.0], 'target_atr_mult': [4.0, 6.0], 'trend_filter_period': [60, 80], 'long_only': [True]},
+    'daily_trend': {'fast_period': [5, 10], 'slow_period': [20, 40], 'stop_pct': [5.0, 6.0], 'target_pct': [15.0, 24.0], 'long_only': [True]},
+    'bollinger_breakout': {'bb_period': [20], 'bb_std': [1.5, 2.0], 'stop_pct': [2.0, 3.0], 'target_pct': [4.0, 6.0]},
+    'adaptive_momentum_burst': {'bb_period': [20], 'bb_std': [2.0], 'squeeze_lookback': [50], 'squeeze_pct': [20], 'min_squeeze_bars': [3], 'ma_period': [30, 50], 'ma_slope_bars': [5], 'stop_pct': [2.0, 3.0], 'target_pct': [6.0, 8.0]},
+    'acceleration_breakout': {'channel_period': [10, 20], 'roc_short': [5], 'roc_long': [20], 'stop_pct': [2.0, 3.0], 'target_pct': [6.0, 9.0]},
+    'mtf_breakout': {'channel_period': [10, 20], 'trend_ma_period': [90, 120], 'stop_pct': [2.0, 3.0], 'target_pct': [6.0, 9.0]},
+}
+
+
+def _auto_map_from_backlog(entry: Dict) -> Optional[Dict]:
+    """Try to infer strategy config from a backlog entry's notes field.
+
+    When LLM-sourced ideas include 'Archetype: <name>' in their notes,
+    this auto-maps them to a screening config with default param grids.
+    """
+    import re
+    notes = entry.get('notes', '')
+    match = re.search(r'[Aa]rchetype:\s*(\w+)', notes)
+    if not match:
+        return None
+
+    archetype = match.group(1).strip()
+    if archetype not in ARCHETYPES:
+        return None
+
+    param_grid = DEFAULT_PARAM_GRIDS.get(archetype)
+    if not param_grid:
+        return None
+
+    timeframe = 24 if archetype == 'daily_trend' else 4
+    print(f"  Auto-mapped {entry['id']} to {archetype} (from backlog notes)")
+    return {
+        'archetype': archetype,
+        'timeframe_hours': timeframe,
+        'param_grid': param_grid,
+    }
 
 
 def _default_promoted_queue() -> Dict:
@@ -235,19 +312,23 @@ def run_pipeline(
 
         config = IDEA_ARCHETYPE_MAP.get(idea_id)
 
+        # Auto-map: if no hardcoded config, try to infer from backlog notes
         if not config:
-            print(f"  No archetype mapping for {idea_id}. Parking.")
+            config = _auto_map_from_backlog(entry)
+
+        if not config:
+            print(f"  No strategy mapping for {idea_id}. Parking.")
             parked.append(idea_id)
             if update_backlog:
                 update_backlog_entry(
                     idea_id, 'parked',
-                    'No archetype mapping. Needs manual strategy implementation.',
+                    'No strategy mapping found. Add to IDEA_ARCHETYPE_MAP or include "Archetype: <name>" in notes.',
                 )
             results.append({
                 'idea_id': idea_id,
                 'idea_name': idea_name,
                 'verdict': 'park',
-                'reason': 'No archetype mapping available.',
+                'reason': 'No strategy mapping available.',
             })
             continue
 

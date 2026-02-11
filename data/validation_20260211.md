@@ -1,6 +1,6 @@
 # Walk-Forward Validation Report
 
-**Date:** 2026-02-11 09:42  
+**Date:** 2026-02-11 10:37  
 **Data:** BTCUSD 1H, 26,279 bars  
 **Period:** 2023-02-08 → 2026-02-07  
 **Base cost:** 0.1%  |  **Stress cost:** 0.15%
