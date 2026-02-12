@@ -1,6 +1,6 @@
 # AI Chief of Staff — Work Board
 
-> Last updated: 2026-02-11 by AI Chief of Staff (auto-execution)
+> Last updated: 2026-02-12 by AI Chief of Staff
 
 ---
 
@@ -9,6 +9,7 @@
 
 | Item | Owner | Started | Status |
 |------|:-----:|---------|--------|
+| Walk-forward validate R010/R012/R013/R014 | AI | 2026-02-12 | Queued for next RBI Pipeline run |
 
 ---
 
@@ -17,7 +18,7 @@
 
 | # | Item | RBI Phase | Notes |
 |:-:|------|:---------:|-------|
-| 1 | Unpark R010 (Multi-Asset Momentum) — ETH/SOL data now available | R | Can now test cross-asset strategies |
+| 1 | Source new research ideas (refill funnel) | R | Pipeline cleared — need fresh ideas |
 
 ---
 
@@ -25,6 +26,9 @@
 
 | Item | Completed |
 |------|-----------|
+| Screen R010/R012/R013/R014 — all promoted (PF 1.39-2.34) | 2026-02-11 |
+| Remove archetype bottleneck (any strategy class can now be screened) | 2026-02-11 |
+| Harden automation: timeouts, retry limits, concurrency, push safety | 2026-02-11 |
 | Screen R012/R013/R014 (new ideas from LLM sourcing) | 2026-02-11 |
 | Fetch ETH/SOL data for multi-asset screens (26K candles each) | 2026-02-10 |
 | Test evening review workflow end-to-end | 2026-02-10 |

@@ -295,8 +295,9 @@ def action_create_hypothesis_docs(idea_ids: str = "", **kwargs) -> Tuple[bool, s
 
 
 def action_fetch_multi_asset(assets: str = "ETHUSDT,SOLUSDT", **kwargs) -> Tuple[bool, str]:
-    """Fetch data for additional crypto assets."""
+    """Fetch data for additional crypto assets. Skips files that already exist."""
     fetched = []
+    skipped = []
     failed = []
     for symbol in assets.split(","):
         symbol = symbol.strip()
@@ -304,6 +305,12 @@ def action_fetch_multi_asset(assets: str = "ETHUSDT,SOLUSDT", **kwargs) -> Tuple
             continue
         clean_name = symbol.replace("USDT", "USD")
         output_path = DATA_DIR / f"{clean_name}_1h.csv"
+
+        # Skip if data already exists and is reasonably fresh (>100 bytes)
+        if output_path.exists() and output_path.stat().st_size > 100:
+            print(f"  {clean_name} data already exists ({output_path.stat().st_size:,} bytes). Skipping.")
+            skipped.append(clean_name)
+            continue
 
         print(f"  Fetching 1h data for {symbol}...")
         try:
@@ -317,12 +324,14 @@ def action_fetch_multi_asset(assets: str = "ETHUSDT,SOLUSDT", **kwargs) -> Tuple
             failed.append(f"{symbol}: {e}")
 
     msg_parts = []
+    if skipped:
+        msg_parts.append(f"Already exists: {', '.join(skipped)}")
     if fetched:
         msg_parts.append(f"Fetched: {', '.join(fetched)}")
     if failed:
         msg_parts.append(f"Failed: {', '.join(failed)}")
 
-    if fetched:
+    if fetched or skipped:
         return True, "; ".join(msg_parts)
     return False, "; ".join(msg_parts) or "No data fetched"
 
@@ -335,8 +344,49 @@ FETCH_MAX_CONSECUTIVE_ERRORS = 5  # give up after 5 failures in a row
 
 
 def _fetch_symbol(symbol: str, interval: str, days: int, output_path: Path):
-    """Fetch OHLCV data for any Binance symbol with hard limits."""
+    """Fetch OHLCV data with Binance → Bybit fallback (handles HTTP 451 geoblock)."""
     import csv
+    import time as _time
+    from datetime import timedelta
+    import urllib.request
+    import urllib.error
+
+    # Try Binance first, fall back to Bybit if geoblocked (HTTP 451)
+    all_data = []
+    try:
+        all_data = _fetch_binance(symbol, interval, days)
+    except RuntimeError as e:
+        if "451" in str(e) or "403" in str(e):
+            print(f"  Binance geoblocked. Falling back to Bybit...")
+            try:
+                all_data = _fetch_bybit(symbol, interval, days)
+            except Exception as bybit_err:
+                raise RuntimeError(
+                    f"Both Binance and Bybit failed for {symbol}. "
+                    f"Binance: {e} | Bybit: {bybit_err}"
+                )
+        else:
+            raise
+
+    if not all_data:
+        raise RuntimeError(f"No data received for {symbol} from any source")
+
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(output_path, "w", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow(["datetime", "open", "high", "low", "close", "volume"])
+        for candle in all_data:
+            ts = datetime.fromtimestamp(candle[0] / 1000)
+            writer.writerow([
+                ts.strftime("%Y-%m-%d %H:%M:%S"),
+                candle[1], candle[2], candle[3], candle[4], candle[5],
+            ])
+
+    print(f"  Saved {len(all_data):,} candles to {output_path}")
+
+
+def _fetch_binance(symbol: str, interval: str, days: int) -> list:
+    """Fetch from Binance API. Returns list of [ts, o, h, l, c, v, ...] candles."""
     import time as _time
     from datetime import timedelta
     import urllib.request
@@ -350,17 +400,13 @@ def _fetch_symbol(symbol: str, interval: str, days: int, output_path: Path):
     consecutive_errors = 0
     wall_start = _time.monotonic()
 
-    print(f"  Fetching {days} days of {interval} data for {symbol}...")
-    print(f"  Limits: {FETCH_MAX_REQUESTS} requests, {FETCH_TOTAL_TIMEOUT}s total, "
-          f"{FETCH_MAX_CONSECUTIVE_ERRORS} consecutive errors max")
+    print(f"  [Binance] Fetching {days} days of {interval} data for {symbol}...")
 
     while current_start < end_time:
-        # Hard limits
         if request_count >= FETCH_MAX_REQUESTS:
             print(f"  Hit request limit ({FETCH_MAX_REQUESTS}). Stopping.")
             break
-        elapsed = _time.monotonic() - wall_start
-        if elapsed > FETCH_TOTAL_TIMEOUT:
+        if _time.monotonic() - wall_start > FETCH_TOTAL_TIMEOUT:
             print(f"  Hit time limit ({FETCH_TOTAL_TIMEOUT}s). Stopping.")
             break
 
@@ -379,8 +425,7 @@ def _fetch_symbol(symbol: str, interval: str, days: int, output_path: Path):
                 request_count += 1
                 consecutive_errors = 0
                 if request_count % 10 == 0:
-                    print(f"    {len(all_data):,} candles ({request_count} reqs, "
-                          f"{_time.monotonic() - wall_start:.0f}s elapsed)...")
+                    print(f"    {len(all_data):,} candles ({request_count} reqs)...")
                 if request_count % 50 == 0:
                     _time.sleep(1)
         except Exception as e:
@@ -394,22 +439,87 @@ def _fetch_symbol(symbol: str, interval: str, days: int, output_path: Path):
             _time.sleep(2)
             continue
 
-    if not all_data:
-        raise RuntimeError(f"No data received for {symbol} after {request_count} requests")
+    return all_data
 
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    with open(output_path, "w", newline="") as f:
-        writer = csv.writer(f)
-        writer.writerow(["datetime", "open", "high", "low", "close", "volume"])
-        for candle in all_data:
-            ts = datetime.fromtimestamp(candle[0] / 1000)
-            writer.writerow([
-                ts.strftime("%Y-%m-%d %H:%M:%S"),
-                candle[1], candle[2], candle[3], candle[4], candle[5],
-            ])
 
-    print(f"  Saved {len(all_data):,} candles to {output_path} "
-          f"({request_count} reqs, {_time.monotonic() - wall_start:.0f}s)")
+def _fetch_bybit(symbol: str, interval: str, days: int) -> list:
+    """Fetch from Bybit API. Returns Binance-compatible [ts, o, h, l, c, v] candles."""
+    import time as _time
+    from datetime import timedelta
+    import urllib.request
+
+    # Map Binance intervals to Bybit intervals
+    interval_map = {"1h": "60", "4h": "240", "1d": "D", "15m": "15", "1m": "1", "5m": "5"}
+    bybit_interval = interval_map.get(interval, interval)
+
+    all_data = []
+    end_time = int(datetime.now().timestamp() * 1000)
+    start_time = int((datetime.now() - timedelta(days=days)).timestamp() * 1000)
+    current_start = start_time
+    request_count = 0
+    consecutive_errors = 0
+    wall_start = _time.monotonic()
+
+    print(f"  [Bybit] Fetching {days} days of {interval} data for {symbol}...")
+
+    while current_start < end_time:
+        if request_count >= FETCH_MAX_REQUESTS:
+            print(f"  Hit request limit ({FETCH_MAX_REQUESTS}). Stopping.")
+            break
+        if _time.monotonic() - wall_start > FETCH_TOTAL_TIMEOUT:
+            print(f"  Hit time limit ({FETCH_TOTAL_TIMEOUT}s). Stopping.")
+            break
+
+        url = (
+            f"https://api.bybit.com/v5/market/kline"
+            f"?category=spot&symbol={symbol}&interval={bybit_interval}"
+            f"&start={current_start}&limit=1000"
+        )
+        try:
+            req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+            with urllib.request.urlopen(req, timeout=FETCH_TIMEOUT_PER_REQ) as response:
+                resp = json.loads(response.read().decode())
+                rows = resp.get("result", {}).get("list", [])
+                if not rows:
+                    break
+                # Bybit returns [ts, o, h, l, c, v, turnover] in DESCENDING order
+                rows.sort(key=lambda r: int(r[0]))
+                for r in rows:
+                    ts_ms = int(r[0])
+                    if ts_ms < current_start:
+                        continue
+                    # Convert to Binance-compatible format: [ts, o, h, l, c, v]
+                    all_data.append([ts_ms, r[1], r[2], r[3], r[4], r[5]])
+                current_start = int(rows[-1][0]) + 1
+                request_count += 1
+                consecutive_errors = 0
+                if request_count % 10 == 0:
+                    print(f"    {len(all_data):,} candles ({request_count} reqs)...")
+                if request_count % 50 == 0:
+                    _time.sleep(1)
+        except Exception as e:
+            consecutive_errors += 1
+            print(f"    Error ({consecutive_errors}/{FETCH_MAX_CONSECUTIVE_ERRORS}): {e}")
+            if consecutive_errors >= FETCH_MAX_CONSECUTIVE_ERRORS:
+                raise RuntimeError(
+                    f"Fetch aborted for {symbol} (Bybit): {FETCH_MAX_CONSECUTIVE_ERRORS} "
+                    f"consecutive errors. Last: {e}"
+                )
+            _time.sleep(2)
+            continue
+
+    # Deduplicate by timestamp
+    seen = set()
+    deduped = []
+    for candle in all_data:
+        ts = candle[0]
+        if ts not in seen:
+            seen.add(ts)
+            deduped.append(candle)
+    deduped.sort(key=lambda c: c[0])
+
+    print(f"  [Bybit] Got {len(deduped):,} candles in {request_count} requests")
+    return deduped
 
 
 def action_test_evening_review(**kwargs) -> Tuple[bool, str]:
