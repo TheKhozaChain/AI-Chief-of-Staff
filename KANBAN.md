@@ -9,7 +9,7 @@
 
 | Item | Owner | Started | Status |
 |------|:-----:|---------|--------|
-| Walk-forward validate R010/R012/R013/R014 | AI | 2026-02-12 | Queued for next RBI Pipeline run |
+| Paper trade H004 + H007/H008/H009 (4 strategies live) | AI | 2026-02-12 | Auto-registered, running every 4H |
 
 ---
 
@@ -26,6 +26,7 @@
 
 | Item | Completed |
 |------|-----------|
+| Walk-forward validate R010/R012/R013/R014 — H007/H008/H009 validated, H010 failed | 2026-02-12 |
 | Screen R010/R012/R013/R014 — all promoted (PF 1.39-2.34) | 2026-02-11 |
 | Remove archetype bottleneck (any strategy class can now be screened) | 2026-02-11 |
 | Harden automation: timeouts, retry limits, concurrency, push safety | 2026-02-11 |

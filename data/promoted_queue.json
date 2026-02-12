@@ -1,5 +1,6 @@
 {
-  "pending_validation": [
+  "pending_validation": [],
+  "validated": [
     {
       "hypothesis_id": "H007",
       "research_id": "R010",
@@ -17,7 +18,10 @@
       },
       "promoted_date": "2026-02-11",
       "screen_pf": 1.62,
-      "screen_trades": 82
+      "screen_trades": 82,
+      "validated_date": "2026-02-12",
+      "validation_passed_tests": 3,
+      "validation_overall": true
     },
     {
       "hypothesis_id": "H008",
@@ -38,7 +42,10 @@
       },
       "promoted_date": "2026-02-11",
       "screen_pf": 1.66,
-      "screen_trades": 35
+      "screen_trades": 35,
+      "validated_date": "2026-02-12",
+      "validation_passed_tests": 3,
+      "validation_overall": true
     },
     {
       "hypothesis_id": "H009",
@@ -55,8 +62,13 @@
       },
       "promoted_date": "2026-02-11",
       "screen_pf": 2.34,
-      "screen_trades": 35
-    },
+      "screen_trades": 35,
+      "validated_date": "2026-02-12",
+      "validation_passed_tests": 4,
+      "validation_overall": true
+    }
+  ],
+  "failed": [
     {
       "hypothesis_id": "H010",
       "research_id": "R014",
@@ -71,9 +83,10 @@
       },
       "promoted_date": "2026-02-11",
       "screen_pf": 1.39,
-      "screen_trades": 107
+      "screen_trades": 107,
+      "validated_date": "2026-02-12",
+      "validation_passed_tests": 2,
+      "validation_overall": false
     }
-  ],
-  "validated": [],
-  "failed": []
+  ]
 }
