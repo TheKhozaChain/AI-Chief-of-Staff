@@ -131,6 +131,75 @@ IDEA_ARCHETYPE_MAP = {
             'target_pct': [6.0, 9.0, 12.0],
         },
     },
+    'R015': {
+        'archetype': 'volume_breakout',
+        'timeframe_hours': 4,
+        'param_grid': {
+            'channel_period': [15, 20, 30],
+            'vol_period': [15, 20],
+            'vol_mult': [1.2, 1.5, 2.0],
+            'stop_pct': [2.0, 3.0],
+            'target_pct': [6.0, 9.0, 12.0],
+        },
+    },
+    'R016': {
+        'archetype': 'dual_momentum_consensus',
+        'timeframe_hours': 4,
+        'param_grid': {
+            'channel_period': [15, 20, 30],
+            'roc_fast': [3, 5],
+            'roc_med': [10, 15],
+            'roc_slow': [20, 30],
+            'stop_pct': [2.0, 3.0],
+            'target_pct': [6.0, 9.0, 12.0],
+        },
+    },
+    'R017': {
+        'archetype': 'trend_strength_breakout',
+        'timeframe_hours': 4,
+        'param_grid': {
+            'channel_period': [15, 20, 30],
+            'adx_period': [14, 20],
+            'adx_threshold': [20, 25, 30],
+            'stop_pct': [2.0, 3.0],
+            'target_pct': [6.0, 9.0, 12.0],
+        },
+    },
+    'R018': {
+        'archetype': 'trend_pullback',
+        'timeframe_hours': 4,
+        'param_grid': {
+            'ma_period': [30, 50, 80],
+            'ma_slope_bars': [5],
+            'pullback_pct': [1.0, 2.0, 3.0],
+            'roc_period': [3, 5],
+            'min_roc': [0.3, 0.5, 1.0],
+            'stop_pct': [2.0, 3.0],
+            'target_pct': [6.0, 9.0, 12.0],
+        },
+    },
+    'R019': {
+        'archetype': 'atr_regime_adaptive',
+        'timeframe_hours': 4,
+        'param_grid': {
+            'ma_period': [20, 30],
+            'atr_period': [14, 20],
+            'atr_history': [90, 120],
+            'base_stop_pct': [2.0, 3.0],
+            'base_target_pct': [8.0, 12.0],
+            'trend_filter_period': [60, 80],
+        },
+    },
+    'R020': {
+        'archetype': 'consecutive_momentum',
+        'timeframe_hours': 4,
+        'param_grid': {
+            'channel_period': [15, 20, 30],
+            'consec_bars': [2, 3, 4],
+            'stop_pct': [2.0, 3.0],
+            'target_pct': [6.0, 9.0, 12.0],
+        },
+    },
 }
 
 REPO_ROOT = Path(__file__).parent.parent.parent
@@ -146,6 +215,12 @@ DEFAULT_PARAM_GRIDS = {
     'adaptive_momentum_burst': {'bb_period': [20], 'bb_std': [2.0], 'squeeze_lookback': [50], 'squeeze_pct': [20], 'min_squeeze_bars': [3], 'ma_period': [30, 50], 'ma_slope_bars': [5], 'stop_pct': [2.0, 3.0], 'target_pct': [6.0, 8.0]},
     'acceleration_breakout': {'channel_period': [10, 20], 'roc_short': [5], 'roc_long': [20], 'stop_pct': [2.0, 3.0], 'target_pct': [6.0, 9.0]},
     'mtf_breakout': {'channel_period': [10, 20], 'trend_ma_period': [90, 120], 'stop_pct': [2.0, 3.0], 'target_pct': [6.0, 9.0]},
+    'volume_breakout': {'channel_period': [15, 20], 'vol_period': [20], 'vol_mult': [1.5, 2.0], 'stop_pct': [2.0, 3.0], 'target_pct': [6.0, 12.0]},
+    'dual_momentum_consensus': {'channel_period': [15, 20], 'roc_fast': [5], 'roc_med': [15], 'roc_slow': [30], 'stop_pct': [2.0, 3.0], 'target_pct': [6.0, 12.0]},
+    'trend_strength_breakout': {'channel_period': [15, 20], 'adx_period': [14], 'adx_threshold': [25], 'stop_pct': [2.0, 3.0], 'target_pct': [6.0, 12.0]},
+    'trend_pullback': {'ma_period': [30, 50], 'ma_slope_bars': [5], 'pullback_pct': [2.0], 'roc_period': [3], 'min_roc': [0.5], 'stop_pct': [2.0, 3.0], 'target_pct': [6.0, 12.0]},
+    'atr_regime_adaptive': {'ma_period': [20, 30], 'atr_period': [14], 'atr_history': [120], 'base_stop_pct': [2.0, 3.0], 'base_target_pct': [8.0, 12.0], 'trend_filter_period': [60, 80]},
+    'consecutive_momentum': {'channel_period': [15, 20], 'consec_bars': [3], 'stop_pct': [2.0, 3.0], 'target_pct': [6.0, 12.0]},
 }
 
 

@@ -9,7 +9,7 @@
 
 | Item | Owner | Started | Status |
 |------|:-----:|---------|--------|
-| Paper trade H004 + H007/H008/H009 (4 strategies live) | AI | 2026-02-12 | Auto-registered, running every 4H |
+| Paper trade H004 + H007-H009 + H011 + H013-H016 (9 strategies live) | AI | 2026-02-12 | Running every 4H via GitHub Actions |
 
 ---
 
@@ -18,7 +18,7 @@
 
 | # | Item | RBI Phase | Notes |
 |:-:|------|:---------:|-------|
-| 1 | Source new research ideas (refill funnel) | R | Pipeline cleared — need fresh ideas |
+| 1 | Review paper trading results after 30 days (target: Mar 14) | I | Evaluate graduation candidates |
 
 ---
 
@@ -26,6 +26,7 @@
 
 | Item | Completed |
 |------|-----------|
+| Source + screen + validate R015-R020 — H013/H014/H016 standouts, H012 failed | 2026-02-12 |
 | Walk-forward validate R010/R012/R013/R014 — H007/H008/H009 validated, H010 failed | 2026-02-12 |
 | Screen R010/R012/R013/R014 — all promoted (PF 1.39-2.34) | 2026-02-11 |
 | Remove archetype bottleneck (any strategy class can now be screened) | 2026-02-11 |

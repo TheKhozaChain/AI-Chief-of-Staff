@@ -66,6 +66,108 @@
       "validated_date": "2026-02-12",
       "validation_passed_tests": 4,
       "validation_overall": true
+    },
+    {
+      "hypothesis_id": "H011",
+      "research_id": "R015",
+      "name": "Volume-Confirmed Breakout (VCB)",
+      "archetype": "volume_breakout",
+      "timeframe_hours": 4,
+      "params": {
+        "channel_period": 20,
+        "vol_period": 20,
+        "vol_mult": 1.5,
+        "stop_pct": 2.0,
+        "target_pct": 12.0
+      },
+      "promoted_date": "2026-02-12",
+      "screen_pf": 1.41,
+      "screen_trades": 90,
+      "validated_date": "2026-02-12",
+      "validation_passed_tests": 3,
+      "validation_overall": true
+    },
+    {
+      "hypothesis_id": "H013",
+      "research_id": "R017",
+      "name": "Trend Strength Breakout (TSB)",
+      "archetype": "trend_strength_breakout",
+      "timeframe_hours": 4,
+      "params": {
+        "channel_period": 30,
+        "adx_period": 20,
+        "adx_threshold": 30,
+        "stop_pct": 2.0,
+        "target_pct": 9.0
+      },
+      "promoted_date": "2026-02-12",
+      "screen_pf": 1.59,
+      "screen_trades": 67,
+      "validated_date": "2026-02-12",
+      "validation_passed_tests": 4,
+      "validation_overall": true
+    },
+    {
+      "hypothesis_id": "H014",
+      "research_id": "R018",
+      "name": "Trend Pullback Entry (TPE)",
+      "archetype": "trend_pullback",
+      "timeframe_hours": 4,
+      "params": {
+        "ma_period": 80,
+        "ma_slope_bars": 5,
+        "pullback_pct": 1.0,
+        "roc_period": 5,
+        "min_roc": 1.0,
+        "stop_pct": 2.0,
+        "target_pct": 6.0
+      },
+      "promoted_date": "2026-02-12",
+      "screen_pf": 2.65,
+      "screen_trades": 26,
+      "validated_date": "2026-02-12",
+      "validation_passed_tests": 4,
+      "validation_overall": true
+    },
+    {
+      "hypothesis_id": "H015",
+      "research_id": "R019",
+      "name": "ATR Regime Adaptive (ARA)",
+      "archetype": "atr_regime_adaptive",
+      "timeframe_hours": 4,
+      "params": {
+        "ma_period": 20,
+        "atr_period": 20,
+        "atr_history": 90,
+        "base_stop_pct": 3.0,
+        "base_target_pct": 12.0,
+        "trend_filter_period": 80
+      },
+      "promoted_date": "2026-02-12",
+      "screen_pf": 1.38,
+      "screen_trades": 69,
+      "validated_date": "2026-02-12",
+      "validation_passed_tests": 3,
+      "validation_overall": true
+    },
+    {
+      "hypothesis_id": "H016",
+      "research_id": "R020",
+      "name": "Consecutive Momentum Filter (CMF)",
+      "archetype": "consecutive_momentum",
+      "timeframe_hours": 4,
+      "params": {
+        "channel_period": 20,
+        "consec_bars": 4,
+        "stop_pct": 2.0,
+        "target_pct": 12.0
+      },
+      "promoted_date": "2026-02-12",
+      "screen_pf": 1.74,
+      "screen_trades": 48,
+      "validated_date": "2026-02-12",
+      "validation_passed_tests": 4,
+      "validation_overall": true
     }
   ],
   "failed": [
@@ -84,6 +186,27 @@
       "promoted_date": "2026-02-11",
       "screen_pf": 1.39,
       "screen_trades": 107,
+      "validated_date": "2026-02-12",
+      "validation_passed_tests": 2,
+      "validation_overall": false
+    },
+    {
+      "hypothesis_id": "H012",
+      "research_id": "R016",
+      "name": "Dual Momentum Consensus (DMC)",
+      "archetype": "dual_momentum_consensus",
+      "timeframe_hours": 4,
+      "params": {
+        "channel_period": 20,
+        "roc_fast": 3,
+        "roc_med": 10,
+        "roc_slow": 20,
+        "stop_pct": 2.0,
+        "target_pct": 6.0
+      },
+      "promoted_date": "2026-02-12",
+      "screen_pf": 1.31,
+      "screen_trades": 134,
       "validated_date": "2026-02-12",
       "validation_passed_tests": 2,
       "validation_overall": false
