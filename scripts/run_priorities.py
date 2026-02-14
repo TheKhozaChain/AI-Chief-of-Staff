@@ -522,6 +522,52 @@ def _fetch_bybit(symbol: str, interval: str, days: int) -> list:
     return deduped
 
 
+def action_paper_trade_health_check(**kwargs) -> Tuple[bool, str]:
+    """Check paper trading strategies for early kill criteria."""
+    registry_path = DATA_DIR / "paper_trade_registry.json"
+    if not registry_path.exists():
+        return False, "No paper_trade_registry.json found"
+
+    registry = json.loads(registry_path.read_text())
+    active = registry.get("active", [])
+    if not active:
+        return True, "No active paper trading strategies"
+
+    alerts = []
+    healthy = []
+    for strat in active:
+        sid = strat["id"]
+        state_file = DATA_DIR / f"paper_trade_{sid}_state.json"
+        if not state_file.exists():
+            healthy.append(f"{sid}: no state yet")
+            continue
+
+        state = json.loads(state_file.read_text())
+        trades = state.get("trades", [])
+        kill_pf = strat.get("graduation", {}).get("kill_pf_below", 0.7)
+        kill_min = strat.get("graduation", {}).get("kill_min_trades", 10)
+        max_dd = strat.get("graduation", {}).get("max_drawdown_pct", 25)
+
+        # Check kill criteria
+        if len(trades) >= kill_min:
+            gross_wins = sum(t.get("pnl_pct", 0) for t in trades if t.get("pnl_pct", 0) > 0)
+            gross_losses = abs(sum(t.get("pnl_pct", 0) for t in trades if t.get("pnl_pct", 0) < 0))
+            pf = gross_wins / gross_losses if gross_losses > 0 else 99
+            if pf < kill_pf:
+                alerts.append(f"{sid}: PF {pf:.2f} below kill threshold {kill_pf} ({len(trades)} trades)")
+            else:
+                healthy.append(f"{sid}: PF {pf:.2f}, {len(trades)} trades")
+        else:
+            healthy.append(f"{sid}: {len(trades)} trades (need {kill_min} for kill check)")
+
+    msg_parts = []
+    if alerts:
+        msg_parts.append(f"ALERTS: {'; '.join(alerts)}")
+    msg_parts.append(f"Healthy: {len(healthy)}/{len(active)} strategies")
+
+    return True, "; ".join(msg_parts)
+
+
 def action_test_evening_review(**kwargs) -> Tuple[bool, str]:
     """Test the evening review workflow end-to-end."""
     print("  Executing: run_evening.py (dry test)")
@@ -549,7 +595,7 @@ def action_test_evening_review(**kwargs) -> Tuple[bool, str]:
 # Pattern → (action_func, kwargs_extractor)
 ACTION_PATTERNS = [
     # Source research ideas
-    (r"[Ss]ource.*research ideas|[Ss]ource.*ideas.*LLM|run_rbi.*--source-ideas",
+    (r"[Ss]ource.*research ideas|[Ss]ource.*ideas.*LLM|run_rbi.*--source-ideas|[Ss]ource.*new.*ideas.*R\d{3}",
      action_source_ideas, {}),
 
     # Walk-forward validation
@@ -571,6 +617,10 @@ ACTION_PATTERNS = [
     # Test evening review
     (r"[Tt]est.*evening.*review|evening.*review.*test",
      action_test_evening_review, {}),
+
+    # Paper trading health check
+    (r"[Pp]aper.*trad.*health|[Pp]aper.*trad.*check|[Cc]heck.*early.*kill",
+     action_paper_trade_health_check, {}),
 ]
 
 
@@ -678,11 +728,25 @@ def save_execution_report(results: List[Dict]) -> Path:
     lines = [
         f"# Priority Execution Report — {datetime.now().strftime('%Y-%m-%d %H:%M')}",
         "",
+    ]
+
+    if not results:
+        lines.extend([
+            "**No executable priorities found in KANBAN.**",
+            "",
+            "The system is in monitoring mode. Paper trading is running autonomously.",
+            "Next scheduled work: check KANBAN Up Next for queued items.",
+        ])
+        report_path.write_text("\n".join(lines))
+        print(f"\nExecution report saved to: {report_path}")
+        return report_path
+
+    lines.extend([
         f"Executed {len(results)} priorities.",
         "",
         "| # | Priority | Action | Result |",
         "|:-:|----------|--------|--------|",
-    ]
+    ])
 
     succeeded = 0
     for i, r in enumerate(results):
@@ -772,7 +836,10 @@ def main():
     plan = build_execution_plan(kanban, max_items=args.max)
 
     if not plan:
-        print("  No executable priorities found. Nothing to do.")
+        print("  No executable priorities found.")
+        # Still generate a report so the system doesn't go silent
+        report_path = save_execution_report([])
+        print(f"  Empty execution report saved to: {report_path}")
         return
 
     print(f"\n  Execution plan ({len(plan)} steps):")

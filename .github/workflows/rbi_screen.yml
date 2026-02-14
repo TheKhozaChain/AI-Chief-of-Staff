@@ -87,8 +87,9 @@ jobs:
             ARGS="$ARGS --refresh-data"
           fi
 
-          # Source ideas (default false for scheduled, configurable for dispatch)
-          if [ "${{ inputs.source_ideas }}" = "true" ]; then
+          # Source ideas: always on for scheduled runs (keeps funnel fed),
+          # configurable for dispatch
+          if [ "${{ github.event_name }}" = "schedule" ] || [ "${{ inputs.source_ideas }}" = "true" ]; then
             ARGS="$ARGS --source-ideas"
           fi
 

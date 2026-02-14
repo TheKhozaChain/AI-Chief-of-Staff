@@ -14,6 +14,12 @@ Review the user profile and mission documents provided. Consider:
 - **Where are we in the RBI loop?** (Research = sourcing ideas, Backtest = screening/validating, Implement = deployment)
 - **What does the pipeline look like?** (How many ideas in research backlog? Any active screens? Any hypotheses in validation?)
 
+## CRITICAL: Check KANBAN.md Before Recommending Priorities
+
+**You MUST read the KANBAN.md "Done" section carefully.** If an item appears in Done, it is COMPLETED — do NOT recommend it again. Do NOT recommend walk-forward validation for strategies that have already been validated. Do NOT recommend screening for ideas that have already been screened. Only recommend work from the "Up Next" section or new work that isn't covered by any Done item.
+
+**If all major work is done and the system is in a monitoring phase (e.g., paper trading is running), say so explicitly.** Don't invent phantom tasks. Recommend maintenance, research sourcing, or documentation — not re-doing completed work.
+
 ## Output Format
 
 Generate a briefing with these sections:
