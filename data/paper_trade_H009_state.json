@@ -1,0 +1,17 @@
+{
+  "strategy_id": "H009",
+  "archetype": "acceleration_breakout",
+  "params": {
+    "channel_period": 30,
+    "roc_short": 5,
+    "roc_long": 15,
+    "stop_pct": 2.0,
+    "target_pct": 12.0
+  },
+  "started": "2026-02-15",
+  "position": null,
+  "last_bar_time": "2026-02-14T16:00:00",
+  "trades": [],
+  "total_pnl": 0.0,
+  "total_costs": 0.0
+}

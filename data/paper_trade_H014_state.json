@@ -1,0 +1,19 @@
+{
+  "strategy_id": "H014",
+  "archetype": "trend_pullback",
+  "params": {
+    "ma_period": 80,
+    "ma_slope_bars": 5,
+    "pullback_pct": 1.0,
+    "roc_period": 5,
+    "min_roc": 1.0,
+    "stop_pct": 2.0,
+    "target_pct": 6.0
+  },
+  "started": "2026-02-15",
+  "position": null,
+  "last_bar_time": "2026-02-14T16:00:00",
+  "trades": [],
+  "total_pnl": 0.0,
+  "total_costs": 0.0
+}

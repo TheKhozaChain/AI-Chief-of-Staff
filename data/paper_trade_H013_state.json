@@ -1,0 +1,17 @@
+{
+  "strategy_id": "H013",
+  "archetype": "trend_strength_breakout",
+  "params": {
+    "channel_period": 30,
+    "adx_period": 20,
+    "adx_threshold": 30,
+    "stop_pct": 2.0,
+    "target_pct": 9.0
+  },
+  "started": "2026-02-15",
+  "position": null,
+  "last_bar_time": "2026-02-14T16:00:00",
+  "trades": [],
+  "total_pnl": 0.0,
+  "total_costs": 0.0
+}
