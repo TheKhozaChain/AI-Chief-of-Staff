@@ -42,10 +42,10 @@ COST_PCT = 0.1  # 0.1% round-trip
 # ── Data fetching ─────────────────────────────────────────────────
 
 def fetch_recent_1h(days=60):
-    """Fetch recent BTCUSD 1H candles with Binance → Bybit fallback.
+    """Fetch recent BTCUSD 1H candles with Binance → Bybit → CryptoCompare fallback.
 
-    GitHub Actions runs in the US where Binance returns HTTP 451 (geoblock).
-    Falls back to Bybit API automatically.
+    GitHub Actions runs in the US where Binance (HTTP 451) and Bybit (HTTP 403)
+    are geoblocked. Falls back to CryptoCompare which works globally.
     """
     all_data = []
 
@@ -53,16 +53,16 @@ def fetch_recent_1h(days=60):
     try:
         all_data = _fetch_binance_1h(days)
     except RuntimeError as e:
-        if "451" in str(e) or "403" in str(e):
-            print(f"  Binance geoblocked ({e}). Falling back to Bybit...")
+        print(f"  Binance failed ({e}). Trying Bybit...")
+        try:
+            all_data = _fetch_bybit_1h(days)
+        except Exception as bybit_err:
+            print(f"  Bybit also failed ({bybit_err}). Trying CryptoCompare...")
             try:
-                all_data = _fetch_bybit_1h(days)
-            except Exception as bybit_err:
-                print(f"  Bybit also failed: {bybit_err}")
+                all_data = _fetch_cryptocompare_1h(days)
+            except Exception as cc_err:
+                print(f"  CryptoCompare also failed: {cc_err}")
                 return []
-        else:
-            print(f"  Binance fetch failed: {e}")
-            return []
 
     bars = []
     for c in all_data:
@@ -188,6 +188,68 @@ def _fetch_bybit_1h(days):
     deduped.sort(key=lambda c: c[0])
 
     print(f"  [Bybit] Got {len(deduped):,} candles in {request_count} requests")
+    return deduped
+
+
+def _fetch_cryptocompare_1h(days):
+    """Fetch BTCUSD 1H from CryptoCompare. Works globally (no geoblock).
+
+    Returns Binance-compatible [ts_ms, open, high, low, close, volume] format.
+    """
+    all_data = []
+    # CryptoCompare returns up to 2000 candles per request
+    # For 60 days = 1440 hourly candles, one request is enough
+    # For longer periods, paginate backwards
+    to_ts = int(datetime.utcnow().timestamp())
+    remaining_hours = days * 24
+    request_count = 0
+
+    print(f"  [CryptoCompare] Fetching {days} days of 1H BTCUSD...")
+
+    while remaining_hours > 0:
+        limit = min(remaining_hours, 2000)
+        req_url = (
+            f"https://min-api.cryptocompare.com/data/v2/histohour"
+            f"?fsym=BTC&tsym=USD&limit={limit}&toTs={to_ts}"
+        )
+        try:
+            req = urllib.request.Request(req_url, headers={"User-Agent": "Mozilla/5.0"})
+            with urllib.request.urlopen(req, timeout=30) as resp:
+                data = json.loads(resp.read().decode())
+                candles = data.get("Data", {}).get("Data", [])
+                if not candles:
+                    break
+                for c in candles:
+                    ts_ms = c["time"] * 1000
+                    all_data.append([
+                        ts_ms,
+                        str(c["open"]),
+                        str(c["high"]),
+                        str(c["low"]),
+                        str(c["close"]),
+                        str(c.get("volumefrom", 0)),
+                    ])
+                # Move window back
+                to_ts = candles[0]["time"] - 1
+                remaining_hours -= len(candles)
+                request_count += 1
+                if request_count % 5 == 0:
+                    print(f"    {len(all_data):,} candles ({request_count} reqs)...")
+                time.sleep(0.5)
+        except Exception as e:
+            raise RuntimeError(f"CryptoCompare failed: {e}")
+
+    # Deduplicate and sort
+    seen = set()
+    deduped = []
+    for candle in all_data:
+        ts = candle[0]
+        if ts not in seen:
+            seen.add(ts)
+            deduped.append(candle)
+    deduped.sort(key=lambda c: c[0])
+
+    print(f"  [CryptoCompare] Got {len(deduped):,} candles in {request_count} requests")
     return deduped
 
 
