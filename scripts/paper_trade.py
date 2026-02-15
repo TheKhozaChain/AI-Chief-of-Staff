@@ -42,41 +42,27 @@ COST_PCT = 0.1  # 0.1% round-trip
 # ── Data fetching ─────────────────────────────────────────────────
 
 def fetch_recent_1h(days=60):
-    """Fetch recent BTCUSD 1H candles from Binance."""
-    url = "https://api.binance.com/api/v3/klines"
+    """Fetch recent BTCUSD 1H candles with Binance → Bybit fallback.
+
+    GitHub Actions runs in the US where Binance returns HTTP 451 (geoblock).
+    Falls back to Bybit API automatically.
+    """
     all_data = []
-    end_time = int(datetime.utcnow().timestamp() * 1000)
-    start_time = int((datetime.utcnow() - timedelta(days=days)).timestamp() * 1000)
-    current = start_time
 
-    max_retries = 5
-    consecutive_errors = 0
-    wall_start = time.monotonic()
-    wall_timeout = 300  # 5 min hard ceiling
-
-    while current < end_time:
-        if time.monotonic() - wall_start > wall_timeout:
-            print(f"  Hit time limit ({wall_timeout}s). Using {len(all_data)} candles fetched so far.")
-            break
-        req_url = f"{url}?symbol=BTCUSDT&interval=1h&startTime={current}&limit=1000"
-        try:
-            req = urllib.request.Request(req_url, headers={"User-Agent": "Mozilla/5.0"})
-            with urllib.request.urlopen(req, timeout=30) as resp:
-                data = json.loads(resp.read().decode())
-                if not data:
-                    break
-                all_data.extend(data)
-                current = data[-1][0] + 1
-                consecutive_errors = 0
-                time.sleep(0.2)
-        except Exception as e:
-            consecutive_errors += 1
-            print(f"  Fetch error ({consecutive_errors}/{max_retries}): {e}")
-            if consecutive_errors >= max_retries:
-                print(f"  Giving up after {max_retries} consecutive errors.")
-                break
-            time.sleep(3)
-            continue
+    # Try Binance first
+    try:
+        all_data = _fetch_binance_1h(days)
+    except RuntimeError as e:
+        if "451" in str(e) or "403" in str(e):
+            print(f"  Binance geoblocked ({e}). Falling back to Bybit...")
+            try:
+                all_data = _fetch_bybit_1h(days)
+            except Exception as bybit_err:
+                print(f"  Bybit also failed: {bybit_err}")
+                return []
+        else:
+            print(f"  Binance fetch failed: {e}")
+            return []
 
     bars = []
     for c in all_data:
@@ -90,6 +76,119 @@ def fetch_recent_1h(days=60):
         })
     bars.sort(key=lambda x: x['datetime'])
     return bars
+
+
+def _fetch_binance_1h(days):
+    """Fetch from Binance. Raises RuntimeError on geoblock."""
+    url = "https://api.binance.com/api/v3/klines"
+    all_data = []
+    end_time = int(datetime.utcnow().timestamp() * 1000)
+    start_time = int((datetime.utcnow() - timedelta(days=days)).timestamp() * 1000)
+    current = start_time
+
+    max_retries = 3
+    consecutive_errors = 0
+    wall_start = time.monotonic()
+    wall_timeout = 300
+
+    while current < end_time:
+        if time.monotonic() - wall_start > wall_timeout:
+            print(f"  Hit time limit ({wall_timeout}s). Using {len(all_data)} candles.")
+            break
+        req_url = f"{url}?symbol=BTCUSDT&interval=1h&startTime={current}&limit=1000"
+        try:
+            req = urllib.request.Request(req_url, headers={"User-Agent": "Mozilla/5.0"})
+            with urllib.request.urlopen(req, timeout=30) as resp:
+                data = json.loads(resp.read().decode())
+                if not data:
+                    break
+                all_data.extend(data)
+                current = data[-1][0] + 1
+                consecutive_errors = 0
+                time.sleep(0.2)
+        except Exception as e:
+            error_str = str(e)
+            if "451" in error_str or "403" in error_str:
+                raise RuntimeError(f"Binance geoblock: {e}")
+            consecutive_errors += 1
+            print(f"  Binance error ({consecutive_errors}/{max_retries}): {e}")
+            if consecutive_errors >= max_retries:
+                raise RuntimeError(f"Binance failed after {max_retries} errors: {e}")
+            time.sleep(3)
+            continue
+
+    return all_data
+
+
+def _fetch_bybit_1h(days):
+    """Fetch BTCUSDT 1H from Bybit. Returns Binance-compatible candle format."""
+    all_data = []
+    end_time = int(datetime.utcnow().timestamp() * 1000)
+    start_time = int((datetime.utcnow() - timedelta(days=days)).timestamp() * 1000)
+    current = start_time
+
+    max_retries = 5
+    consecutive_errors = 0
+    wall_start = time.monotonic()
+    wall_timeout = 300
+    request_count = 0
+
+    print(f"  [Bybit] Fetching {days} days of 1H BTCUSDT...")
+
+    while current < end_time:
+        if time.monotonic() - wall_start > wall_timeout:
+            print(f"  Hit time limit ({wall_timeout}s). Using {len(all_data)} candles.")
+            break
+        if request_count >= 200:
+            break
+
+        req_url = (
+            f"https://api.bybit.com/v5/market/kline"
+            f"?category=spot&symbol=BTCUSDT&interval=60"
+            f"&start={current}&limit=1000"
+        )
+        try:
+            req = urllib.request.Request(req_url, headers={"User-Agent": "Mozilla/5.0"})
+            with urllib.request.urlopen(req, timeout=30) as resp:
+                data = json.loads(resp.read().decode())
+                rows = data.get("result", {}).get("list", [])
+                if not rows:
+                    break
+                # Bybit returns descending order
+                rows.sort(key=lambda r: int(r[0]))
+                for r in rows:
+                    ts_ms = int(r[0])
+                    if ts_ms < current:
+                        continue
+                    # [ts, o, h, l, c, v] — Binance-compatible
+                    all_data.append([ts_ms, r[1], r[2], r[3], r[4], r[5]])
+                current = int(rows[-1][0]) + 1
+                request_count += 1
+                consecutive_errors = 0
+                if request_count % 10 == 0:
+                    print(f"    {len(all_data):,} candles ({request_count} reqs)...")
+                if request_count % 50 == 0:
+                    time.sleep(1)
+        except Exception as e:
+            consecutive_errors += 1
+            print(f"  Bybit error ({consecutive_errors}/{max_retries}): {e}")
+            if consecutive_errors >= max_retries:
+                raise RuntimeError(f"Bybit failed after {max_retries} errors: {e}")
+            time.sleep(3)
+            continue
+
+    # Deduplicate
+    seen = set()
+    deduped = []
+    for candle in all_data:
+        ts = candle[0]
+        if ts not in seen:
+            seen.add(ts)
+            deduped.append(candle)
+    deduped.sort(key=lambda c: c[0])
+
+    print(f"  [Bybit] Got {len(deduped):,} candles in {request_count} requests")
+    return deduped
 
 
 # ── Registry management ──────────────────────────────────────────
@@ -435,8 +534,8 @@ def run():
     print(f"\nFetching recent 1H data...")
     bars_1h = fetch_recent_1h(days=60)
     if not bars_1h:
-        print("ERROR: No data fetched!")
-        return
+        print("ERROR: No data fetched! Exiting with error.")
+        sys.exit(1)
 
     print(f"  Got {len(bars_1h)} 1H bars")
     print(f"  Range: {bars_1h[0]['datetime']} → {bars_1h[-1]['datetime']}")

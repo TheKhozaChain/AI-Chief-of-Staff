@@ -9,7 +9,7 @@
 
 | Item | Owner | Started | Status |
 |------|:-----:|---------|--------|
-| Paper trade H004 + H007-H009 + H011 + H013-H016 (9 strategies live) | AI | 2026-02-12 | Running every 4H via GitHub Actions |
+| Paper trade H004 + H007-H009 + H011 + H013-H016 (9 strategies live) | AI | 2026-02-15 | Running every 4H via GitHub Actions (restarted: Bybit fallback fix) |
 
 ---
 

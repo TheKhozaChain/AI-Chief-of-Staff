@@ -12,7 +12,7 @@
         "trend_filter_period": 80,
         "long_only": true
       },
-      "started": "2026-02-10",
+      "started": "2026-02-15",
       "graduation": {
         "min_days": 30,
         "min_trades": 5,
@@ -31,11 +31,11 @@
         "min_roc": 1.0,
         "stop_pct": 2.0,
         "target_pct": 12.0,
-        "aux_data_dir": "/Users/siphokhoza/ai-chief-of-staff/data",
+        "aux_data_dir": "data",
         "aux_timeframe_hours": 4,
         "long_only": true
       },
-      "started": "2026-02-12",
+      "started": "2026-02-15",
       "graduation": {
         "min_days": 30,
         "min_trades": 5,
@@ -60,7 +60,7 @@
         "stop_pct": 2.0,
         "target_pct": 12.0
       },
-      "started": "2026-02-12",
+      "started": "2026-02-15",
       "graduation": {
         "min_days": 30,
         "min_trades": 5,
@@ -81,7 +81,7 @@
         "stop_pct": 2.0,
         "target_pct": 12.0
       },
-      "started": "2026-02-12",
+      "started": "2026-02-15",
       "graduation": {
         "min_days": 30,
         "min_trades": 5,
@@ -102,7 +102,7 @@
         "stop_pct": 2.0,
         "target_pct": 12.0
       },
-      "started": "2026-02-12",
+      "started": "2026-02-15",
       "graduation": {
         "min_days": 30,
         "min_trades": 5,
@@ -123,7 +123,7 @@
         "stop_pct": 2.0,
         "target_pct": 9.0
       },
-      "started": "2026-02-12",
+      "started": "2026-02-15",
       "graduation": {
         "min_days": 30,
         "min_trades": 5,
@@ -146,7 +146,7 @@
         "stop_pct": 2.0,
         "target_pct": 6.0
       },
-      "started": "2026-02-12",
+      "started": "2026-02-15",
       "graduation": {
         "min_days": 30,
         "min_trades": 5,
@@ -168,7 +168,7 @@
         "base_target_pct": 12.0,
         "trend_filter_period": 80
       },
-      "started": "2026-02-12",
+      "started": "2026-02-15",
       "graduation": {
         "min_days": 30,
         "min_trades": 5,
@@ -188,7 +188,7 @@
         "stop_pct": 2.0,
         "target_pct": 12.0
       },
-      "started": "2026-02-12",
+      "started": "2026-02-15",
       "graduation": {
         "min_days": 30,
         "min_trades": 5,
