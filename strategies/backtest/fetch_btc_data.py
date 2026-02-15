@@ -30,24 +30,37 @@ STANDARD_DATASETS = [
 ]
 
 
-def fetch_binance_klines(
+def fetch_klines(
     symbol: str = "BTCUSDT",
     interval: str = "15m",
     days: int = 1095,
 ) -> list:
-    """Fetch historical klines from Binance public API.
+    """Fetch historical klines with Binance → CryptoCompare fallback.
 
-    Paginates automatically (1000 candles per request).
-    Respects rate limits with a small sleep between requests.
+    GitHub Actions runs in the US where Binance is geoblocked (HTTP 451).
+    Falls back to CryptoCompare automatically.
 
     Args:
-        symbol: Binance trading pair (default BTCUSDT).
-        interval: Candle interval — 1m, 3m, 5m, 15m, 30m, 1h, 2h, 4h, 6h, 8h, 12h, 1d, 1w.
+        symbol: Trading pair (default BTCUSDT).
+        interval: Candle interval — 15m, 1h, 4h, 1d, etc.
         days: How many days of history to fetch.
 
     Returns:
-        List of raw kline arrays from Binance.
+        List of raw kline arrays [ts_ms, open, high, low, close, volume].
     """
+    try:
+        return _fetch_binance_klines(symbol, interval, days)
+    except RuntimeError as e:
+        print(f"  Binance failed ({e}). Falling back to CryptoCompare...")
+        return _fetch_cryptocompare_klines(interval, days)
+
+
+# Keep old name as alias for backwards compatibility
+fetch_binance_klines = fetch_klines
+
+
+def _fetch_binance_klines(symbol, interval, days):
+    """Fetch from Binance. Raises RuntimeError on geoblock."""
     base_url = "https://api.binance.com/api/v3/klines"
     all_data = []
 
@@ -58,6 +71,7 @@ def fetch_binance_klines(
     print(f"Fetching {days} days ({days/365:.1f}y) of {interval} data for {symbol}...")
 
     request_count = 0
+    consecutive_errors = 0
     while current_start < end_time:
         url = (
             f"{base_url}?symbol={symbol}&interval={interval}"
@@ -76,22 +90,111 @@ def fetch_binance_klines(
                 last_timestamp = data[-1][0]
                 current_start = last_timestamp + 1
                 request_count += 1
+                consecutive_errors = 0
 
                 if request_count % 10 == 0:
                     print(f"  {len(all_data):,} candles fetched...")
 
-                # Small delay to be respectful of rate limits
                 if request_count % 50 == 0:
                     time.sleep(1)
 
         except Exception as e:
+            error_str = str(e)
+            if "451" in error_str or "403" in error_str:
+                raise RuntimeError(f"Binance geoblock: {e}")
+            consecutive_errors += 1
             print(f"Error at request {request_count}: {e}")
+            if consecutive_errors >= 5:
+                raise RuntimeError(f"Binance failed after {consecutive_errors} errors: {e}")
             print("  Retrying in 5 seconds...")
             time.sleep(5)
             continue
 
     print(f"  Done: {len(all_data):,} candles in {request_count} requests")
     return all_data
+
+
+def _fetch_cryptocompare_klines(interval, days):
+    """Fetch from CryptoCompare. Works globally (no geoblock)."""
+    # Map intervals to CryptoCompare endpoints
+    interval_map = {
+        "15m": ("histominute", 15),
+        "1h": ("histohour", 1),
+        "4h": ("histohour", 4),
+        "1d": ("histoday", 1),
+    }
+
+    if interval not in interval_map:
+        raise RuntimeError(f"CryptoCompare doesn't support interval '{interval}'. "
+                          f"Supported: {list(interval_map.keys())}")
+
+    endpoint, multiplier = interval_map[interval]
+    all_data = []
+    to_ts = int(datetime.now().timestamp())
+
+    if endpoint == "histominute" and multiplier > 1:
+        # For sub-hour intervals, fetch minute data and resample
+        total_candles = days * 24 * (60 // multiplier)
+        fetch_endpoint = "histominute"
+    elif endpoint == "histohour" and multiplier > 1:
+        # For multi-hour intervals, fetch hourly and resample later
+        total_candles = days * 24
+        fetch_endpoint = "histohour"
+    else:
+        total_candles = days * 24 if endpoint == "histohour" else days
+        if endpoint == "histominute":
+            total_candles = days * 24 * (60 // multiplier)
+        fetch_endpoint = endpoint
+
+    remaining = total_candles
+    request_count = 0
+
+    print(f"  [CryptoCompare] Fetching {days} days of {interval} BTCUSD...")
+
+    while remaining > 0:
+        limit = min(remaining, 2000)
+        req_url = (
+            f"https://min-api.cryptocompare.com/data/v2/{fetch_endpoint}"
+            f"?fsym=BTC&tsym=USD&limit={limit}&toTs={to_ts}"
+        )
+        try:
+            req = urllib.request.Request(req_url, headers={"User-Agent": "Mozilla/5.0"})
+            with urllib.request.urlopen(req, timeout=30) as resp:
+                data = json.loads(resp.read().decode())
+                candles = data.get("Data", {}).get("Data", [])
+                if not candles:
+                    break
+                for c in candles:
+                    ts_ms = c["time"] * 1000
+                    all_data.append([
+                        ts_ms,
+                        str(c["open"]),
+                        str(c["high"]),
+                        str(c["low"]),
+                        str(c["close"]),
+                        str(c.get("volumefrom", 0)),
+                    ])
+                to_ts = candles[0]["time"] - 1
+                remaining -= len(candles)
+                request_count += 1
+                if request_count % 5 == 0:
+                    print(f"    {len(all_data):,} candles ({request_count} reqs)...")
+                time.sleep(0.3)
+        except Exception as e:
+            raise RuntimeError(f"CryptoCompare failed: {e}")
+
+    # Deduplicate and sort
+    seen = set()
+    deduped = []
+    for candle in all_data:
+        ts = candle[0]
+        if ts not in seen:
+            seen.add(ts)
+            deduped.append(candle)
+    deduped.sort(key=lambda c: c[0])
+
+    print(f"  [CryptoCompare] Done: {len(deduped):,} candles in {request_count} requests")
+    return deduped
 
 
 def save_to_csv(data: list, filepath: str):
@@ -128,7 +231,7 @@ def get_output_path(interval: str) -> Path:
 
 def fetch_and_save(interval: str, days: int):
     """Fetch data and save to standard location."""
-    data = fetch_binance_klines(symbol="BTCUSDT", interval=interval, days=days)
+    data = fetch_klines(symbol="BTCUSDT", interval=interval, days=days)
 
     if not data:
         print(f"No data fetched for {interval}!")
