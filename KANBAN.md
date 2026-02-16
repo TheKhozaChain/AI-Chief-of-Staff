@@ -18,7 +18,10 @@
 
 | # | Item | RBI Phase | Notes |
 |:-:|------|:---------:|-------|
-| 1 | Review paper trading results after 30 days (target: Mar 14) | I | Evaluate graduation candidates |
+| 1 | Screen R021-R023 (new ideas from LLM sourcing) | B | Quick-screen, kill or promote |
+| 2 | Source new research ideas R024+ via LLM | R | Keep funnel fed — recurring weekly |
+| 3 | Weekly paper trading health check (check for early kills) | I | Recurring weekly |
+| 4 | Review paper trading results after 30 days (target: Mar 17) | I | Evaluate graduation candidates |
 
 ---
 

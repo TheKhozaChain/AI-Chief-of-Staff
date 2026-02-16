@@ -87,10 +87,37 @@ def build_user_prompt(root: Path) -> str:
     # This prevents stale briefs that recommend already-completed items
     kanban_text = load_file(root / "KANBAN.md")
     if kanban_text:
+        # Extract Done items as explicit blocklist
+        done_items = []
+        in_done = False
+        for line in kanban_text.split("\n"):
+            if "## Done" in line:
+                in_done = True
+                continue
+            if in_done and line.startswith("## "):
+                break
+            if in_done and line.startswith("|") and not line.startswith("|--") and "Item" not in line:
+                parts = [p.strip() for p in line.split("|") if p.strip()]
+                if parts:
+                    done_items.append(parts[0])
+
+        blocklist = ""
+        if done_items:
+            blocklist = ("\n\n## COMPLETED WORK — DO NOT RECOMMEND THESE\n"
+                         "The following items are FINISHED. Do NOT suggest, recommend, "
+                         "or reference any of these as priorities or tasks:\n")
+            for item in done_items:
+                blocklist += f"- {item}\n"
+            blocklist += ("\nALL walk-forward validations for R007-R020 are DONE. "
+                          "ALL screenings for R001-R020 are DONE. "
+                          "Do NOT recommend validating or screening any R001-R020 item.\n"
+                          "Only R021+ items with status 'new' need screening.\n")
+
         context_parts.append(f"## Current Work Board (KANBAN.md)\n"
                              f"IMPORTANT: Use this to determine what's already done "
                              f"and what's actually queued. Do NOT recommend items that "
-                             f"appear in the Done section.\n\n{kanban_text}")
+                             f"appear in the Done section.\n\n{kanban_text}"
+                             f"{blocklist}")
 
     # Load research backlog for RBI status
     backlog_text = load_file(root / "strategies" / "RESEARCH_BACKLOG.md")

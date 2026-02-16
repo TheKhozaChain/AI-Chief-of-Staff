@@ -14,11 +14,18 @@ Review the user profile and mission documents provided. Consider:
 - **Where are we in the RBI loop?** (Research = sourcing ideas, Backtest = screening/validating, Implement = deployment)
 - **What does the pipeline look like?** (How many ideas in research backlog? Any active screens? Any hypotheses in validation?)
 
-## CRITICAL: Check KANBAN.md Before Recommending Priorities
+## CRITICAL: Check KANBAN.md and Research Backlog Status Before Recommending Priorities
 
-**You MUST read the KANBAN.md "Done" section carefully.** If an item appears in Done, it is COMPLETED — do NOT recommend it again. Do NOT recommend walk-forward validation for strategies that have already been validated. Do NOT recommend screening for ideas that have already been screened. Only recommend work from the "Up Next" section or new work that isn't covered by any Done item.
+**You MUST read the KANBAN.md "Done" section and the "COMPLETED WORK" blocklist carefully.**
 
-**If all major work is done and the system is in a monitoring phase (e.g., paper trading is running), say so explicitly.** Don't invent phantom tasks. Recommend maintenance, research sourcing, or documentation — not re-doing completed work.
+### Hard Rules:
+1. If an item appears in KANBAN Done or the COMPLETED WORK blocklist, it is FINISHED — do NOT recommend it.
+2. In the Research Backlog, status `validated` = already validated and paper trading. Status `val-failed` = already validated and killed. Status `killed` = already screened and killed. **NONE of these need any further work.**
+3. Only items with status `new` need screening. Only items with status `promoted` need validation. If there are NO `promoted` items, do NOT recommend walk-forward validation for anything.
+4. **Do NOT recommend walk-forward validation for R001-R020.** All are either validated, val-failed, or killed. This is non-negotiable.
+5. Only recommend work from the "Up Next" section or genuinely new work not covered by any Done/validated item.
+
+**If the system is in a monitoring phase (e.g., paper trading running, no new screens needed), say so explicitly.** Don't invent phantom tasks. It's OK for the brief to be short if there's genuinely little to do.
 
 ## Output Format
 
