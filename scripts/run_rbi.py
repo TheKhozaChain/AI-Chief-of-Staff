@@ -34,12 +34,13 @@ DATA_FILE = str(DATA_DIR / 'BTCUSD_1h.csv')
 BACKLOG_FILE = str(REPO_ROOT / 'strategies' / 'RESEARCH_BACKLOG.md')
 
 
-def refresh_data():
-    """Refresh BTCUSD data from Binance."""
+def refresh_data(include_15m=False):
+    """Refresh BTCUSD data. Only 1h by default (sufficient for screening)."""
     print("\n=== DATA REFRESH ===")
     from fetch_btc_data import fetch_and_save
     fetch_and_save('1h', 1095)
-    fetch_and_save('15m', 1095)
+    if include_15m:
+        fetch_and_save('15m', 1095)
     print("Data refresh complete.\n")
 
 
@@ -400,6 +401,8 @@ def main():
                        help='Refresh BTCUSD data from Binance before screening')
     parser.add_argument('--source-ideas', action='store_true',
                        help='Use LLM to generate new research ideas')
+    parser.add_argument('--skip-screens', action='store_true',
+                       help='Skip screening step (useful for source-only runs)')
     parser.add_argument('--ids', default='',
                        help='Comma-separated idea IDs to screen')
     args = parser.parse_args()
@@ -412,9 +415,12 @@ def main():
     if args.refresh_data:
         refresh_data()
 
-    # Step 2: Run screens
-    idea_ids = [x.strip() for x in args.ids.split(',') if x.strip()] if args.ids else None
-    pipeline_results = run_screens(idea_ids)
+    # Step 2: Run screens (unless --skip-screens)
+    pipeline_results = {'screened': [], 'promoted': [], 'killed': [], 'parked': [],
+                        'summary': 'Screening skipped.'}
+    if not args.skip_screens:
+        idea_ids = [x.strip() for x in args.ids.split(',') if x.strip()] if args.ids else None
+        pipeline_results = run_screens(idea_ids)
 
     # Step 3: Source new ideas (optional)
     new_ideas = []

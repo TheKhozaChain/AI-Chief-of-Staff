@@ -205,12 +205,19 @@ def update_kanban(completed_items: List[str], new_doing: Optional[List[Dict]] = 
 # Action Registry — maps priority patterns to executable functions
 # ---------------------------------------------------------------------------
 
+def _needs_data_refresh() -> bool:
+    """Check if BTCUSD_1h.csv needs to be fetched (e.g., on GitHub Actions)."""
+    data_file = DATA_DIR / "BTCUSD_1h.csv"
+    return not data_file.exists()
+
+
 def action_source_ideas(**kwargs) -> Tuple[bool, str]:
     """Source new research ideas via LLM."""
-    print("  Executing: run_rbi.py --source-ideas")
+    cmd = [sys.executable, str(REPO_ROOT / "scripts" / "run_rbi.py"),
+           "--source-ideas", "--skip-screens"]
+    print(f"  Executing: {' '.join(str(c) for c in cmd)}")
     result = subprocess.run(
-        [sys.executable, str(REPO_ROOT / "scripts" / "run_rbi.py"), "--source-ideas"],
-        capture_output=True, text=True, timeout=300,
+        cmd, capture_output=True, text=True, timeout=300,
         env={**os.environ, "PYTHONPATH": str(REPO_ROOT / "strategies" / "backtest")},
     )
     print(result.stdout[-500:] if len(result.stdout) > 500 else result.stdout)
@@ -230,9 +237,12 @@ def action_screen_ideas(idea_ids: str = "", **kwargs) -> Tuple[bool, str]:
     cmd = [sys.executable, str(REPO_ROOT / "scripts" / "run_rbi.py")]
     if idea_ids:
         cmd.extend(["--ids", idea_ids])
-    print(f"  Executing: run_rbi.py --ids {idea_ids}")
+    if _needs_data_refresh():
+        cmd.append("--refresh-data")
+        print("  Data file missing — will refresh first")
+    print(f"  Executing: {' '.join(str(c) for c in cmd)}")
     result = subprocess.run(
-        cmd, capture_output=True, text=True, timeout=600,
+        cmd, capture_output=True, text=True, timeout=1200,
         env={**os.environ, "PYTHONPATH": str(REPO_ROOT / "strategies" / "backtest")},
     )
     print(result.stdout[-500:] if len(result.stdout) > 500 else result.stdout)
