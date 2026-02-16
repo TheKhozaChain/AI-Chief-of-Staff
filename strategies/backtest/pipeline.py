@@ -200,6 +200,48 @@ IDEA_ARCHETYPE_MAP = {
             'target_pct': [6.0, 9.0, 12.0],
         },
     },
+    'R021': {
+        'archetype': 'range_compression_expansion',
+        'timeframe_hours': 4,
+        'param_grid': {
+            'atr_period': [14, 20],
+            'atr_lookback': [40, 60],
+            'compression_percentile': [10, 15, 20],
+            'breakout_atr_mult': [1.0, 1.5, 2.0],
+            'confirmation_bars': [2, 3],
+            'stop_pct': [2.0, 3.0],
+            'target_pct': [6.0, 9.0, 12.0],
+            'long_only': [True],
+        },
+    },
+    'R022': {
+        'archetype': 'momentum_exhaustion_reversal',
+        'timeframe_hours': 4,
+        'param_grid': {
+            'ma_period': [30, 50, 80],
+            'rsi_period': [10, 14],
+            'rsi_threshold': [25, 30, 35],
+            'bounce_min_pct': [0.3, 0.5, 1.0],
+            'stop_pct': [2.0, 3.0],
+            'target_pct': [6.0, 9.0, 12.0],
+            'long_only': [True],
+        },
+    },
+    'R023': {
+        'archetype': 'gap_and_go',
+        'timeframe_hours': 4,
+        'param_grid': {
+            'ma_period': [30, 50],
+            'gap_min_pct': [0.5, 1.0, 1.5],
+            'lookback_period': [10, 20],
+            'roc_period': [5, 10],
+            'min_roc': [1.0, 2.0, 3.0],
+            'entry_delay_bars': [0, 1],
+            'stop_pct': [2.0, 3.0],
+            'target_pct': [6.0, 9.0],
+            'long_only': [True],
+        },
+    },
 }
 
 REPO_ROOT = Path(__file__).parent.parent.parent
@@ -221,6 +263,9 @@ DEFAULT_PARAM_GRIDS = {
     'trend_pullback': {'ma_period': [30, 50], 'ma_slope_bars': [5], 'pullback_pct': [2.0], 'roc_period': [3], 'min_roc': [0.5], 'stop_pct': [2.0, 3.0], 'target_pct': [6.0, 12.0]},
     'atr_regime_adaptive': {'ma_period': [20, 30], 'atr_period': [14], 'atr_history': [120], 'base_stop_pct': [2.0, 3.0], 'base_target_pct': [8.0, 12.0], 'trend_filter_period': [60, 80]},
     'consecutive_momentum': {'channel_period': [15, 20], 'consec_bars': [3], 'stop_pct': [2.0, 3.0], 'target_pct': [6.0, 12.0]},
+    'range_compression_expansion': {'atr_period': [14, 20], 'atr_lookback': [60], 'compression_percentile': [10, 15], 'breakout_atr_mult': [1.5], 'confirmation_bars': [2], 'stop_pct': [2.0, 3.0], 'target_pct': [6.0, 9.0], 'long_only': [True]},
+    'momentum_exhaustion_reversal': {'ma_period': [50], 'rsi_period': [14], 'rsi_threshold': [30], 'bounce_min_pct': [0.5], 'stop_pct': [2.0, 3.0], 'target_pct': [6.0, 9.0], 'long_only': [True]},
+    'gap_and_go': {'ma_period': [50], 'gap_min_pct': [1.0], 'lookback_period': [20], 'roc_period': [10], 'min_roc': [2.0], 'entry_delay_bars': [1], 'stop_pct': [2.0, 3.0], 'target_pct': [6.0, 9.0], 'long_only': [True]},
 }
 
 

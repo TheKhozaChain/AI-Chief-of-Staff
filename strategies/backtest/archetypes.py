@@ -1034,6 +1034,284 @@ class ConsecutiveMomentum:
         }
 
 
+class RangeCompressionExpansion:
+    """Breakout after extreme ATR compression.
+
+    Detects when ATR is at historical lows (below a percentile threshold),
+    then enters on a breakout confirmed by N consecutive bars moving in
+    the same direction. Trades the expansion itself rather than predicting
+    direction — but long_only filters for upside breaks only.
+
+    Research idea R021.
+
+    Params:
+        atr_period: ATR calculation period
+        atr_lookback: Bars of ATR history for percentile
+        compression_percentile: ATR must be below this percentile (0-100)
+        breakout_atr_mult: Price move > this * ATR triggers breakout
+        confirmation_bars: Consecutive bars in same direction to confirm
+        stop_pct: Stop loss percentage
+        target_pct: Take profit percentage
+        long_only: Only take long breakouts
+    """
+
+    def __init__(self, atr_period=20, atr_lookback=60,
+                 compression_percentile=10, breakout_atr_mult=1.5,
+                 confirmation_bars=2, stop_pct=3.0, target_pct=9.0,
+                 long_only=True):
+        self.atr_period = atr_period
+        self.atr_lookback = atr_lookback
+        self.compression_percentile = compression_percentile
+        self.breakout_atr_mult = breakout_atr_mult
+        self.confirmation_bars = confirmation_bars
+        self.stop_pct = stop_pct
+        self.target_pct = target_pct
+        self.long_only = long_only
+
+    def _calc_atr(self, bars: List[Dict]) -> float:
+        if len(bars) < 2:
+            return 0.0
+        trs = []
+        for i in range(1, len(bars)):
+            high = bars[i]['high']
+            low = bars[i]['low']
+            prev_close = bars[i - 1]['close']
+            tr = max(high - low, abs(high - prev_close), abs(low - prev_close))
+            trs.append(tr)
+        return statistics.mean(trs[-self.atr_period:]) if trs else 0.0
+
+    def __call__(self, bar: Dict, prev_bars: List[Dict], position) -> Optional[Dict]:
+        needed = max(self.atr_period + 1, self.atr_lookback, self.confirmation_bars + 1)
+        if len(prev_bars) < needed:
+            return None
+
+        # Current ATR
+        atr = self._calc_atr(prev_bars[-(self.atr_period + 1):])
+        if atr == 0:
+            return None
+
+        # ATR history for percentile
+        atr_vals = []
+        for end in range(self.atr_period + 1, min(len(prev_bars) + 1, self.atr_lookback + 1)):
+            segment = prev_bars[end - self.atr_period - 1:end]
+            a = self._calc_atr(segment)
+            if a > 0:
+                atr_vals.append(a)
+
+        if len(atr_vals) < 20:
+            return None
+
+        rank = sum(1 for a in atr_vals if a <= atr)
+        pct = (rank / len(atr_vals)) * 100
+
+        # Must be in compression zone
+        if pct > self.compression_percentile:
+            return None
+
+        price = bar['close']
+
+        # Check confirmation: N consecutive positive closes
+        recent = prev_bars[-self.confirmation_bars:] + [bar]
+        all_up = all(recent[i]['close'] > recent[i - 1]['close']
+                     for i in range(1, len(recent)))
+        all_down = all(recent[i]['close'] < recent[i - 1]['close']
+                       for i in range(1, len(recent)))
+
+        # Breakout magnitude check
+        move = abs(price - prev_bars[-self.confirmation_bars]['close'])
+        if move < self.breakout_atr_mult * atr:
+            return None
+
+        if all_up:
+            return {
+                'action': 'buy',
+                'stop_loss': price * (1 - self.stop_pct / 100),
+                'take_profit': price * (1 + self.target_pct / 100),
+            }
+
+        if not self.long_only and all_down:
+            return {
+                'action': 'sell',
+                'stop_loss': price * (1 + self.stop_pct / 100),
+                'take_profit': price * (1 - self.target_pct / 100),
+            }
+
+        return None
+
+
+class MomentumExhaustionReversal:
+    """Oversold bounce within established uptrend.
+
+    Waits for RSI to drop below threshold within a rising trend MA,
+    then enters on the first bounce bar (positive close-to-close return
+    above a minimum). This is trend continuation, not mean reversion —
+    buying temporary weakness in structural strength.
+
+    Research idea R022.
+
+    Params:
+        ma_period: Trend MA period (must be rising)
+        rsi_period: RSI lookback
+        rsi_threshold: RSI must drop below this (oversold)
+        bounce_min_pct: Minimum positive return on bounce bar (%)
+        stop_pct: Stop loss percentage
+        target_pct: Take profit percentage
+        long_only: Only long signals
+    """
+
+    def __init__(self, ma_period=50, rsi_period=14, rsi_threshold=30,
+                 bounce_min_pct=0.5, stop_pct=3.0, target_pct=9.0,
+                 long_only=True):
+        self.ma_period = ma_period
+        self.rsi_period = rsi_period
+        self.rsi_threshold = rsi_threshold
+        self.bounce_min_pct = bounce_min_pct
+        self.stop_pct = stop_pct
+        self.target_pct = target_pct
+        self.long_only = long_only
+
+    def _calc_rsi(self, closes: List[float]) -> float:
+        if len(closes) < self.rsi_period + 1:
+            return 50.0
+        gains = []
+        losses = []
+        for i in range(len(closes) - self.rsi_period, len(closes)):
+            change = closes[i] - closes[i - 1]
+            if change > 0:
+                gains.append(change)
+                losses.append(0)
+            else:
+                gains.append(0)
+                losses.append(abs(change))
+        avg_gain = statistics.mean(gains) if gains else 0
+        avg_loss = statistics.mean(losses) if losses else 0
+        if avg_loss == 0:
+            return 100.0
+        rs = avg_gain / avg_loss
+        return 100 - (100 / (1 + rs))
+
+    def __call__(self, bar: Dict, prev_bars: List[Dict], position) -> Optional[Dict]:
+        needed = max(self.ma_period, self.rsi_period + 1)
+        if len(prev_bars) < needed:
+            return None
+
+        closes = [b['close'] for b in prev_bars]
+        price = bar['close']
+
+        # Trend filter: price above rising MA
+        ma = statistics.mean(closes[-self.ma_period:])
+        if ma == 0:
+            return None
+        # MA must be above where it was 5 bars ago
+        if len(closes) >= self.ma_period + 5:
+            ma_prev = statistics.mean(closes[-(self.ma_period + 5):-5])
+            if ma <= ma_prev:
+                return None
+
+        # RSI must be oversold on previous bar (we enter on the bounce)
+        rsi = self._calc_rsi(closes)
+        if rsi > self.rsi_threshold:
+            return None
+
+        # Bounce confirmation: current bar positive return above threshold
+        prev_close = prev_bars[-1]['close']
+        if prev_close == 0:
+            return None
+        bounce_pct = ((price - prev_close) / prev_close) * 100
+        if bounce_pct < self.bounce_min_pct:
+            return None
+
+        return {
+            'action': 'buy',
+            'stop_loss': price * (1 - self.stop_pct / 100),
+            'take_profit': price * (1 + self.target_pct / 100),
+        }
+
+
+class GapAndGoContinuation:
+    """Gap continuation in trending market.
+
+    Enters when price gaps above the recent range high during an
+    established uptrend with strong momentum. Gaps in trend direction
+    signal institutional accumulation or news-driven momentum.
+
+    A "gap" on 4H bars = open significantly above prior bar's high.
+
+    Research idea R023.
+
+    Params:
+        ma_period: Trend MA period
+        gap_min_pct: Minimum gap size (open vs prev high) in %
+        lookback_period: Range high lookback for breakout context
+        roc_period: Momentum ROC lookback
+        min_roc: Minimum ROC to confirm momentum regime (%)
+        entry_delay_bars: Wait N bars after gap before entering (0=immediate)
+        stop_pct: Stop loss percentage
+        target_pct: Take profit percentage
+        long_only: Only long gaps
+    """
+
+    def __init__(self, ma_period=50, gap_min_pct=1.0, lookback_period=20,
+                 roc_period=10, min_roc=2.0, entry_delay_bars=1,
+                 stop_pct=2.0, target_pct=6.0, long_only=True):
+        self.ma_period = ma_period
+        self.gap_min_pct = gap_min_pct
+        self.lookback_period = lookback_period
+        self.roc_period = roc_period
+        self.min_roc = min_roc
+        self.entry_delay_bars = entry_delay_bars
+        self.stop_pct = stop_pct
+        self.target_pct = target_pct
+        self.long_only = long_only
+
+    def __call__(self, bar: Dict, prev_bars: List[Dict], position) -> Optional[Dict]:
+        needed = max(self.ma_period, self.lookback_period, self.roc_period,
+                     self.entry_delay_bars + 1)
+        if len(prev_bars) < needed:
+            return None
+
+        price = bar['close']
+        closes = [b['close'] for b in prev_bars]
+
+        # Trend filter
+        ma = statistics.mean(closes[-self.ma_period:])
+        if price <= ma:
+            return None
+
+        # Momentum filter
+        past_price = closes[-self.roc_period]
+        if past_price == 0:
+            return None
+        roc = ((price - past_price) / past_price) * 100
+        if roc < self.min_roc:
+            return None
+
+        # Gap detection: check the bar that is entry_delay_bars ago
+        # If delay=1, we check prev_bars[-1] gapped above prev_bars[-2]
+        gap_bar_idx = -(self.entry_delay_bars + 1) if self.entry_delay_bars > 0 else -1
+        ref_bar_idx = gap_bar_idx - 1
+
+        if abs(gap_bar_idx) > len(prev_bars) or abs(ref_bar_idx) > len(prev_bars):
+            return None
+
+        gap_bar = prev_bars[gap_bar_idx] if self.entry_delay_bars > 0 else bar
+        ref_bar = prev_bars[ref_bar_idx] if self.entry_delay_bars > 0 else prev_bars[-1]
+
+        ref_high = ref_bar['high']
+        if ref_high == 0:
+            return None
+        gap_pct = ((gap_bar['open'] - ref_high) / ref_high) * 100
+
+        if gap_pct < self.gap_min_pct:
+            return None
+
+        return {
+            'action': 'buy',
+            'stop_loss': price * (1 - self.stop_pct / 100),
+            'take_profit': price * (1 + self.target_pct / 100),
+        }
+
+
 # Registry: maps strategy name to class for dynamic instantiation
 ARCHETYPES = {
     'ma_crossover': MACrossover,
@@ -1051,4 +1329,7 @@ ARCHETYPES = {
     'trend_pullback': TrendPullback,
     'atr_regime_adaptive': ATRRegimeAdaptive,
     'consecutive_momentum': ConsecutiveMomentum,
+    'range_compression_expansion': RangeCompressionExpansion,
+    'momentum_exhaustion_reversal': MomentumExhaustionReversal,
+    'gap_and_go': GapAndGoContinuation,
 }
