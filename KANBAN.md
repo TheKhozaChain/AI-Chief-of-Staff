@@ -18,10 +18,9 @@
 
 | # | Item | RBI Phase | Notes |
 |:-:|------|:---------:|-------|
-| 1 | Screen R021-R023 (new ideas from LLM sourcing) | B | Quick-screen, kill or promote |
-| 2 | Source new research ideas R024+ via LLM | R | Keep funnel fed — recurring weekly |
-| 3 | Review paper trading results after 30 days (target: Mar 17) | I | Evaluate graduation candidates |
-| 4 | Weekly paper trading health check (check for early kills) | I | Recurring weekly |
+| 1 | Review paper trading results after 30 days (target: Mar 17) | I | Evaluate graduation candidates |
+| 2 | Weekly paper trading health check (check for early kills) | I | Recurring weekly |
+| 3 | Source new research ideas R025+ via LLM | R | Keep funnel fed — recurring weekly |
 
 ---
 
@@ -29,6 +28,8 @@
 
 | Item | Completed |
 |------|-----------|
+| Screen R021-R023 (new ideas from LLM sourcing) | 2026-02-17 |
+| Source new research ideas R024+ via LLM | 2026-02-17 |
 | Weekly paper trading health check (check for early kills) | 2026-02-17 |
 | Source new research ideas R021+ via LLM | 2026-02-15 |
 | Source + screen + validate R015-R020 — H013/H014/H016 standouts, H012 failed | 2026-02-12 |

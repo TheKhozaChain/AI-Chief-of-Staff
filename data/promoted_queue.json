@@ -1,5 +1,26 @@
 {
-  "pending_validation": [],
+  "pending_validation": [
+    {
+      "hypothesis_id": "H017",
+      "research_id": "R021",
+      "name": "Range Compression Expansion (RCE)",
+      "archetype": "range_compression_expansion",
+      "timeframe_hours": 4,
+      "params": {
+        "atr_period": 20,
+        "atr_lookback": 60,
+        "compression_percentile": 10,
+        "breakout_atr_mult": 1.5,
+        "confirmation_bars": 2,
+        "stop_pct": 2.0,
+        "target_pct": 6.0,
+        "long_only": true
+      },
+      "promoted_date": "2026-02-17",
+      "screen_pf": 2.49,
+      "screen_trades": 48
+    }
+  ],
   "validated": [
     {
       "hypothesis_id": "H007",
