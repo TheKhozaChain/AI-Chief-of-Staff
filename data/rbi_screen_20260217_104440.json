@@ -1,0 +1,48 @@
+{
+  "timestamp": "2026-02-17T10:44:40.129607",
+  "promoted": [
+    "R021"
+  ],
+  "killed": [],
+  "parked": [],
+  "summary": "\nRBI Pipeline Summary \u2014 2026-02-17\n============================================================\nScreened: 1 ideas\nPromoted: 1 (R021)\nKilled: 0 (none)\nParked: 0 (none)\n\nPROMOTED IDEAS (ready for full hypothesis):\n  R021 \u2014 Range Compression Expansion (RCE)\n    PF: 2.49 gross | Trades: 48 | Sharpe: 1.44\n    Params: {'atr_period': 20, 'atr_lookback': 60, 'compression_percentile': 10, 'breakout_atr_mult': 1.5, 'confirmation_bars': 2, 'stop_pct': 2.0, 'target_pct': 6.0, 'long_only': True}\n",
+  "screens": [
+    {
+      "idea_id": "R021",
+      "idea_name": "Range Compression Expansion (RCE)",
+      "archetype": "range_compression_expansion",
+      "params": {
+        "atr_period": 20,
+        "atr_lookback": 60,
+        "compression_percentile": 10,
+        "breakout_atr_mult": 1.5,
+        "confirmation_bars": 2,
+        "stop_pct": 2.0,
+        "target_pct": 6.0,
+        "long_only": true
+      },
+      "timeframe": "4H",
+      "data_bars": 6571,
+      "data_period": "2023-02-18 \u2192 2026-02-17",
+      "gross_pf": 2.49,
+      "net_pf": 2.33,
+      "win_rate": 0.438,
+      "total_trades": 48,
+      "expectancy_gross": 1105.43,
+      "expectancy_net": 1037.65,
+      "sharpe": 1.44,
+      "sortino": 99.0,
+      "max_dd": 11139.29,
+      "max_dd_duration_days": 223.0,
+      "avg_duration_hours": 97.8,
+      "buy_hold_pnl": 44033.44,
+      "strategy_pnl_gross": 53060.76,
+      "strategy_pnl_net": 49807.03,
+      "total_costs": 3253.73,
+      "cost_pct": 0.1,
+      "verdict": "promote",
+      "reason": "Gross PF 2.49 >= 1.3 threshold. Promote to full hypothesis.",
+      "timestamp": "2026-02-17T10:42:30.464785"
+    }
+  ]
+}

@@ -19,6 +19,25 @@
       "promoted_date": "2026-02-17",
       "screen_pf": 2.49,
       "screen_trades": 48
+    },
+    {
+      "hypothesis_id": "H018",
+      "research_id": "R022",
+      "name": "Momentum Exhaustion Reversal to Trend (MERT)",
+      "archetype": "momentum_exhaustion_reversal",
+      "timeframe_hours": 4,
+      "params": {
+        "ma_period": 50,
+        "rsi_period": 14,
+        "rsi_threshold": 30,
+        "bounce_min_pct": 1.0,
+        "stop_pct": 2.0,
+        "target_pct": 6.0,
+        "long_only": true
+      },
+      "promoted_date": "2026-02-17",
+      "screen_pf": 1.61,
+      "screen_trades": 29
     }
   ],
   "validated": [

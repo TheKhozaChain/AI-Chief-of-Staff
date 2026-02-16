@@ -1,20 +1,22 @@
 {
-  "version": 12,
-  "last_updated": "2026-02-17T14:00:00+11:00",
+  "version": 14,
+  "last_updated": "2026-02-17T10:44:40.129980+11:00",
   "schema_note": "Optimized for AI context retrieval, not human reading",
   "active_context": {
     "current_focus": "H004_validated_paper_trading_next_screen_new_ideas",
-    "status": "pipeline_ran_2026-02-17_3_new_ideas_sourced",
+    "status": "pipeline_ran_2026-02-17_1_screened_1_promoted",
     "blockers": [],
-    "next_action": "monitor_paper_trading_screen_new_ideas",
+    "next_action": "walk_forward_validate_newly_promoted_strategies",
     "execution_model": "autonomous_execute_then_inform",
     "rbi_phase": "implement_paper_trading"
   },
   "session_log": [
     {
       "date": "2026-02-17",
-      "summary": "New ideas sourced: R024, R025, R026.",
-      "decisions": [],
+      "summary": "Pipeline screened 1 ideas. Promoted: R021 (PF 2.49).",
+      "decisions": [
+        "R021_promoted"
+      ],
       "artifacts": [],
       "source": "automated_rbi_pipeline"
     },
@@ -164,7 +166,7 @@
         "research_id": "R013",
         "name": "Acceleration Breakout Filter (ABF)",
         "gross_pf": 2.34,
-        "oos_pf": 2.50,
+        "oos_pf": 2.5,
         "trades": 35,
         "timeframe": "4H",
         "validation": "4/4 passed. STRONGEST batch 1.",
@@ -200,7 +202,7 @@
         "oos_pf": 4.61,
         "trades": 26,
         "timeframe": "4H",
-        "validation": "4/4 passed. Only 26 trades — sample concern.",
+        "validation": "4/4 passed. Only 26 trades \u2014 sample concern.",
         "next_step": "paper_trading_30_days"
       },
       {
@@ -211,7 +213,7 @@
         "oos_pf": 0.76,
         "trades": 62,
         "timeframe": "4H",
-        "validation": "3/4 passed. OOS decay -57% — overfitting warning.",
+        "validation": "3/4 passed. OOS decay -57% \u2014 overfitting warning.",
         "next_step": "paper_trading_30_days"
       },
       {
@@ -233,12 +235,6 @@
       "H012/R016 (Dual Momentum Consensus): Failed walk-forward validation."
     ],
     "research_queue": [
-      {
-        "id": "R022",
-        "name": "Momentum Exhaustion Reversal to Trend (MERT)",
-        "status": "new",
-        "note": "Auto-sourced. Archetype: momentum_exhaustion_reversal."
-      },
       {
         "id": "R024",
         "name": "Volatility Regime Breakout (VRB)",
@@ -298,6 +294,23 @@
           "compression_percentile": 10,
           "breakout_atr_mult": 1.5,
           "confirmation_bars": 2,
+          "stop_pct": 2.0,
+          "target_pct": 6.0,
+          "long_only": true
+        },
+        "next_step": "walk_forward_validation"
+      },
+      {
+        "research_id": "R022",
+        "name": "Momentum Exhaustion Reversal to Trend (MERT)",
+        "gross_pf": 1.61,
+        "trades": 29,
+        "win_rate": "31.0%",
+        "params": {
+          "ma_period": 50,
+          "rsi_period": 14,
+          "rsi_threshold": 30,
+          "bounce_min_pct": 1.0,
           "stop_pct": 2.0,
           "target_pct": 6.0,
           "long_only": true

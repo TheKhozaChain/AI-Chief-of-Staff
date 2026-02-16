@@ -1,0 +1,62 @@
+{
+  "timestamp": "2026-02-17T10:41:30.649825",
+  "promoted": [
+    "R022"
+  ],
+  "killed": [],
+  "parked": [
+    "R024",
+    "R026"
+  ],
+  "summary": "\nRBI Pipeline Summary \u2014 2026-02-17\n============================================================\nScreened: 3 ideas\nPromoted: 1 (R022)\nKilled: 0 (none)\nParked: 2 (R024, R026)\n\nPROMOTED IDEAS (ready for full hypothesis):\n  R022 \u2014 Momentum Exhaustion Reversal to Trend (MERT)\n    PF: 1.61 gross | Trades: 29 | Sharpe: 0.32\n    Params: {'ma_period': 50, 'rsi_period': 14, 'rsi_threshold': 30, 'bounce_min_pct': 1.0, 'stop_pct': 2.0, 'target_pct': 6.0, 'long_only': True}\n",
+  "screens": [
+    {
+      "idea_id": "R022",
+      "idea_name": "Momentum Exhaustion Reversal to Trend (MERT)",
+      "archetype": "momentum_exhaustion_reversal",
+      "params": {
+        "ma_period": 50,
+        "rsi_period": 14,
+        "rsi_threshold": 30,
+        "bounce_min_pct": 1.0,
+        "stop_pct": 2.0,
+        "target_pct": 6.0,
+        "long_only": true
+      },
+      "timeframe": "4H",
+      "data_bars": 6571,
+      "data_period": "2023-02-18 \u2192 2026-02-17",
+      "gross_pf": 1.61,
+      "net_pf": 1.5,
+      "win_rate": 0.31,
+      "total_trades": 29,
+      "expectancy_gross": 537.28,
+      "expectancy_net": 469.15,
+      "sharpe": 0.32,
+      "sortino": 99.0,
+      "max_dd": 11311.62,
+      "max_dd_duration_days": 639.0,
+      "avg_duration_hours": 48.4,
+      "buy_hold_pnl": 44033.44,
+      "strategy_pnl_gross": 15581.25,
+      "strategy_pnl_net": 13605.49,
+      "total_costs": 1975.76,
+      "cost_pct": 0.1,
+      "verdict": "promote",
+      "reason": "Gross PF 1.61 >= 1.3 threshold. Promote to full hypothesis.",
+      "timestamp": "2026-02-17T10:40:58.552861"
+    },
+    {
+      "idea_id": "R024",
+      "idea_name": "Volatility Regime Breakout (VRB)",
+      "verdict": "park",
+      "reason": "No strategy mapping available."
+    },
+    {
+      "idea_id": "R026",
+      "idea_name": "Two-Timeframe Breakout Confirmation (2TBC)",
+      "verdict": "park",
+      "reason": "No strategy mapping available."
+    }
+  ]
+}

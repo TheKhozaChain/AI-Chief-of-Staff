@@ -18,11 +18,9 @@
 
 | # | Item | RBI Phase | Notes |
 |:-:|------|:---------:|-------|
-| 1 | Screen R022 + R024-R026 (unscreened ideas) | B | Quick-screen, kill or promote |
-| 2 | Walk-forward validate R021 (PF 2.49 — newly promoted) | B | Strong candidate, needs OOS validation |
-| 3 | Review paper trading results after 30 days (target: Mar 17) | I | Evaluate graduation candidates |
-| 4 | Weekly paper trading health check (check for early kills) | I | Recurring weekly |
-| 5 | Source new research ideas R027+ via LLM | R | Keep funnel fed — recurring weekly |
+| 1 | Review paper trading results after 30 days (target: Mar 17) | I | Evaluate graduation candidates |
+| 2 | Source new research ideas R027+ via LLM | R | Keep funnel fed — recurring weekly |
+| 3 | Weekly paper trading health check (check for early kills) | I | Recurring weekly |
 
 ---
 
@@ -30,9 +28,11 @@
 
 | Item | Completed |
 |------|-----------|
+| Screen R022 + R024-R026 (unscreened ideas) | 2026-02-17 |
+| Walk-forward validate R021 (PF 2.49 — newly promoted) | 2026-02-17 |
+| Weekly paper trading health check (check for early kills) | 2026-02-17 |
 | Screen R021+R023: R021 promoted (PF 2.49), R023 parked (0 trades). R022 skipped (range bug, fixed). | 2026-02-17 |
 | Source new research ideas R024+ via LLM | 2026-02-17 |
-| Weekly paper trading health check (check for early kills) | 2026-02-17 |
 | Source new research ideas R021+ via LLM | 2026-02-15 |
 | Source + screen + validate R015-R020 — H013/H014/H016 standouts, H012 failed | 2026-02-12 |
 | Walk-forward validate R010/R012/R013/R014 — H007/H008/H009 validated, H010 failed | 2026-02-12 |
