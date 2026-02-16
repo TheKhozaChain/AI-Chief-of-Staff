@@ -125,12 +125,27 @@ Rules:
 - Daily timeframe shows strong results but low trade count
 - Squeeze breakouts predict magnitude but not direction
 
-## Available strategy archetypes:
+## Available strategy archetypes (use ONLY these, never 'custom'):
 - ma_crossover: Fast/slow MA crossover with configurable periods
 - donchian_breakout: N-bar high/low breakout
 - vol_adjusted_trend: MA trend with ATR-scaled stops/targets
 - daily_trend: Longer-hold trend following on daily bars
 - bollinger_breakout: BB squeeze breakout
+- adaptive_momentum_burst: Squeeze breakout with trend MA confirmation
+- acceleration_breakout: Donchian breakout + ROC acceleration filter
+- mtf_breakout: Donchian breakout + slow MA trend filter
+- volume_breakout: Donchian breakout + volume spike confirmation
+- dual_momentum_consensus: Donchian breakout + 3-period ROC consensus
+- trend_strength_breakout: Donchian breakout + ADX trend strength filter
+- trend_pullback: Buy pullback to rising MA with momentum bounce
+- atr_regime_adaptive: Trend following with ATR-percentile stop scaling
+- consecutive_momentum: Donchian breakout + N consecutive positive bars
+- range_compression_expansion: ATR compression detection + breakout
+- momentum_exhaustion_reversal: RSI oversold bounce within uptrend
+- gap_and_go: Gap continuation in trending market
+
+IMPORTANT: You MUST pick one of the archetypes above. Do NOT use 'custom'.
+Design ideas that FIT an existing archetype with appropriate parameters.
 
 For each idea, output EXACTLY this format (one per idea):
 ---

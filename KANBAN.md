@@ -18,9 +18,11 @@
 
 | # | Item | RBI Phase | Notes |
 |:-:|------|:---------:|-------|
-| 1 | Review paper trading results after 30 days (target: Mar 17) | I | Evaluate graduation candidates |
-| 2 | Weekly paper trading health check (check for early kills) | I | Recurring weekly |
-| 3 | Source new research ideas R025+ via LLM | R | Keep funnel fed — recurring weekly |
+| 1 | Screen R022 + R024-R026 (unscreened ideas) | B | Quick-screen, kill or promote |
+| 2 | Walk-forward validate R021 (PF 2.49 — newly promoted) | B | Strong candidate, needs OOS validation |
+| 3 | Review paper trading results after 30 days (target: Mar 17) | I | Evaluate graduation candidates |
+| 4 | Weekly paper trading health check (check for early kills) | I | Recurring weekly |
+| 5 | Source new research ideas R027+ via LLM | R | Keep funnel fed — recurring weekly |
 
 ---
 
@@ -28,7 +30,7 @@
 
 | Item | Completed |
 |------|-----------|
-| Screen R021-R023 (new ideas from LLM sourcing) | 2026-02-17 |
+| Screen R021+R023: R021 promoted (PF 2.49), R023 parked (0 trades). R022 skipped (range bug, fixed). | 2026-02-17 |
 | Source new research ideas R024+ via LLM | 2026-02-17 |
 | Weekly paper trading health check (check for early kills) | 2026-02-17 |
 | Source new research ideas R021+ via LLM | 2026-02-15 |
