@@ -692,15 +692,34 @@ ACTION_PATTERNS = [
 ]
 
 
+def _expand_id_ranges(ids: List[str]) -> List[str]:
+    """Expand R-number ranges like ['R021', 'R023'] from 'R021-R023' into
+    ['R021', 'R022', 'R023']. Detects when exactly 2 IDs are found and
+    a dash separates them in the original text."""
+    if len(ids) != 2:
+        return ids
+    try:
+        start = int(ids[0][1:])
+        end = int(ids[1][1:])
+        if end > start and end - start <= 10:  # reasonable range
+            return [f"R{n:03d}" for n in range(start, end + 1)]
+    except (ValueError, IndexError):
+        pass
+    return ids
+
+
 def match_action(item_text: str) -> Optional[Dict]:
     """Match a KANBAN item to an executable action."""
     for pattern, action_func, default_kwargs in ACTION_PATTERNS:
         match = re.search(pattern, item_text)
         if match:
             kwargs = dict(default_kwargs)
-            # Extract idea IDs if present
+            # Extract idea IDs if present, expanding ranges like R021-R023
             ids_match = re.findall(r"R\d{3}", item_text)
             if ids_match and "idea_ids" not in kwargs:
+                # Check for range notation (e.g., R021-R023)
+                if re.search(r"R\d{3}\s*[-–]\s*R\d{3}", item_text):
+                    ids_match = _expand_id_ranges(ids_match)
                 kwargs["idea_ids"] = ",".join(ids_match)
             return {
                 "action": action_func,
