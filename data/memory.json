@@ -1,12 +1,12 @@
 {
-  "version": 11,
-  "last_updated": "2026-02-17T09:39:29.573594+11:00",
+  "version": 12,
+  "last_updated": "2026-02-17T14:00:00+11:00",
   "schema_note": "Optimized for AI context retrieval, not human reading",
   "active_context": {
     "current_focus": "H004_validated_paper_trading_next_screen_new_ideas",
     "status": "pipeline_ran_2026-02-17_3_new_ideas_sourced",
     "blockers": [],
-    "next_action": "walk_forward_validate_newly_promoted_strategies",
+    "next_action": "monitor_paper_trading_screen_new_ideas",
     "execution_model": "autonomous_execute_then_inform",
     "rbi_phase": "implement_paper_trading"
   },
@@ -131,58 +131,131 @@
         "research_id": "R007",
         "name": "Volatility-Adjusted Trend Following",
         "gross_pf": 1.46,
-        "net_pf": 1.4,
         "oos_pf": 1.09,
         "trades": 87,
-        "win_rate": "44.8%",
-        "sharpe": 1.18,
         "timeframe": "4H",
-        "validation": "3/4 passed (walk-forward, sensitivity, cost-stress). OOS failed (-37.9% PF decay).",
-        "params": {
-          "ma_period": 30,
-          "atr_period": 20,
-          "stop_atr_mult": 3.0,
-          "target_atr_mult": 6.0,
-          "trend_filter_period": 80,
-          "long_only": true
-        },
+        "validation": "3/4 passed. OOS failed (-37.9% PF decay).",
+        "next_step": "paper_trading_30_days"
+      },
+      {
+        "hypothesis": "H007",
+        "research_id": "R010",
+        "name": "Multi-Asset Momentum",
+        "gross_pf": 1.62,
+        "oos_pf": 1.04,
+        "trades": 82,
+        "timeframe": "4H",
+        "validation": "3/4 passed. OOS decay warning -42.7%.",
+        "next_step": "paper_trading_30_days"
+      },
+      {
+        "hypothesis": "H008",
+        "research_id": "R012",
+        "name": "Adaptive Momentum Burst (AMB)",
+        "gross_pf": 1.66,
+        "oos_pf": 1.13,
+        "trades": 35,
+        "timeframe": "4H",
+        "validation": "3/4 passed. OOS decay warning -48.8%.",
+        "next_step": "paper_trading_30_days"
+      },
+      {
+        "hypothesis": "H009",
+        "research_id": "R013",
+        "name": "Acceleration Breakout Filter (ABF)",
+        "gross_pf": 2.34,
+        "oos_pf": 2.50,
+        "trades": 35,
+        "timeframe": "4H",
+        "validation": "4/4 passed. STRONGEST batch 1.",
+        "next_step": "paper_trading_30_days"
+      },
+      {
+        "hypothesis": "H011",
+        "research_id": "R015",
+        "name": "Volume-Confirmed Breakout (VCB)",
+        "gross_pf": 1.41,
+        "oos_pf": 1.18,
+        "trades": 53,
+        "timeframe": "4H",
+        "validation": "3/4 passed.",
+        "next_step": "paper_trading_30_days"
+      },
+      {
+        "hypothesis": "H013",
+        "research_id": "R017",
+        "name": "Trend Strength Breakout (TSB)",
+        "gross_pf": 1.59,
+        "oos_pf": 1.54,
+        "trades": 45,
+        "timeframe": "4H",
+        "validation": "4/4 passed. STRONGEST batch 2.",
+        "next_step": "paper_trading_30_days"
+      },
+      {
+        "hypothesis": "H014",
+        "research_id": "R018",
+        "name": "Trend Pullback Entry (TPE)",
+        "gross_pf": 2.65,
+        "oos_pf": 4.61,
+        "trades": 26,
+        "timeframe": "4H",
+        "validation": "4/4 passed. Only 26 trades — sample concern.",
+        "next_step": "paper_trading_30_days"
+      },
+      {
+        "hypothesis": "H015",
+        "research_id": "R019",
+        "name": "ATR Regime Adaptive (ARA)",
+        "gross_pf": 1.38,
+        "oos_pf": 0.76,
+        "trades": 62,
+        "timeframe": "4H",
+        "validation": "3/4 passed. OOS decay -57% — overfitting warning.",
+        "next_step": "paper_trading_30_days"
+      },
+      {
+        "hypothesis": "H016",
+        "research_id": "R020",
+        "name": "Consecutive Momentum Filter (CMF)",
+        "gross_pf": 1.74,
+        "oos_pf": 1.94,
+        "trades": 41,
+        "timeframe": "4H",
+        "validation": "4/4 passed. Robust.",
         "next_step": "paper_trading_30_days"
       }
     ],
     "failed_validation": [
       "H005/R009 (Donchian Breakout): net PF 1.23, OOS PF 1.07. Edge too thin after costs.",
-      "H006/R011 (Daily Trend): 20 trades, OOS PF 1.13, -41% decay. Insufficient sample."
+      "H006/R011 (Daily Trend): 20 trades, OOS PF 1.13, -41% decay. Insufficient sample.",
+      "H010/R014 (Multi-TF Breakout Confluence): Failed walk-forward validation.",
+      "H012/R016 (Dual Momentum Consensus): Failed walk-forward validation."
     ],
     "research_queue": [
       {
         "id": "R022",
         "name": "Momentum Exhaustion Reversal to Trend (MERT)",
         "status": "new",
-        "note": "Auto-sourced. Archetype: custom."
-      },
-      {
-        "id": "R023",
-        "name": "Gap-and-Go Continuation (GGC)",
-        "status": "new",
-        "note": "Auto-sourced. Archetype: custom."
+        "note": "Auto-sourced. Archetype: momentum_exhaustion_reversal."
       },
       {
         "id": "R024",
         "name": "Volatility Regime Breakout (VRB)",
         "status": "new",
-        "note": "Auto-sourced. Archetype: custom."
+        "note": "Auto-sourced 2026-02-17."
       },
       {
         "id": "R025",
         "name": "Momentum Exhaustion Reversal (Long-Only)",
         "status": "new",
-        "note": "Auto-sourced. Archetype: custom."
+        "note": "Auto-sourced 2026-02-17."
       },
       {
         "id": "R026",
         "name": "Two-Timeframe Breakout Confirmation (2TBC)",
         "status": "new",
-        "note": "Auto-sourced. Archetype: custom."
+        "note": "Auto-sourced 2026-02-17."
       }
     ],
     "parked": [
@@ -190,6 +263,11 @@
         "id": "R002",
         "name": "Funding Rate Mean Reversion",
         "reason": "needs_funding_rate_data"
+      },
+      {
+        "id": "R023",
+        "name": "Gap-and-Go Continuation (GGC)",
+        "reason": "0_trades_on_4H_gaps_too_rare"
       }
     ],
     "killed": [
@@ -208,71 +286,6 @@
       "HYPOTHESIS_003"
     ],
     "promoted_awaiting_validation": [
-      {
-        "research_id": "R010",
-        "name": "Multi-Asset Momentum",
-        "gross_pf": 1.62,
-        "trades": 82,
-        "win_rate": "24.4%",
-        "params": {
-          "roc_period": 30,
-          "min_roc": 1.0,
-          "stop_pct": 2.0,
-          "target_pct": 12.0,
-          "aux_data_dir": "/Users/siphokhoza/ai-chief-of-staff/data",
-          "aux_timeframe_hours": 4,
-          "long_only": true
-        },
-        "next_step": "walk_forward_validation"
-      },
-      {
-        "research_id": "R012",
-        "name": "Adaptive Momentum Burst (AMB)",
-        "gross_pf": 1.66,
-        "trades": 35,
-        "win_rate": "22.9%",
-        "params": {
-          "bb_period": 20,
-          "bb_std": 2.0,
-          "squeeze_lookback": 50,
-          "squeeze_pct": 20,
-          "min_squeeze_bars": 3,
-          "ma_period": 50,
-          "ma_slope_bars": 5,
-          "stop_pct": 2.0,
-          "target_pct": 12.0
-        },
-        "next_step": "walk_forward_validation"
-      },
-      {
-        "research_id": "R013",
-        "name": "Acceleration Breakout Filter (ABF)",
-        "gross_pf": 2.34,
-        "trades": 35,
-        "win_rate": "25.7%",
-        "params": {
-          "channel_period": 30,
-          "roc_short": 5,
-          "roc_long": 15,
-          "stop_pct": 2.0,
-          "target_pct": 12.0
-        },
-        "next_step": "walk_forward_validation"
-      },
-      {
-        "research_id": "R014",
-        "name": "Multi-Timeframe Breakout Confluence (MTBC)",
-        "gross_pf": 1.39,
-        "trades": 107,
-        "win_rate": "50.5%",
-        "params": {
-          "channel_period": 15,
-          "trend_ma_period": 90,
-          "stop_pct": 4.0,
-          "target_pct": 6.0
-        },
-        "next_step": "walk_forward_validation"
-      },
       {
         "research_id": "R021",
         "name": "Range Compression Expansion (RCE)",
