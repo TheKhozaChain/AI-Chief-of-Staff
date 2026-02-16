@@ -88,8 +88,22 @@ def parse_kanban() -> Dict:
     return result
 
 
+# Recurring items: patterns that should be re-added to Up Next after completion.
+# Each tuple is (match_pattern, regenerated_item_text, rbi_phase, notes).
+RECURRING_ITEMS = [
+    (r"[Ss]ource.*research ideas|[Ss]ource.*ideas.*LLM|[Ss]ource.*new.*ideas",
+     "Source new research ideas R{next}+ via LLM", "R", "Keep funnel fed — recurring weekly"),
+    (r"[Pp]aper.*trad.*health|[Pp]aper.*trad.*check|[Cc]heck.*early.*kill",
+     "Weekly paper trading health check (check for early kills)", "I", "Recurring weekly"),
+]
+
+
 def update_kanban(completed_items: List[str], new_doing: Optional[List[Dict]] = None):
-    """Move completed items to Done and optionally update Doing section."""
+    """Move completed items to Done and optionally update Doing section.
+
+    Recurring items (matching RECURRING_ITEMS patterns) are re-added to
+    Up Next after being moved to Done, so they appear again next cycle.
+    """
     text = KANBAN_FILE.read_text()
     today = datetime.now().strftime("%Y-%m-%d")
 
@@ -99,6 +113,20 @@ def update_kanban(completed_items: List[str], new_doing: Optional[List[Dict]] = 
         f"> Last updated: {today} by AI Chief of Staff (auto-execution)",
         text,
     )
+
+    # Identify which completed items are recurring (before removing them)
+    items_to_readd = []
+    for item_text in completed_items:
+        for pattern, template, phase, notes in RECURRING_ITEMS:
+            if re.search(pattern, item_text):
+                # Extract next R-number if template needs it
+                readd_text = template
+                if "{next}" in template:
+                    r_nums = re.findall(r"R(\d{3})", text)
+                    next_r = max(int(n) for n in r_nums) + 1 if r_nums else 1
+                    readd_text = template.replace("{next}", f"{next_r:03d}")
+                items_to_readd.append((readd_text, phase, notes))
+                break
 
     # Remove completed items by filtering out whole lines
     # This is safer than regex cell matching which can corrupt table rows
@@ -123,6 +151,36 @@ def update_kanban(completed_items: List[str], new_doing: Optional[List[Dict]] = 
     if new_rows:
         text = text.replace(done_header, done_header + new_rows)
 
+    # Re-add recurring items to Up Next (at the end of the table)
+    if items_to_readd:
+        lines = text.split("\n")
+        # Find the last Up Next table row to insert after
+        last_up_next_row = None
+        in_up_next = False
+        for i, line in enumerate(lines):
+            if "## Up Next" in line:
+                in_up_next = True
+                continue
+            if in_up_next and line.startswith("---"):
+                break
+            if in_up_next and re.match(r"^\|\s*\d+\s*\|", line):
+                last_up_next_row = i
+
+        # If no rows found, find the table header row
+        if last_up_next_row is None:
+            for i, line in enumerate(lines):
+                if in_up_next and line.startswith("|:-:"):
+                    last_up_next_row = i
+                    break
+
+        if last_up_next_row is not None:
+            for readd_text, phase, notes in items_to_readd:
+                last_up_next_row += 1
+                lines.insert(last_up_next_row,
+                             f"| ? | {readd_text} | {phase} | {notes} |")
+            text = "\n".join(lines)
+            print(f"  Re-added {len(items_to_readd)} recurring items to Up Next")
+
     # Renumber Up Next items (only lines in the Up Next section)
     lines = text.split("\n")
     in_up_next = False
@@ -134,8 +192,8 @@ def update_kanban(completed_items: List[str], new_doing: Optional[List[Dict]] = 
         if in_up_next and line.startswith("---"):
             in_up_next = False
             continue
-        if in_up_next and re.match(r"^\|\s*\d+\s*\|", line):
-            lines[i] = re.sub(r"^\|\s*\d+\s*\|", f"| {counter} |", line)
+        if in_up_next and re.match(r"^\|\s*[\d?]+\s*\|", line):
+            lines[i] = re.sub(r"^\|\s*[\d?]+\s*\|", f"| {counter} |", line)
             counter += 1
     text = "\n".join(lines)
 
