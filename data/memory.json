@@ -1,16 +1,23 @@
 {
-  "version": 15,
-  "last_updated": "2026-02-18T08:41:55.929130+11:00",
+  "version": 16,
+  "last_updated": "2026-02-19T08:41:29.491939+11:00",
   "schema_note": "Optimized for AI context retrieval, not human reading",
   "active_context": {
     "current_focus": "H004_validated_paper_trading_next_screen_new_ideas",
-    "status": "pipeline_ran_2026-02-18_3_new_ideas_sourced",
+    "status": "pipeline_ran_2026-02-19_3_new_ideas_sourced",
     "blockers": [],
     "next_action": "walk_forward_validate_newly_promoted_strategies",
     "execution_model": "autonomous_execute_then_inform",
     "rbi_phase": "implement_paper_trading"
   },
   "session_log": [
+    {
+      "date": "2026-02-19",
+      "summary": "New ideas sourced: R030, R031, R032.",
+      "decisions": [],
+      "artifacts": [],
+      "source": "automated_rbi_pipeline"
+    },
     {
       "date": "2026-02-18",
       "summary": "New ideas sourced: R027, R028, R029.",
@@ -119,17 +126,6 @@
         "strategies/HYPOTHESIS_003.md",
         "backtest/data_loader.py",
         "data/weekly_review_2026-02-07.md"
-      ]
-    },
-    {
-      "date": "2026-02-06",
-      "summary": "Refined HYPOTHESIS_002 with time-of-day filter. Best: 20-23 UTC (PF 1.18, 55.4% win rate). Archived \u2014 edge too thin.",
-      "decisions": [
-        "hypothesis_002_refined_then_archived"
-      ],
-      "artifacts": [
-        "HYPOTHESIS_002.md",
-        "backtest/mean_reversion.py"
       ]
     }
   ],
@@ -277,6 +273,24 @@
         "name": "High ATR Regime Trend Following (HARTF)",
         "status": "new",
         "note": "Auto-sourced. Archetype: atr_regime_adaptive."
+      },
+      {
+        "id": "R030",
+        "name": "Volatility Breakout with Momentum Confirmation (VBMC)",
+        "status": "new",
+        "note": "Auto-sourced. Archetype: adaptive_momentum_burst."
+      },
+      {
+        "id": "R031",
+        "name": "Acceleration Surge After Consolidation (ASAC)",
+        "status": "new",
+        "note": "Auto-sourced. Archetype: acceleration_breakout."
+      },
+      {
+        "id": "R032",
+        "name": "Multi-Bar Persistence Breakout (MBPB)",
+        "status": "new",
+        "note": "Auto-sourced. Archetype: consecutive_momentum."
       }
     ],
     "parked": [
