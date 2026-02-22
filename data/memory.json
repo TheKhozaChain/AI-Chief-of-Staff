@@ -1,16 +1,23 @@
 {
-  "version": 20,
-  "last_updated": "2026-02-22T14:48:07.648162+11:00",
+  "version": 21,
+  "last_updated": "2026-02-23T08:31:47.503162+11:00",
   "schema_note": "Optimized for AI context retrieval, not human reading",
   "active_context": {
     "current_focus": "H004_validated_paper_trading_next_screen_new_ideas",
-    "status": "pipeline_ran_2026-02-22_18_screened_7_promoted_4_killed_3_new_ideas_sourced",
+    "status": "pipeline_ran_2026-02-23_3_new_ideas_sourced",
     "blockers": [],
     "next_action": "walk_forward_validate_newly_promoted_strategies",
     "execution_model": "autonomous_execute_then_inform",
     "rbi_phase": "implement_paper_trading"
   },
   "session_log": [
+    {
+      "date": "2026-02-23",
+      "summary": "New ideas sourced: R047, R048, R049.",
+      "decisions": [],
+      "artifacts": [],
+      "source": "automated_rbi_pipeline"
+    },
     {
       "date": "2026-02-22",
       "summary": "Pipeline screened 18 ideas. Promoted: R027 (PF 1.37), R029 (PF 1.31), R033 (PF 2.49), R035 (PF 1.56), R037 (PF 1.32), R038 (PF 1.31), R041 (PF 1.31). Killed: R028 (PF 1.08), R031 (PF 1.08), R034 (PF 1.08), R039 (PF 1.08). New ideas sourced: R044, R045, R046.",
@@ -99,20 +106,6 @@
         "strategies/HYPOTHESIS_004.md",
         "strategies/HYPOTHESIS_005.md",
         "strategies/HYPOTHESIS_006.md"
-      ]
-    },
-    {
-      "date": "2026-02-10",
-      "summary": "Added MultiAssetMomentum archetype for R010. Fixed pipeline reliability (timeouts, fail-fast, failure email alerts). Fixed workflow YAML alert extraction. Fetched ETH/SOL 1h data (26K candles each).",
-      "decisions": [
-        "multi_asset_archetype_added",
-        "pipeline_reliability_hardened",
-        "eth_sol_data_fetched"
-      ],
-      "artifacts": [
-        "strategies/backtest/archetypes.py",
-        ".github/workflows/morning.yml",
-        "scripts/send_workflow_alert.py"
       ]
     }
   ],
@@ -282,6 +275,24 @@
       {
         "id": "R046",
         "name": "Post-Pullback Acceleration Surge (PPAS)",
+        "status": "new",
+        "note": "Auto-sourced. Archetype: trend_pullback."
+      },
+      {
+        "id": "R047",
+        "name": "Volatility Regime Shift Breakout (VRSB)",
+        "status": "new",
+        "note": "Auto-sourced. Archetype: range_compression_expansion."
+      },
+      {
+        "id": "R048",
+        "name": "Multi-Leg Momentum Cascade (MLMC)",
+        "status": "new",
+        "note": "Auto-sourced. Archetype: consecutive_momentum."
+      },
+      {
+        "id": "R049",
+        "name": "Trend Acceleration After Pause (TAAP)",
         "status": "new",
         "note": "Auto-sourced. Archetype: trend_pullback."
       }
