@@ -37,6 +37,7 @@ from data_loader import resample
 DATA_DIR = REPO_ROOT / 'data'
 REGISTRY_FILE = DATA_DIR / 'paper_trade_registry.json'
 COST_PCT = 0.1  # 0.1% round-trip
+WARMUP_BARS = 180  # ~30 days of 4H bars for first-run lookback
 
 
 # ── Data fetching ─────────────────────────────────────────────────
@@ -319,22 +320,36 @@ def save_state(strategy_id, state):
 # ── Position tracking ─────────────────────────────────────────────
 
 def check_exit(bar, position):
-    """Check if position SL/TP hit on this bar."""
+    """Check if position SL/TP hit on this bar (direction-aware)."""
     sl = position['stop_loss']
     tp = position['take_profit']
+    direction = position.get('direction', 'long')
 
-    if bar['low'] <= sl:
-        return sl, 'stop_loss'
-    if bar['high'] >= tp:
-        return tp, 'take_profit'
+    if direction == 'long':
+        if bar['low'] <= sl:
+            return sl, 'stop_loss'
+        if bar['high'] >= tp:
+            return tp, 'take_profit'
+    else:  # short
+        if bar['high'] >= sl:
+            return sl, 'stop_loss'
+        if bar['low'] <= tp:
+            return tp, 'take_profit'
+
     return None, None
 
 
 def record_trade(state, bar, exit_price, exit_reason):
-    """Close position, record trade, update P&L."""
+    """Close position, record trade, update P&L (direction-aware)."""
     pos = state['position']
     entry = pos['entry_price']
-    pnl_gross = (exit_price - entry)
+    direction = pos.get('direction', 'long')
+
+    if direction == 'long':
+        pnl_gross = exit_price - entry
+    else:
+        pnl_gross = entry - exit_price
+
     cost = entry * (COST_PCT / 100)
     pnl_net = pnl_gross - cost
     pnl_pct = (pnl_net / entry) * 100
@@ -346,6 +361,7 @@ def record_trade(state, bar, exit_price, exit_reason):
         'exit_price': exit_price,
         'stop_loss': pos['stop_loss'],
         'take_profit': pos['take_profit'],
+        'direction': direction,
         'exit_reason': exit_reason,
         'pnl_gross': round(pnl_gross, 2),
         'pnl_net': round(pnl_net, 2),
@@ -362,12 +378,14 @@ def record_trade(state, bar, exit_price, exit_reason):
 
 
 def open_position(state, bar, signal):
-    """Open a new paper position."""
+    """Open a new paper position (direction-aware)."""
+    direction = 'short' if signal.get('action') == 'sell' else 'long'
     state['position'] = {
         'entry_time': bar['datetime'],
         'entry_price': bar['close'],
         'stop_loss': signal['stop_loss'],
         'take_profit': signal['take_profit'],
+        'direction': direction,
     }
     return state['position']
 
@@ -474,6 +492,54 @@ def evaluate_graduation(strategy_id, state, config):
     return None, None
 
 
+# ── Staleness detection ───────────────────────────────────────────
+
+def check_staleness(strategy_id, state, config):
+    """Check if a strategy is stale (no trades for too long).
+
+    Returns: ('stale', reason) | ('zero_trade_kill', reason) | (None, None)
+    """
+    started = state.get('started')
+    if not started:
+        return None, None
+
+    started_dt = datetime.fromisoformat(started) if isinstance(started, str) else started
+    days_active = (datetime.utcnow() - started_dt).days
+    n_trades = len(state.get('trades', []))
+    has_position = state.get('position') is not None
+    stale_alert_sent = state.get('stale_alert_sent', False)
+
+    # Skip if in a position — strategy is active
+    if has_position:
+        return None, None
+
+    # 30+ days, 0 trades → auto-kill (don't wait 60 days)
+    if days_active >= 30 and n_trades == 0:
+        reason = (f"{strategy_id}: {days_active} days active, 0 trades, no position. "
+                  f"Auto-killed for zero trade production.")
+        return 'zero_trade_kill', reason
+
+    # 14+ days, 0 trades → stale warning (once)
+    if days_active >= 14 and n_trades == 0 and not stale_alert_sent:
+        state['stale_alert_sent'] = True
+        reason = (f"{strategy_id}: {days_active} days active, 0 trades, no position. "
+                  f"Strategy may be mismatched with current market regime.")
+        return 'stale', reason
+
+    # Check last_signal_time for strategies that had trades but went silent
+    last_signal = state.get('last_signal_time')
+    if last_signal and n_trades > 0:
+        last_dt = datetime.fromisoformat(last_signal) if isinstance(last_signal, str) else last_signal
+        silent_days = (datetime.utcnow() - last_dt).days
+        if silent_days >= 30 and not stale_alert_sent:
+            state['stale_alert_sent'] = True
+            reason = (f"{strategy_id}: Last signal was {silent_days} days ago. "
+                      f"Strategy may have stopped generating signals.")
+            return 'stale', reason
+
+    return None, None
+
+
 # ── Main logic ────────────────────────────────────────────────────
 
 def run_strategy(strategy_id, config, bars_1h):
@@ -493,7 +559,8 @@ def run_strategy(strategy_id, config, bars_1h):
 
     if state['position']:
         pos = state['position']
-        print(f"  Position: LONG @ ${pos['entry_price']:,.2f} "
+        direction_label = pos.get('direction', 'long').upper()
+        print(f"  Position: {direction_label} @ ${pos['entry_price']:,.2f} "
               f"(SL: ${pos['stop_loss']:,.2f}, TP: ${pos['take_profit']:,.2f})")
     else:
         print(f"  Position: FLAT | Trades: {len(state['trades'])} | P&L: ${state['total_pnl']:+,.2f}")
@@ -516,7 +583,10 @@ def run_strategy(strategy_id, config, bars_1h):
             save_state(strategy_id, state)
             return []
     else:
-        new_bars_start = len(bars) - 1
+        # First run: warm-up with WARMUP_BARS instead of just 1 bar
+        new_bars_start = max(0, len(bars) - WARMUP_BARS)
+        state['warmup_done'] = True
+        print(f"  First run: warm-up processing {len(bars) - new_bars_start} bars")
 
     # Create strategy instance
     strategy = archetype_cls(**config['params'])
@@ -544,9 +614,12 @@ def run_strategy(strategy_id, config, bars_1h):
         # Check for entry signal (only when flat)
         if not state['position']:
             signal = strategy(bar, prev_bars, None)
-            if signal and signal.get('action') == 'buy':
+            if signal and signal.get('action') in ('buy', 'sell'):
                 pos = open_position(state, bar, signal)
-                msg = (f"[{strategy_id}] ENTRY: Long @ ${bar['close']:,.2f} "
+                direction_label = pos.get('direction', 'long').upper()
+                state['last_signal_time'] = bar['datetime'].isoformat() if isinstance(bar['datetime'], datetime) else bar['datetime']
+                state['stale_alert_sent'] = False
+                msg = (f"[{strategy_id}] ENTRY: {direction_label} @ ${bar['close']:,.2f} "
                        f"(SL: ${signal['stop_loss']:,.2f}, "
                        f"TP: ${signal['take_profit']:,.2f})")
                 print(f"    [{bar['datetime']}] {msg}")
@@ -559,7 +632,11 @@ def run_strategy(strategy_id, config, bars_1h):
     current_price = bars[-1]['close']
     if state['position']:
         pos = state['position']
-        unrealized = current_price - pos['entry_price']
+        direction = pos.get('direction', 'long')
+        if direction == 'long':
+            unrealized = current_price - pos['entry_price']
+        else:
+            unrealized = pos['entry_price'] - current_price
         unrealized_pct = (unrealized / pos['entry_price']) * 100
         print(f"  Unrealized: ${unrealized:+,.2f} ({unrealized_pct:+.2f}%)")
 
@@ -570,6 +647,13 @@ def run_strategy(strategy_id, config, bars_1h):
     grad_result, grad_reason = evaluate_graduation(strategy_id, state, config)
     if grad_result:
         events.append(('graduation', strategy_id, grad_result, grad_reason))
+
+    # Check staleness
+    stale_result, stale_reason = check_staleness(strategy_id, state, config)
+    if stale_result:
+        events.append(('staleness', strategy_id, stale_result, stale_reason))
+        # Save state again since check_staleness may have set stale_alert_sent
+        save_state(strategy_id, state)
 
     return events
 
@@ -614,10 +698,12 @@ def run():
         events = run_strategy(sid, config, bars_1h)
         all_events.extend(events)
 
-        # Collect graduation actions to apply after all strategies run
+        # Collect graduation/kill actions to apply after all strategies run
         for evt in events:
             if evt[0] == 'graduation':
                 graduation_actions.append(evt)
+            elif evt[0] == 'staleness' and evt[2] == 'zero_trade_kill':
+                graduation_actions.append(('graduation', evt[1], 'killed', evt[3]))
 
     # Apply graduation/kill actions to registry
     for evt in graduation_actions:
@@ -641,12 +727,13 @@ def run():
         if event_type == 'entry':
             _, _, pos, msg = evt
             append_log(sid, msg)
+            dir_label = pos.get('direction', 'long').upper()
             body = (f"### New Paper Trade — {sid}\n\n"
-                    f"**LONG BTCUSD** @ ${pos['entry_price']:,.2f}\n\n"
+                    f"**{dir_label} BTCUSD** @ ${pos['entry_price']:,.2f}\n\n"
                     f"- Stop Loss: ${pos['stop_loss']:,.2f}\n"
                     f"- Take Profit: ${pos['take_profit']:,.2f}\n"
                     f"- Time: {pos['entry_time']}\n")
-            send_alert(f"[{sid} Paper] ENTRY — Long BTCUSD", body)
+            send_alert(f"[{sid} Paper] ENTRY — {dir_label} BTCUSD", body)
 
         elif event_type == 'exit':
             _, _, trade, msg = evt
@@ -660,6 +747,22 @@ def run():
                     f"- P&L: ${trade['pnl_net']:+,.2f} ({trade['pnl_pct']:+.2f}%)\n"
                     f"- Costs: ${trade['cost']:,.2f}\n")
             send_alert(f"[{sid} Paper] {result_str} — ${trade['pnl_net']:+,.0f}", body)
+
+        elif event_type == 'staleness':
+            _, _, stale_type, reason = evt
+            if stale_type == 'stale':
+                append_log(sid, f"STALE WARNING: {reason}")
+                body = (f"### Staleness Warning — {sid}\n\n"
+                        f"{reason}\n\n"
+                        f"Strategy has been active with no trades. "
+                        f"Review market regime compatibility.\n")
+                send_alert(f"[{sid} Paper] STALE — no trades detected", body)
+            elif stale_type == 'zero_trade_kill':
+                append_log(sid, f"ZERO-TRADE KILL: {reason}")
+                body = (f"### Strategy Auto-Killed — {sid}\n\n"
+                        f"{reason}\n\n"
+                        f"Strategy produced zero trades and has been removed.\n")
+                send_alert(f"[{sid} Paper] KILLED — zero trades after 30 days", body)
 
         elif event_type == 'graduation':
             _, _, result, reason = evt
@@ -723,7 +826,8 @@ def print_status():
                 print(f"    Trades: {n_trades}  |  P&L: ${pnl:+,.2f}")
 
                 if pos:
-                    print(f"    Position: LONG @ ${pos['entry_price']:,.2f}")
+                    dir_label = pos.get('direction', 'long').upper()
+                    print(f"    Position: {dir_label} @ ${pos['entry_price']:,.2f}")
                     print(f"      SL: ${pos['stop_loss']:,.2f}  |  TP: ${pos['take_profit']:,.2f}")
                 else:
                     print(f"    Position: FLAT")

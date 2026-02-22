@@ -33,6 +33,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from data_loader import load_csv, resample
 from engine import Backtest
 from archetypes import ARCHETYPES
+from regime import run_regime_coverage_check
 
 
 COST_PCT = 0.1  # Standard transaction cost
@@ -99,12 +100,24 @@ def run_screen(
 
     # Determine verdict
     gross_pf = gross.profit_factor
+    regime_coverage = None
     if gross.total_trades < 20:
         verdict = 'park'
         reason = f'Insufficient trades ({gross.total_trades}). Need 20+ for meaningful screen.'
     elif gross_pf >= PF_THRESHOLD:
-        verdict = 'promote'
-        reason = f'Gross PF {gross_pf:.2f} >= {PF_THRESHOLD} threshold. Promote to full hypothesis.'
+        # Base criteria pass — run regime coverage check before promoting
+        regime_coverage = run_regime_coverage_check(
+            data,
+            strategy_factory=lambda: strategy_class(**params),
+            cost_pct=cost_pct,
+        )
+        if regime_coverage['pass']:
+            verdict = 'promote'
+            reason = f'Gross PF {gross_pf:.2f} >= {PF_THRESHOLD} threshold. Regime coverage OK. Promote to full hypothesis.'
+        else:
+            verdict = 'park'
+            reason = (f'Gross PF {gross_pf:.2f} passes threshold but regime coverage failed: '
+                      f'{regime_coverage["reason"]}')
     elif gross_pf >= 1.0:
         verdict = 'kill'
         reason = f'Gross PF {gross_pf:.2f} — positive expectancy but below {PF_THRESHOLD} threshold.'
@@ -139,6 +152,7 @@ def run_screen(
         'cost_pct': cost_pct,
         'verdict': verdict,
         'reason': reason,
+        'regime_coverage': regime_coverage,
         'timestamp': datetime.now().isoformat(),
     }
 
@@ -199,7 +213,7 @@ def _format_summary(r: Dict) -> str:
     verdict_icon = {'kill': 'KILLED', 'promote': 'PROMOTED', 'park': 'PARKED'}
     v = verdict_icon.get(r['verdict'], r['verdict'].upper())
 
-    return f"""
+    summary = f"""
 Screen Result: {r['idea_id']} — {r['idea_name']}
 {'=' * 60}
 Archetype:  {r['archetype']}
@@ -224,6 +238,22 @@ Total Costs:   ${r['total_costs']:,.0f}
 
 VERDICT: [{v}] {r['reason']}
 """
+    # Add regime breakdown if present
+    rc = r.get('regime_coverage')
+    if rc and isinstance(rc, dict) and rc.get('regimes'):
+        regime_lines = ["\nRegime Coverage:"]
+        for regime_name, info in rc['regimes'].items():
+            if info.get('skipped'):
+                regime_lines.append(f"  {regime_name:>8}: SKIPPED ({info.get('reason', 'too few bars')})")
+            else:
+                status = "OK" if info.get('passed', True) else "FAIL"
+                regime_lines.append(
+                    f"  {regime_name:>8}: [{status}] {info['bars']} bars, "
+                    f"{info['trades']} trades, PF {info['pf']}"
+                )
+        summary += "\n".join(regime_lines) + "\n"
+
+    return summary
 
 
 def screen_multiple(screens: List[Dict], data_file: str) -> List[Dict]:

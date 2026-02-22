@@ -1312,6 +1312,142 @@ class GapAndGoContinuation:
         }
 
 
+class MeanReversionShort:
+    """Short overbought bounces in bear regime.
+
+    Sells when price is below a slow MA (bear filter), above upper Bollinger
+    Band (overbought), and RSI is elevated. Targets the mean reversion back
+    down within the bearish trend.
+
+    Params:
+        slow_ma_period: Slow MA for bear regime filter
+        bb_period: Bollinger Band lookback
+        bb_std: BB standard deviation multiplier
+        rsi_period: RSI lookback
+        rsi_threshold: RSI must be above this to enter short (overbought)
+        stop_pct: Stop loss percentage (above entry)
+        target_pct: Take profit percentage (below entry)
+    """
+
+    def __init__(self, slow_ma_period=200, bb_period=20, bb_std=2.0,
+                 rsi_period=14, rsi_threshold=70, stop_pct=3.0, target_pct=6.0):
+        self.slow_ma_period = slow_ma_period
+        self.bb_period = bb_period
+        self.bb_std = bb_std
+        self.rsi_period = rsi_period
+        self.rsi_threshold = rsi_threshold
+        self.stop_pct = stop_pct
+        self.target_pct = target_pct
+
+    def _calc_rsi(self, closes):
+        if len(closes) < self.rsi_period + 1:
+            return 50.0
+        gains = []
+        losses = []
+        for i in range(len(closes) - self.rsi_period, len(closes)):
+            change = closes[i] - closes[i - 1]
+            if change > 0:
+                gains.append(change)
+                losses.append(0)
+            else:
+                gains.append(0)
+                losses.append(abs(change))
+        avg_gain = statistics.mean(gains) if gains else 0
+        avg_loss = statistics.mean(losses) if losses else 0
+        if avg_loss == 0:
+            return 100.0
+        rs = avg_gain / avg_loss
+        return 100 - (100 / (1 + rs))
+
+    def __call__(self, bar: Dict, prev_bars: List[Dict], position) -> Optional[Dict]:
+        needed = max(self.slow_ma_period, self.bb_period, self.rsi_period + 1)
+        if len(prev_bars) < needed:
+            return None
+
+        closes = [b['close'] for b in prev_bars]
+        price = bar['close']
+
+        # Bear filter: price below slow MA
+        slow_ma = statistics.mean(closes[-self.slow_ma_period:])
+        if price >= slow_ma:
+            return None
+
+        # Overbought: price above upper Bollinger Band
+        bb_closes = closes[-self.bb_period:]
+        bb_ma = statistics.mean(bb_closes)
+        bb_std = statistics.stdev(bb_closes) if len(bb_closes) > 1 else 0
+        if bb_std == 0:
+            return None
+        upper_band = bb_ma + self.bb_std * bb_std
+        if price <= upper_band:
+            return None
+
+        # RSI overbought confirmation
+        rsi = self._calc_rsi(closes + [price])
+        if rsi < self.rsi_threshold:
+            return None
+
+        return {
+            'action': 'sell',
+            'stop_loss': price * (1 + self.stop_pct / 100),
+            'take_profit': price * (1 - self.target_pct / 100),
+        }
+
+
+class BreakdownMomentum:
+    """Short on Donchian low breakdown with negative momentum acceleration.
+
+    Mirror of AccelerationBreakoutFilter but for shorts. Enters short when
+    price breaks below the Donchian channel low AND negative ROC is
+    accelerating downward.
+
+    Params:
+        channel_period: Donchian channel lookback (bars)
+        roc_short: Short ROC lookback (bars)
+        roc_long: Long ROC lookback (bars)
+        stop_pct: Stop loss percentage (above entry)
+        target_pct: Take profit percentage (below entry)
+    """
+
+    def __init__(self, channel_period=20, roc_short=5, roc_long=20,
+                 stop_pct=3.0, target_pct=9.0):
+        self.channel_period = channel_period
+        self.roc_short = roc_short
+        self.roc_long = roc_long
+        self.stop_pct = stop_pct
+        self.target_pct = target_pct
+
+    def __call__(self, bar: Dict, prev_bars: List[Dict], position) -> Optional[Dict]:
+        needed = max(self.channel_period, self.roc_long)
+        if len(prev_bars) < needed:
+            return None
+
+        price = bar['close']
+        closes = [b['close'] for b in prev_bars]
+
+        # Donchian breakdown: price below channel low
+        channel_low = min(b['low'] for b in prev_bars[-self.channel_period:])
+        if price >= channel_low:
+            return None
+
+        # ROC acceleration filter (negative direction)
+        if closes[-self.roc_short] == 0 or closes[-self.roc_long] == 0:
+            return None
+        roc_s = ((price - closes[-self.roc_short]) / closes[-self.roc_short]) * 100
+        roc_l = ((price - closes[-self.roc_long]) / closes[-self.roc_long]) * 100
+
+        # Short ROC must be more negative than long ROC (accelerating down)
+        # and both must be negative
+        if roc_s >= roc_l or roc_s >= 0:
+            return None
+
+        return {
+            'action': 'sell',
+            'stop_loss': price * (1 + self.stop_pct / 100),
+            'take_profit': price * (1 - self.target_pct / 100),
+        }
+
+
 # Registry: maps strategy name to class for dynamic instantiation
 ARCHETYPES = {
     'ma_crossover': MACrossover,
@@ -1332,4 +1468,6 @@ ARCHETYPES = {
     'range_compression_expansion': RangeCompressionExpansion,
     'momentum_exhaustion_reversal': MomentumExhaustionReversal,
     'gap_and_go': GapAndGoContinuation,
+    'mean_reversion_short': MeanReversionShort,
+    'breakdown_momentum': BreakdownMomentum,
 }

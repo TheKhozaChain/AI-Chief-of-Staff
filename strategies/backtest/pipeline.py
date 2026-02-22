@@ -242,6 +242,30 @@ IDEA_ARCHETYPE_MAP = {
             'long_only': [True],
         },
     },
+    'R042': {
+        'archetype': 'mean_reversion_short',
+        'timeframe_hours': 4,
+        'param_grid': {
+            'slow_ma_period': [100, 200],
+            'bb_period': [20],
+            'bb_std': [1.5, 2.0],
+            'rsi_period': [14],
+            'rsi_threshold': [65, 70, 75],
+            'stop_pct': [2.0, 3.0, 4.0],
+            'target_pct': [4.0, 6.0, 9.0],
+        },
+    },
+    'R043': {
+        'archetype': 'breakdown_momentum',
+        'timeframe_hours': 4,
+        'param_grid': {
+            'channel_period': [10, 20, 30],
+            'roc_short': [3, 5],
+            'roc_long': [15, 20],
+            'stop_pct': [2.0, 3.0, 4.0],
+            'target_pct': [6.0, 9.0, 12.0],
+        },
+    },
 }
 
 REPO_ROOT = Path(__file__).parent.parent.parent
@@ -266,6 +290,8 @@ DEFAULT_PARAM_GRIDS = {
     'range_compression_expansion': {'atr_period': [14, 20], 'atr_lookback': [60], 'compression_percentile': [10, 15], 'breakout_atr_mult': [1.5], 'confirmation_bars': [2], 'stop_pct': [2.0, 3.0], 'target_pct': [6.0, 9.0], 'long_only': [True]},
     'momentum_exhaustion_reversal': {'ma_period': [50], 'rsi_period': [14], 'rsi_threshold': [30], 'bounce_min_pct': [0.5], 'stop_pct': [2.0, 3.0], 'target_pct': [6.0, 9.0], 'long_only': [True]},
     'gap_and_go': {'ma_period': [50], 'gap_min_pct': [1.0], 'lookback_period': [20], 'roc_period': [10], 'min_roc': [2.0], 'entry_delay_bars': [1], 'stop_pct': [2.0, 3.0], 'target_pct': [6.0, 9.0], 'long_only': [True]},
+    'mean_reversion_short': {'slow_ma_period': [200], 'bb_period': [20], 'bb_std': [2.0], 'rsi_period': [14], 'rsi_threshold': [70], 'stop_pct': [2.0, 3.0], 'target_pct': [4.0, 6.0]},
+    'breakdown_momentum': {'channel_period': [10, 20], 'roc_short': [5], 'roc_long': [20], 'stop_pct': [2.0, 3.0], 'target_pct': [6.0, 9.0]},
 }
 
 
