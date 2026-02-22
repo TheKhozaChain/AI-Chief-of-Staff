@@ -1,0 +1,985 @@
+{
+  "timestamp": "2026-02-22T14:47:47.490852",
+  "promoted": [
+    "R027",
+    "R029",
+    "R033",
+    "R035",
+    "R037",
+    "R038",
+    "R041"
+  ],
+  "killed": [
+    "R028",
+    "R031",
+    "R034",
+    "R039"
+  ],
+  "parked": [
+    "R025",
+    "R030",
+    "R032",
+    "R036",
+    "R040",
+    "R042",
+    "R043"
+  ],
+  "summary": "\nRBI Pipeline Summary \u2014 2026-02-22\n============================================================\nScreened: 18 ideas\nPromoted: 7 (R027, R029, R033, R035, R037, R038, R041)\nKilled: 4 (R028, R031, R034, R039)\nParked: 7 (R025, R030, R032, R036, R040, R042, R043)\n\nPROMOTED IDEAS (ready for full hypothesis):\n  R027 \u2014 Volatility Breakout with Momentum Confirmation (VBMC)\n    PF: 1.37 gross | Trades: 126 | Sharpe: 1.2\n    Params: {'channel_period': 20, 'roc_fast': 5, 'roc_med': 15, 'roc_slow': 30, 'stop_pct': 2.0, 'target_pct': 6.0}\n\n  R029 \u2014 High ATR Regime Trend Following (HARTF)\n    PF: 1.31 gross | Trades: 72 | Sharpe: 0.84\n    Params: {'ma_period': 20, 'atr_period': 14, 'atr_history': 120, 'base_stop_pct': 3.0, 'base_target_pct': 12.0, 'trend_filter_period': 80}\n\n  R033 \u2014 Multi-Day Consolidation Breakout (MDCB)\n    PF: 2.49 gross | Trades: 48 | Sharpe: 1.44\n    Params: {'atr_period': 20, 'atr_lookback': 60, 'compression_percentile': 10, 'breakout_atr_mult': 1.5, 'confirmation_bars': 2, 'stop_pct': 2.0, 'target_pct': 6.0, 'long_only': True}\n\n  R035 \u2014 Trending Strength Continuation (TSC)\n    PF: 1.56 gross | Trades: 103 | Sharpe: 1.3\n    Params: {'channel_period': 20, 'adx_period': 14, 'adx_threshold': 25, 'stop_pct': 2.0, 'target_pct': 6.0}\n\n  R037 \u2014 Acceleration Breakout With Volume Confirmation (ABVC)\n    PF: 1.32 gross | Trades: 129 | Sharpe: 1.0\n    Params: {'channel_period': 15, 'vol_period': 20, 'vol_mult': 1.5, 'stop_pct': 2.0, 'target_pct': 6.0}\n\n  R038 \u2014 Adaptive Volatility Regime Trend (AVRT)\n    PF: 1.31 gross | Trades: 72 | Sharpe: 0.84\n    Params: {'ma_period': 20, 'atr_period': 14, 'atr_history': 120, 'base_stop_pct': 3.0, 'base_target_pct': 12.0, 'trend_filter_period': 80}\n\n  R041 \u2014 ATR Percentile Expansion Breakout\n    PF: 1.31 gross | Trades: 72 | Sharpe: 0.84\n    Params: {'ma_period': 20, 'atr_period': 14, 'atr_history': 120, 'base_stop_pct': 3.0, 'base_target_pct': 12.0, 'trend_filter_period': 80}\n\nKILLED IDEAS:\n  R028 \u2014 Trend Acceleration Breakout (TAB): PF 1.08\n  R031 \u2014 Acceleration Surge After Consolidation (ASAC): PF 1.08\n  R034 \u2014 Momentum Divergence Acceleration (MDA): PF 1.08\n  R039 \u2014 Volatility Breakout with Momentum Confirmation: PF 1.08\n",
+  "screens": [
+    {
+      "idea_id": "R025",
+      "idea_name": "Momentum Exhaustion Reversal (Long-Only)",
+      "verdict": "park",
+      "reason": "No strategy mapping available."
+    },
+    {
+      "idea_id": "R027",
+      "idea_name": "Volatility Breakout with Momentum Confirmation (VBMC)",
+      "archetype": "dual_momentum_consensus",
+      "params": {
+        "channel_period": 20,
+        "roc_fast": 5,
+        "roc_med": 15,
+        "roc_slow": 30,
+        "stop_pct": 2.0,
+        "target_pct": 6.0
+      },
+      "timeframe": "4H",
+      "data_bars": 6571,
+      "data_period": "2023-02-23 \u2192 2026-02-22",
+      "gross_pf": 1.37,
+      "net_pf": 1.28,
+      "win_rate": 0.349,
+      "total_trades": 126,
+      "expectancy_gross": 343.98,
+      "expectancy_net": 276.44,
+      "sharpe": 1.2,
+      "sortino": 99.0,
+      "max_dd": 22092.37,
+      "max_dd_duration_days": 250.0,
+      "avg_duration_hours": 71.3,
+      "buy_hold_pnl": 43378.31,
+      "strategy_pnl_gross": 43341.36,
+      "strategy_pnl_net": 34832.07,
+      "total_costs": 8509.29,
+      "cost_pct": 0.1,
+      "verdict": "promote",
+      "reason": "Gross PF 1.37 >= 1.3 threshold. Regime coverage OK. Promote to full hypothesis.",
+      "regime_coverage": {
+        "pass": true,
+        "regimes": {
+          "bull": {
+            "bars": 3021,
+            "trades": 63,
+            "pf": 1.74,
+            "skipped": false,
+            "passed": true
+          },
+          "bear": {
+            "bars": 2288,
+            "trades": 43,
+            "pf": 0.26,
+            "skipped": false,
+            "passed": true
+          },
+          "sideways": {
+            "bars": 1062,
+            "trades": 18,
+            "pf": 0.54,
+            "skipped": false,
+            "passed": true
+          }
+        },
+        "failed_regimes": [],
+        "reason": "All non-skipped regimes have sufficient trades."
+      },
+      "timestamp": "2026-02-22T14:34:03.816590"
+    },
+    {
+      "idea_id": "R028",
+      "idea_name": "Trend Acceleration Breakout (TAB)",
+      "archetype": "acceleration_breakout",
+      "params": {
+        "channel_period": 10,
+        "roc_short": 5,
+        "roc_long": 20,
+        "stop_pct": 3.0,
+        "target_pct": 6.0
+      },
+      "timeframe": "4H",
+      "data_bars": 6571,
+      "data_period": "2023-02-23 \u2192 2026-02-22",
+      "gross_pf": 1.08,
+      "net_pf": 1.03,
+      "win_rate": 0.352,
+      "total_trades": 105,
+      "expectancy_gross": 106.16,
+      "expectancy_net": 38.2,
+      "sharpe": 0.13,
+      "sortino": 1.93,
+      "max_dd": 24934.6,
+      "max_dd_duration_days": 401.0,
+      "avg_duration_hours": 93.0,
+      "buy_hold_pnl": 43378.31,
+      "strategy_pnl_gross": 11146.32,
+      "strategy_pnl_net": 4011.34,
+      "total_costs": 7134.97,
+      "cost_pct": 0.1,
+      "verdict": "kill",
+      "reason": "Gross PF 1.08 \u2014 positive expectancy but below 1.3 threshold.",
+      "regime_coverage": null,
+      "timestamp": "2026-02-22T14:34:06.296797"
+    },
+    {
+      "idea_id": "R029",
+      "idea_name": "High ATR Regime Trend Following (HARTF)",
+      "archetype": "atr_regime_adaptive",
+      "params": {
+        "ma_period": 20,
+        "atr_period": 14,
+        "atr_history": 120,
+        "base_stop_pct": 3.0,
+        "base_target_pct": 12.0,
+        "trend_filter_period": 80
+      },
+      "timeframe": "4H",
+      "data_bars": 6571,
+      "data_period": "2023-02-23 \u2192 2026-02-22",
+      "gross_pf": 1.31,
+      "net_pf": 1.26,
+      "win_rate": 0.306,
+      "total_trades": 72,
+      "expectancy_gross": 486.21,
+      "expectancy_net": 422.45,
+      "sharpe": 0.84,
+      "sortino": 7.41,
+      "max_dd": 36037.54,
+      "max_dd_duration_days": 245.0,
+      "avg_duration_hours": 215.4,
+      "buy_hold_pnl": 43378.31,
+      "strategy_pnl_gross": 35007.39,
+      "strategy_pnl_net": 30416.65,
+      "total_costs": 4590.74,
+      "cost_pct": 0.1,
+      "verdict": "promote",
+      "reason": "Gross PF 1.31 >= 1.3 threshold. Regime coverage OK. Promote to full hypothesis.",
+      "regime_coverage": {
+        "pass": true,
+        "regimes": {
+          "bull": {
+            "bars": 3021,
+            "trades": 41,
+            "pf": 1.73,
+            "skipped": false,
+            "passed": true
+          },
+          "bear": {
+            "bars": 2288,
+            "trades": 31,
+            "pf": 0.42,
+            "skipped": false,
+            "passed": true
+          },
+          "sideways": {
+            "bars": 1062,
+            "trades": 14,
+            "pf": 0.76,
+            "skipped": false,
+            "passed": true
+          }
+        },
+        "failed_regimes": [],
+        "reason": "All non-skipped regimes have sufficient trades."
+      },
+      "timestamp": "2026-02-22T14:34:21.065369"
+    },
+    {
+      "idea_id": "R030",
+      "idea_name": "Volatility Breakout with Momentum Confirmation (VBMC)",
+      "archetype": "adaptive_momentum_burst",
+      "params": {
+        "bb_period": 20,
+        "bb_std": 2.0,
+        "squeeze_lookback": 50,
+        "squeeze_pct": 20,
+        "min_squeeze_bars": 3,
+        "ma_period": 50,
+        "ma_slope_bars": 5,
+        "stop_pct": 2.0,
+        "target_pct": 8.0
+      },
+      "timeframe": "4H",
+      "data_bars": 6571,
+      "data_period": "2023-02-23 \u2192 2026-02-22",
+      "gross_pf": 1.3,
+      "net_pf": 1.23,
+      "win_rate": 0.265,
+      "total_trades": 34,
+      "expectancy_gross": 342.12,
+      "expectancy_net": 267.4,
+      "sharpe": 0.42,
+      "sortino": 99.0,
+      "max_dd": 13061.23,
+      "max_dd_duration_days": 284.0,
+      "avg_duration_hours": 90.1,
+      "buy_hold_pnl": 43378.31,
+      "strategy_pnl_gross": 11632.12,
+      "strategy_pnl_net": 9091.59,
+      "total_costs": 2540.53,
+      "cost_pct": 0.1,
+      "verdict": "park",
+      "reason": "Gross PF 1.30 passes threshold but regime coverage failed: Insufficient trade coverage in: sideways. Strategy may only work in specific market conditions.",
+      "regime_coverage": {
+        "pass": false,
+        "regimes": {
+          "bull": {
+            "bars": 3021,
+            "trades": 16,
+            "pf": 2.47,
+            "skipped": false,
+            "passed": true
+          },
+          "bear": {
+            "bars": 2288,
+            "trades": 14,
+            "pf": 0.15,
+            "skipped": false,
+            "passed": true
+          },
+          "sideways": {
+            "bars": 1062,
+            "trades": 4,
+            "pf": 0.0,
+            "skipped": false,
+            "passed": false,
+            "reason": "4 trades (need 10)"
+          }
+        },
+        "failed_regimes": [
+          "sideways"
+        ],
+        "reason": "Insufficient trade coverage in: sideways. Strategy may only work in specific market conditions."
+      },
+      "timestamp": "2026-02-22T14:36:24.250105"
+    },
+    {
+      "idea_id": "R031",
+      "idea_name": "Acceleration Surge After Consolidation (ASAC)",
+      "archetype": "acceleration_breakout",
+      "params": {
+        "channel_period": 10,
+        "roc_short": 5,
+        "roc_long": 20,
+        "stop_pct": 3.0,
+        "target_pct": 6.0
+      },
+      "timeframe": "4H",
+      "data_bars": 6571,
+      "data_period": "2023-02-23 \u2192 2026-02-22",
+      "gross_pf": 1.08,
+      "net_pf": 1.03,
+      "win_rate": 0.352,
+      "total_trades": 105,
+      "expectancy_gross": 106.16,
+      "expectancy_net": 38.2,
+      "sharpe": 0.13,
+      "sortino": 1.93,
+      "max_dd": 24934.6,
+      "max_dd_duration_days": 401.0,
+      "avg_duration_hours": 93.0,
+      "buy_hold_pnl": 43378.31,
+      "strategy_pnl_gross": 11146.32,
+      "strategy_pnl_net": 4011.34,
+      "total_costs": 7134.97,
+      "cost_pct": 0.1,
+      "verdict": "kill",
+      "reason": "Gross PF 1.08 \u2014 positive expectancy but below 1.3 threshold.",
+      "regime_coverage": null,
+      "timestamp": "2026-02-22T14:36:59.650460"
+    },
+    {
+      "idea_id": "R032",
+      "idea_name": "Multi-Bar Persistence Breakout (MBPB)",
+      "archetype": "consecutive_momentum",
+      "params": {
+        "channel_period": 20,
+        "consec_bars": 3,
+        "stop_pct": 2.0,
+        "target_pct": 12.0
+      },
+      "timeframe": "4H",
+      "data_bars": 6571,
+      "data_period": "2023-02-23 \u2192 2026-02-22",
+      "gross_pf": 1.42,
+      "net_pf": 1.34,
+      "win_rate": 0.215,
+      "total_trades": 79,
+      "expectancy_gross": 467.81,
+      "expectancy_net": 398.27,
+      "sharpe": 0.83,
+      "sortino": 99.0,
+      "max_dd": 14457.22,
+      "max_dd_duration_days": 252.0,
+      "avg_duration_hours": 112.9,
+      "buy_hold_pnl": 43378.31,
+      "strategy_pnl_gross": 36956.6,
+      "strategy_pnl_net": 31463.51,
+      "total_costs": 5493.09,
+      "cost_pct": 0.1,
+      "verdict": "park",
+      "reason": "Gross PF 1.42 passes threshold but regime coverage failed: Insufficient trade coverage in: sideways. Strategy may only work in specific market conditions.",
+      "regime_coverage": {
+        "pass": false,
+        "regimes": {
+          "bull": {
+            "bars": 3021,
+            "trades": 40,
+            "pf": 1.32,
+            "skipped": false,
+            "passed": true
+          },
+          "bear": {
+            "bars": 2288,
+            "trades": 29,
+            "pf": 0.37,
+            "skipped": false,
+            "passed": true
+          },
+          "sideways": {
+            "bars": 1062,
+            "trades": 8,
+            "pf": 0.46,
+            "skipped": false,
+            "passed": false,
+            "reason": "8 trades (need 10)"
+          }
+        },
+        "failed_regimes": [
+          "sideways"
+        ],
+        "reason": "Insufficient trade coverage in: sideways. Strategy may only work in specific market conditions."
+      },
+      "timestamp": "2026-02-22T14:37:06.454994"
+    },
+    {
+      "idea_id": "R033",
+      "idea_name": "Multi-Day Consolidation Breakout (MDCB)",
+      "archetype": "range_compression_expansion",
+      "params": {
+        "atr_period": 20,
+        "atr_lookback": 60,
+        "compression_percentile": 10,
+        "breakout_atr_mult": 1.5,
+        "confirmation_bars": 2,
+        "stop_pct": 2.0,
+        "target_pct": 6.0,
+        "long_only": true
+      },
+      "timeframe": "4H",
+      "data_bars": 6571,
+      "data_period": "2023-02-23 \u2192 2026-02-22",
+      "gross_pf": 2.49,
+      "net_pf": 2.33,
+      "win_rate": 0.438,
+      "total_trades": 48,
+      "expectancy_gross": 1105.43,
+      "expectancy_net": 1037.65,
+      "sharpe": 1.44,
+      "sortino": 99.0,
+      "max_dd": 11139.29,
+      "max_dd_duration_days": 223.0,
+      "avg_duration_hours": 97.8,
+      "buy_hold_pnl": 43378.31,
+      "strategy_pnl_gross": 53060.76,
+      "strategy_pnl_net": 49807.03,
+      "total_costs": 3253.73,
+      "cost_pct": 0.1,
+      "verdict": "promote",
+      "reason": "Gross PF 2.49 >= 1.3 threshold. Regime coverage OK. Promote to full hypothesis.",
+      "regime_coverage": {
+        "pass": true,
+        "regimes": {
+          "bull": {
+            "bars": 3021,
+            "trades": 22,
+            "pf": 2.58,
+            "skipped": false,
+            "passed": true
+          },
+          "bear": {
+            "bars": 2288,
+            "trades": 19,
+            "pf": 0.14,
+            "skipped": false,
+            "passed": true
+          },
+          "sideways": {
+            "bars": 1062,
+            "trades": 11,
+            "pf": 1.08,
+            "skipped": false,
+            "passed": true
+          }
+        },
+        "failed_regimes": [],
+        "reason": "All non-skipped regimes have sufficient trades."
+      },
+      "timestamp": "2026-02-22T14:39:43.263346"
+    },
+    {
+      "idea_id": "R034",
+      "idea_name": "Momentum Divergence Acceleration (MDA)",
+      "archetype": "acceleration_breakout",
+      "params": {
+        "channel_period": 10,
+        "roc_short": 5,
+        "roc_long": 20,
+        "stop_pct": 3.0,
+        "target_pct": 6.0
+      },
+      "timeframe": "4H",
+      "data_bars": 6571,
+      "data_period": "2023-02-23 \u2192 2026-02-22",
+      "gross_pf": 1.08,
+      "net_pf": 1.03,
+      "win_rate": 0.352,
+      "total_trades": 105,
+      "expectancy_gross": 106.16,
+      "expectancy_net": 38.2,
+      "sharpe": 0.13,
+      "sortino": 1.93,
+      "max_dd": 24934.6,
+      "max_dd_duration_days": 401.0,
+      "avg_duration_hours": 93.0,
+      "buy_hold_pnl": 43378.31,
+      "strategy_pnl_gross": 11146.32,
+      "strategy_pnl_net": 4011.34,
+      "total_costs": 7134.97,
+      "cost_pct": 0.1,
+      "verdict": "kill",
+      "reason": "Gross PF 1.08 \u2014 positive expectancy but below 1.3 threshold.",
+      "regime_coverage": null,
+      "timestamp": "2026-02-22T14:42:02.612635"
+    },
+    {
+      "idea_id": "R035",
+      "idea_name": "Trending Strength Continuation (TSC)",
+      "archetype": "trend_strength_breakout",
+      "params": {
+        "channel_period": 20,
+        "adx_period": 14,
+        "adx_threshold": 25,
+        "stop_pct": 2.0,
+        "target_pct": 6.0
+      },
+      "timeframe": "4H",
+      "data_bars": 6571,
+      "data_period": "2023-02-23 \u2192 2026-02-22",
+      "gross_pf": 1.56,
+      "net_pf": 1.46,
+      "win_rate": 0.369,
+      "total_trades": 103,
+      "expectancy_gross": 512.66,
+      "expectancy_net": 443.16,
+      "sharpe": 1.3,
+      "sortino": 99.0,
+      "max_dd": 13832.39,
+      "max_dd_duration_days": 246.0,
+      "avg_duration_hours": 76.5,
+      "buy_hold_pnl": 43378.31,
+      "strategy_pnl_gross": 52803.68,
+      "strategy_pnl_net": 45645.66,
+      "total_costs": 7158.02,
+      "cost_pct": 0.1,
+      "verdict": "promote",
+      "reason": "Gross PF 1.56 >= 1.3 threshold. Regime coverage OK. Promote to full hypothesis.",
+      "regime_coverage": {
+        "pass": true,
+        "regimes": {
+          "bull": {
+            "bars": 3021,
+            "trades": 52,
+            "pf": 1.84,
+            "skipped": false,
+            "passed": true
+          },
+          "bear": {
+            "bars": 2288,
+            "trades": 35,
+            "pf": 0.28,
+            "skipped": false,
+            "passed": true
+          },
+          "sideways": {
+            "bars": 1062,
+            "trades": 10,
+            "pf": 0.62,
+            "skipped": false,
+            "passed": true
+          }
+        },
+        "failed_regimes": [],
+        "reason": "All non-skipped regimes have sufficient trades."
+      },
+      "timestamp": "2026-02-22T14:42:11.957984"
+    },
+    {
+      "idea_id": "R036",
+      "idea_name": "Momentum Surge After Consolidation (MSAC)",
+      "archetype": "consecutive_momentum",
+      "params": {
+        "channel_period": 20,
+        "consec_bars": 3,
+        "stop_pct": 2.0,
+        "target_pct": 12.0
+      },
+      "timeframe": "4H",
+      "data_bars": 6571,
+      "data_period": "2023-02-23 \u2192 2026-02-22",
+      "gross_pf": 1.42,
+      "net_pf": 1.34,
+      "win_rate": 0.215,
+      "total_trades": 79,
+      "expectancy_gross": 467.81,
+      "expectancy_net": 398.27,
+      "sharpe": 0.83,
+      "sortino": 99.0,
+      "max_dd": 14457.22,
+      "max_dd_duration_days": 252.0,
+      "avg_duration_hours": 112.9,
+      "buy_hold_pnl": 43378.31,
+      "strategy_pnl_gross": 36956.6,
+      "strategy_pnl_net": 31463.51,
+      "total_costs": 5493.09,
+      "cost_pct": 0.1,
+      "verdict": "park",
+      "reason": "Gross PF 1.42 passes threshold but regime coverage failed: Insufficient trade coverage in: sideways. Strategy may only work in specific market conditions.",
+      "regime_coverage": {
+        "pass": false,
+        "regimes": {
+          "bull": {
+            "bars": 3021,
+            "trades": 40,
+            "pf": 1.32,
+            "skipped": false,
+            "passed": true
+          },
+          "bear": {
+            "bars": 2288,
+            "trades": 29,
+            "pf": 0.37,
+            "skipped": false,
+            "passed": true
+          },
+          "sideways": {
+            "bars": 1062,
+            "trades": 8,
+            "pf": 0.46,
+            "skipped": false,
+            "passed": false,
+            "reason": "8 trades (need 10)"
+          }
+        },
+        "failed_regimes": [
+          "sideways"
+        ],
+        "reason": "Insufficient trade coverage in: sideways. Strategy may only work in specific market conditions."
+      },
+      "timestamp": "2026-02-22T14:42:19.121654"
+    },
+    {
+      "idea_id": "R037",
+      "idea_name": "Acceleration Breakout With Volume Confirmation (ABVC)",
+      "archetype": "volume_breakout",
+      "params": {
+        "channel_period": 15,
+        "vol_period": 20,
+        "vol_mult": 1.5,
+        "stop_pct": 2.0,
+        "target_pct": 6.0
+      },
+      "timeframe": "4H",
+      "data_bars": 6571,
+      "data_period": "2023-02-23 \u2192 2026-02-22",
+      "gross_pf": 1.32,
+      "net_pf": 1.24,
+      "win_rate": 0.333,
+      "total_trades": 129,
+      "expectancy_gross": 295.93,
+      "expectancy_net": 229.53,
+      "sharpe": 1.0,
+      "sortino": 99.0,
+      "max_dd": 20077.28,
+      "max_dd_duration_days": 205.0,
+      "avg_duration_hours": 66.9,
+      "buy_hold_pnl": 43378.31,
+      "strategy_pnl_gross": 38175.04,
+      "strategy_pnl_net": 29609.68,
+      "total_costs": 8565.36,
+      "cost_pct": 0.1,
+      "verdict": "promote",
+      "reason": "Gross PF 1.32 >= 1.3 threshold. Regime coverage OK. Promote to full hypothesis.",
+      "regime_coverage": {
+        "pass": true,
+        "regimes": {
+          "bull": {
+            "bars": 3021,
+            "trades": 64,
+            "pf": 1.61,
+            "skipped": false,
+            "passed": true
+          },
+          "bear": {
+            "bars": 2288,
+            "trades": 28,
+            "pf": 0.28,
+            "skipped": false,
+            "passed": true
+          },
+          "sideways": {
+            "bars": 1062,
+            "trades": 16,
+            "pf": 0.46,
+            "skipped": false,
+            "passed": true
+          }
+        },
+        "failed_regimes": [],
+        "reason": "All non-skipped regimes have sufficient trades."
+      },
+      "timestamp": "2026-02-22T14:42:21.523400"
+    },
+    {
+      "idea_id": "R038",
+      "idea_name": "Adaptive Volatility Regime Trend (AVRT)",
+      "archetype": "atr_regime_adaptive",
+      "params": {
+        "ma_period": 20,
+        "atr_period": 14,
+        "atr_history": 120,
+        "base_stop_pct": 3.0,
+        "base_target_pct": 12.0,
+        "trend_filter_period": 80
+      },
+      "timeframe": "4H",
+      "data_bars": 6571,
+      "data_period": "2023-02-23 \u2192 2026-02-22",
+      "gross_pf": 1.31,
+      "net_pf": 1.26,
+      "win_rate": 0.306,
+      "total_trades": 72,
+      "expectancy_gross": 486.21,
+      "expectancy_net": 422.45,
+      "sharpe": 0.84,
+      "sortino": 7.41,
+      "max_dd": 36037.54,
+      "max_dd_duration_days": 245.0,
+      "avg_duration_hours": 215.4,
+      "buy_hold_pnl": 43378.31,
+      "strategy_pnl_gross": 35007.39,
+      "strategy_pnl_net": 30416.65,
+      "total_costs": 4590.74,
+      "cost_pct": 0.1,
+      "verdict": "promote",
+      "reason": "Gross PF 1.31 >= 1.3 threshold. Regime coverage OK. Promote to full hypothesis.",
+      "regime_coverage": {
+        "pass": true,
+        "regimes": {
+          "bull": {
+            "bars": 3021,
+            "trades": 41,
+            "pf": 1.73,
+            "skipped": false,
+            "passed": true
+          },
+          "bear": {
+            "bars": 2288,
+            "trades": 31,
+            "pf": 0.42,
+            "skipped": false,
+            "passed": true
+          },
+          "sideways": {
+            "bars": 1062,
+            "trades": 14,
+            "pf": 0.76,
+            "skipped": false,
+            "passed": true
+          }
+        },
+        "failed_regimes": [],
+        "reason": "All non-skipped regimes have sufficient trades."
+      },
+      "timestamp": "2026-02-22T14:42:39.599965"
+    },
+    {
+      "idea_id": "R039",
+      "idea_name": "Volatility Breakout with Momentum Confirmation",
+      "archetype": "acceleration_breakout",
+      "params": {
+        "channel_period": 10,
+        "roc_short": 5,
+        "roc_long": 20,
+        "stop_pct": 3.0,
+        "target_pct": 6.0
+      },
+      "timeframe": "4H",
+      "data_bars": 6571,
+      "data_period": "2023-02-23 \u2192 2026-02-22",
+      "gross_pf": 1.08,
+      "net_pf": 1.03,
+      "win_rate": 0.352,
+      "total_trades": 105,
+      "expectancy_gross": 106.16,
+      "expectancy_net": 38.2,
+      "sharpe": 0.13,
+      "sortino": 1.93,
+      "max_dd": 24934.6,
+      "max_dd_duration_days": 401.0,
+      "avg_duration_hours": 93.0,
+      "buy_hold_pnl": 43378.31,
+      "strategy_pnl_gross": 11146.32,
+      "strategy_pnl_net": 4011.34,
+      "total_costs": 7134.97,
+      "cost_pct": 0.1,
+      "verdict": "kill",
+      "reason": "Gross PF 1.08 \u2014 positive expectancy but below 1.3 threshold.",
+      "regime_coverage": null,
+      "timestamp": "2026-02-22T14:42:51.934963"
+    },
+    {
+      "idea_id": "R040",
+      "idea_name": "Multi-Stage Trend Pullback",
+      "archetype": "trend_pullback",
+      "params": {
+        "ma_period": 30,
+        "ma_slope_bars": 5,
+        "pullback_pct": 2.0,
+        "roc_period": 3,
+        "min_roc": 0.5,
+        "stop_pct": 3.0,
+        "target_pct": 6.0
+      },
+      "timeframe": "4H",
+      "data_bars": 6571,
+      "data_period": "2023-02-23 \u2192 2026-02-22",
+      "gross_pf": 1.3,
+      "net_pf": 1.24,
+      "win_rate": 0.4,
+      "total_trades": 80,
+      "expectancy_gross": 401.67,
+      "expectancy_net": 328.72,
+      "sharpe": 0.59,
+      "sortino": 99.0,
+      "max_dd": 21050.86,
+      "max_dd_duration_days": 284.0,
+      "avg_duration_hours": 105.0,
+      "buy_hold_pnl": 43378.31,
+      "strategy_pnl_gross": 32133.7,
+      "strategy_pnl_net": 26297.76,
+      "total_costs": 5835.93,
+      "cost_pct": 0.1,
+      "verdict": "park",
+      "reason": "Gross PF 1.30 passes threshold but regime coverage failed: Insufficient trade coverage in: sideways. Strategy may only work in specific market conditions.",
+      "regime_coverage": {
+        "pass": false,
+        "regimes": {
+          "bull": {
+            "bars": 3021,
+            "trades": 41,
+            "pf": 1.4,
+            "skipped": false,
+            "passed": true
+          },
+          "bear": {
+            "bars": 2288,
+            "trades": 30,
+            "pf": 0.29,
+            "skipped": false,
+            "passed": true
+          },
+          "sideways": {
+            "bars": 1062,
+            "trades": 9,
+            "pf": 0.49,
+            "skipped": false,
+            "passed": false,
+            "reason": "9 trades (need 10)"
+          }
+        },
+        "failed_regimes": [
+          "sideways"
+        ],
+        "reason": "Insufficient trade coverage in: sideways. Strategy may only work in specific market conditions."
+      },
+      "timestamp": "2026-02-22T14:42:58.291421"
+    },
+    {
+      "idea_id": "R041",
+      "idea_name": "ATR Percentile Expansion Breakout",
+      "archetype": "atr_regime_adaptive",
+      "params": {
+        "ma_period": 20,
+        "atr_period": 14,
+        "atr_history": 120,
+        "base_stop_pct": 3.0,
+        "base_target_pct": 12.0,
+        "trend_filter_period": 80
+      },
+      "timeframe": "4H",
+      "data_bars": 6571,
+      "data_period": "2023-02-23 \u2192 2026-02-22",
+      "gross_pf": 1.31,
+      "net_pf": 1.26,
+      "win_rate": 0.306,
+      "total_trades": 72,
+      "expectancy_gross": 486.21,
+      "expectancy_net": 422.45,
+      "sharpe": 0.84,
+      "sortino": 7.41,
+      "max_dd": 36037.54,
+      "max_dd_duration_days": 245.0,
+      "avg_duration_hours": 215.4,
+      "buy_hold_pnl": 43378.31,
+      "strategy_pnl_gross": 35007.39,
+      "strategy_pnl_net": 30416.65,
+      "total_costs": 4590.74,
+      "cost_pct": 0.1,
+      "verdict": "promote",
+      "reason": "Gross PF 1.31 >= 1.3 threshold. Regime coverage OK. Promote to full hypothesis.",
+      "regime_coverage": {
+        "pass": true,
+        "regimes": {
+          "bull": {
+            "bars": 3021,
+            "trades": 41,
+            "pf": 1.73,
+            "skipped": false,
+            "passed": true
+          },
+          "bear": {
+            "bars": 2288,
+            "trades": 31,
+            "pf": 0.42,
+            "skipped": false,
+            "passed": true
+          },
+          "sideways": {
+            "bars": 1062,
+            "trades": 14,
+            "pf": 0.76,
+            "skipped": false,
+            "passed": true
+          }
+        },
+        "failed_regimes": [],
+        "reason": "All non-skipped regimes have sufficient trades."
+      },
+      "timestamp": "2026-02-22T14:43:15.997222"
+    },
+    {
+      "idea_id": "R042",
+      "idea_name": "Mean Reversion Short (MRS)",
+      "archetype": "mean_reversion_short",
+      "params": {
+        "slow_ma_period": 200,
+        "bb_period": 20,
+        "bb_std": 2.0,
+        "rsi_period": 14,
+        "rsi_threshold": 75,
+        "stop_pct": 4.0,
+        "target_pct": 9.0
+      },
+      "timeframe": "4H",
+      "data_bars": 6571,
+      "data_period": "2023-02-23 \u2192 2026-02-22",
+      "gross_pf": 1.7,
+      "net_pf": 1.64,
+      "win_rate": 0.4,
+      "total_trades": 15,
+      "expectancy_gross": 1090.72,
+      "expectancy_net": 1021.99,
+      "sharpe": 0.41,
+      "sortino": 99.0,
+      "max_dd": 11078.62,
+      "max_dd_duration_days": 242.0,
+      "avg_duration_hours": 128.3,
+      "buy_hold_pnl": 43378.31,
+      "strategy_pnl_gross": 16360.8,
+      "strategy_pnl_net": 15329.85,
+      "total_costs": 1030.95,
+      "cost_pct": 0.1,
+      "verdict": "park",
+      "reason": "Insufficient trades (15). Need 20+ for meaningful screen.",
+      "regime_coverage": null,
+      "timestamp": "2026-02-22T14:46:43.567673"
+    },
+    {
+      "idea_id": "R043",
+      "idea_name": "Breakdown Momentum Short (BMS)",
+      "archetype": "breakdown_momentum",
+      "params": {
+        "channel_period": 30,
+        "roc_short": 5,
+        "roc_long": 15,
+        "stop_pct": 2.0,
+        "target_pct": 6.0
+      },
+      "timeframe": "4H",
+      "data_bars": 6571,
+      "data_period": "2023-02-23 \u2192 2026-02-22",
+      "gross_pf": 1.78,
+      "net_pf": 1.66,
+      "win_rate": 0.32,
+      "total_trades": 25,
+      "expectancy_gross": 640.93,
+      "expectancy_net": 575.19,
+      "sharpe": 0.37,
+      "sortino": 99.0,
+      "max_dd": 5433.56,
+      "max_dd_duration_days": 226.0,
+      "avg_duration_hours": 57.6,
+      "buy_hold_pnl": 43378.31,
+      "strategy_pnl_gross": 16023.16,
+      "strategy_pnl_net": 14379.76,
+      "total_costs": 1643.4,
+      "cost_pct": 0.1,
+      "verdict": "park",
+      "reason": "Gross PF 1.78 passes threshold but regime coverage failed: Insufficient trade coverage in: bull, sideways. Strategy may only work in specific market conditions.",
+      "regime_coverage": {
+        "pass": false,
+        "regimes": {
+          "bull": {
+            "bars": 3021,
+            "trades": 6,
+            "pf": 0.0,
+            "skipped": false,
+            "passed": false,
+            "reason": "6 trades (need 10)"
+          },
+          "bear": {
+            "bars": 2288,
+            "trades": 18,
+            "pf": 0.95,
+            "skipped": false,
+            "passed": true
+          },
+          "sideways": {
+            "bars": 1062,
+            "trades": 9,
+            "pf": 0.44,
+            "skipped": false,
+            "passed": false,
+            "reason": "9 trades (need 10)"
+          }
+        },
+        "failed_regimes": [
+          "bull",
+          "sideways"
+        ],
+        "reason": "Insufficient trade coverage in: bull, sideways. Strategy may only work in specific market conditions."
+      },
+      "timestamp": "2026-02-22T14:47:32.905360"
+    }
+  ]
+}

@@ -1,10 +1,10 @@
 {
-  "version": 19,
-  "last_updated": "2026-02-22T08:30:24.853797+11:00",
+  "version": 20,
+  "last_updated": "2026-02-22T14:48:07.648162+11:00",
   "schema_note": "Optimized for AI context retrieval, not human reading",
   "active_context": {
     "current_focus": "H004_validated_paper_trading_next_screen_new_ideas",
-    "status": "pipeline_ran_2026-02-22_3_new_ideas_sourced",
+    "status": "pipeline_ran_2026-02-22_18_screened_7_promoted_4_killed_3_new_ideas_sourced",
     "blockers": [],
     "next_action": "walk_forward_validate_newly_promoted_strategies",
     "execution_model": "autonomous_execute_then_inform",
@@ -13,8 +13,20 @@
   "session_log": [
     {
       "date": "2026-02-22",
-      "summary": "New ideas sourced: R039, R040, R041.",
-      "decisions": [],
+      "summary": "Pipeline screened 18 ideas. Promoted: R027 (PF 1.37), R029 (PF 1.31), R033 (PF 2.49), R035 (PF 1.56), R037 (PF 1.32), R038 (PF 1.31), R041 (PF 1.31). Killed: R028 (PF 1.08), R031 (PF 1.08), R034 (PF 1.08), R039 (PF 1.08). New ideas sourced: R044, R045, R046.",
+      "decisions": [
+        "R027_promoted",
+        "R029_promoted",
+        "R033_promoted",
+        "R035_promoted",
+        "R037_promoted",
+        "R038_promoted",
+        "R041_promoted",
+        "R028_killed",
+        "R031_killed",
+        "R034_killed",
+        "R039_killed"
+      ],
       "artifacts": [],
       "source": "automated_rbi_pipeline"
     },
@@ -232,34 +244,10 @@
         "note": "Auto-sourced 2026-02-17."
       },
       {
-        "id": "R027",
-        "name": "Volatility Breakout with Momentum Confirmation (VBMC)",
-        "status": "new",
-        "note": "Auto-sourced. Archetype: dual_momentum_consensus."
-      },
-      {
-        "id": "R028",
-        "name": "Trend Acceleration Breakout (TAB)",
-        "status": "new",
-        "note": "Auto-sourced. Archetype: acceleration_breakout."
-      },
-      {
-        "id": "R029",
-        "name": "High ATR Regime Trend Following (HARTF)",
-        "status": "new",
-        "note": "Auto-sourced. Archetype: atr_regime_adaptive."
-      },
-      {
         "id": "R030",
         "name": "Volatility Breakout with Momentum Confirmation (VBMC)",
         "status": "new",
         "note": "Auto-sourced. Archetype: adaptive_momentum_burst."
-      },
-      {
-        "id": "R031",
-        "name": "Acceleration Surge After Consolidation (ASAC)",
-        "status": "new",
-        "note": "Auto-sourced. Archetype: acceleration_breakout."
       },
       {
         "id": "R032",
@@ -268,46 +256,10 @@
         "note": "Auto-sourced. Archetype: consecutive_momentum."
       },
       {
-        "id": "R033",
-        "name": "Multi-Day Consolidation Breakout (MDCB)",
-        "status": "new",
-        "note": "Auto-sourced. Archetype: range_compression_expansion."
-      },
-      {
-        "id": "R034",
-        "name": "Momentum Divergence Acceleration (MDA)",
-        "status": "new",
-        "note": "Auto-sourced. Archetype: acceleration_breakout."
-      },
-      {
-        "id": "R035",
-        "name": "Trending Strength Continuation (TSC)",
-        "status": "new",
-        "note": "Auto-sourced. Archetype: trend_strength_breakout."
-      },
-      {
         "id": "R036",
         "name": "Momentum Surge After Consolidation (MSAC)",
         "status": "new",
         "note": "Auto-sourced. Archetype: consecutive_momentum."
-      },
-      {
-        "id": "R037",
-        "name": "Acceleration Breakout With Volume Confirmation (ABVC)",
-        "status": "new",
-        "note": "Auto-sourced. Archetype: volume_breakout."
-      },
-      {
-        "id": "R038",
-        "name": "Adaptive Volatility Regime Trend (AVRT)",
-        "status": "new",
-        "note": "Auto-sourced. Archetype: atr_regime_adaptive."
-      },
-      {
-        "id": "R039",
-        "name": "Volatility Breakout with Momentum Confirmation",
-        "status": "new",
-        "note": "Auto-sourced. Archetype: acceleration_breakout."
       },
       {
         "id": "R040",
@@ -316,10 +268,22 @@
         "note": "Auto-sourced. Archetype: trend_pullback."
       },
       {
-        "id": "R041",
-        "name": "ATR Percentile Expansion Breakout",
+        "id": "R044",
+        "name": "Volatility Regime Shift Breakout (VRSB)",
         "status": "new",
-        "note": "Auto-sourced. Archetype: atr_regime_adaptive."
+        "note": "Auto-sourced. Archetype: range_compression_expansion."
+      },
+      {
+        "id": "R045",
+        "name": "Momentum Persistence Stacking (MPS)",
+        "status": "new",
+        "note": "Auto-sourced. Archetype: dual_momentum_consensus."
+      },
+      {
+        "id": "R046",
+        "name": "Post-Pullback Acceleration Surge (PPAS)",
+        "status": "new",
+        "note": "Auto-sourced. Archetype: trend_pullback."
       }
     ],
     "parked": [
@@ -342,7 +306,11 @@
       "R004 (Multi-TF Momentum, PF 1.06)",
       "R005 (Weekend Gap, PF 0.73)",
       "R006 (Trend Following, PF 1.26)",
-      "R008 (Long Dip Buy, PF 0.81)"
+      "R008 (Long Dip Buy, PF 0.81)",
+      "R028 (Trend Acceleration Breakout (TAB), PF 1.08)",
+      "R031 (Acceleration Surge After Consolidation (ASAC), PF 1.08)",
+      "R034 (Momentum Divergence Acceleration (MDA), PF 1.08)",
+      "R039 (Volatility Breakout with Momentum Confirmation, PF 1.08)"
     ],
     "archived": [
       "HYPOTHESIS_001",
@@ -382,6 +350,118 @@
           "stop_pct": 2.0,
           "target_pct": 6.0,
           "long_only": true
+        },
+        "next_step": "walk_forward_validation"
+      },
+      {
+        "research_id": "R027",
+        "name": "Volatility Breakout with Momentum Confirmation (VBMC)",
+        "gross_pf": 1.37,
+        "trades": 126,
+        "win_rate": "34.9%",
+        "params": {
+          "channel_period": 20,
+          "roc_fast": 5,
+          "roc_med": 15,
+          "roc_slow": 30,
+          "stop_pct": 2.0,
+          "target_pct": 6.0
+        },
+        "next_step": "walk_forward_validation"
+      },
+      {
+        "research_id": "R029",
+        "name": "High ATR Regime Trend Following (HARTF)",
+        "gross_pf": 1.31,
+        "trades": 72,
+        "win_rate": "30.6%",
+        "params": {
+          "ma_period": 20,
+          "atr_period": 14,
+          "atr_history": 120,
+          "base_stop_pct": 3.0,
+          "base_target_pct": 12.0,
+          "trend_filter_period": 80
+        },
+        "next_step": "walk_forward_validation"
+      },
+      {
+        "research_id": "R033",
+        "name": "Multi-Day Consolidation Breakout (MDCB)",
+        "gross_pf": 2.49,
+        "trades": 48,
+        "win_rate": "43.8%",
+        "params": {
+          "atr_period": 20,
+          "atr_lookback": 60,
+          "compression_percentile": 10,
+          "breakout_atr_mult": 1.5,
+          "confirmation_bars": 2,
+          "stop_pct": 2.0,
+          "target_pct": 6.0,
+          "long_only": true
+        },
+        "next_step": "walk_forward_validation"
+      },
+      {
+        "research_id": "R035",
+        "name": "Trending Strength Continuation (TSC)",
+        "gross_pf": 1.56,
+        "trades": 103,
+        "win_rate": "36.9%",
+        "params": {
+          "channel_period": 20,
+          "adx_period": 14,
+          "adx_threshold": 25,
+          "stop_pct": 2.0,
+          "target_pct": 6.0
+        },
+        "next_step": "walk_forward_validation"
+      },
+      {
+        "research_id": "R037",
+        "name": "Acceleration Breakout With Volume Confirmation (ABVC)",
+        "gross_pf": 1.32,
+        "trades": 129,
+        "win_rate": "33.3%",
+        "params": {
+          "channel_period": 15,
+          "vol_period": 20,
+          "vol_mult": 1.5,
+          "stop_pct": 2.0,
+          "target_pct": 6.0
+        },
+        "next_step": "walk_forward_validation"
+      },
+      {
+        "research_id": "R038",
+        "name": "Adaptive Volatility Regime Trend (AVRT)",
+        "gross_pf": 1.31,
+        "trades": 72,
+        "win_rate": "30.6%",
+        "params": {
+          "ma_period": 20,
+          "atr_period": 14,
+          "atr_history": 120,
+          "base_stop_pct": 3.0,
+          "base_target_pct": 12.0,
+          "trend_filter_period": 80
+        },
+        "next_step": "walk_forward_validation"
+      },
+      {
+        "research_id": "R041",
+        "name": "ATR Percentile Expansion Breakout",
+        "gross_pf": 1.31,
+        "trades": 72,
+        "win_rate": "30.6%",
+        "params": {
+          "ma_period": 20,
+          "atr_period": 14,
+          "atr_history": 120,
+          "base_stop_pct": 3.0,
+          "base_target_pct": 12.0,
+          "trend_filter_period": 80
         },
         "next_step": "walk_forward_validation"
       }
