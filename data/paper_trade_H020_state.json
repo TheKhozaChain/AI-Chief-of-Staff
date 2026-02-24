@@ -1,18 +1,19 @@
 {
-  "strategy_id": "H015",
+  "strategy_id": "H020",
   "archetype": "atr_regime_adaptive",
   "params": {
     "ma_period": 20,
-    "atr_period": 20,
-    "atr_history": 90,
+    "atr_period": 14,
+    "atr_history": 120,
     "base_stop_pct": 3.0,
     "base_target_pct": 12.0,
     "trend_filter_period": 80
   },
-  "started": "2026-02-15",
+  "started": "2026-02-24",
   "position": null,
   "last_bar_time": "2026-02-23T20:00:00",
   "trades": [],
   "total_pnl": 0.0,
-  "total_costs": 0.0
+  "total_costs": 0.0,
+  "warmup_done": true
 }

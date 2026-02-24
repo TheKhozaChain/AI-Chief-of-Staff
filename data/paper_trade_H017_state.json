@@ -1,0 +1,21 @@
+{
+  "strategy_id": "H017",
+  "archetype": "range_compression_expansion",
+  "params": {
+    "atr_period": 20,
+    "atr_lookback": 60,
+    "compression_percentile": 10,
+    "breakout_atr_mult": 1.5,
+    "confirmation_bars": 2,
+    "stop_pct": 2.0,
+    "target_pct": 6.0,
+    "long_only": true
+  },
+  "started": "2026-02-24",
+  "position": null,
+  "last_bar_time": "2026-02-23T20:00:00",
+  "trades": [],
+  "total_pnl": 0.0,
+  "total_costs": 0.0,
+  "warmup_done": true
+}

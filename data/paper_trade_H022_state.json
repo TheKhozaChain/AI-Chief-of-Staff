@@ -1,0 +1,35 @@
+{
+  "strategy_id": "H022",
+  "archetype": "volume_breakout",
+  "params": {
+    "channel_period": 15,
+    "vol_period": 20,
+    "vol_mult": 1.5,
+    "stop_pct": 2.0,
+    "target_pct": 6.0
+  },
+  "started": "2026-02-24",
+  "position": null,
+  "last_bar_time": "2026-02-23T20:00:00",
+  "trades": [
+    {
+      "entry_time": "2026-01-27T20:00:00",
+      "entry_price": 89136.28,
+      "exit_time": "2026-01-29T12:00:00",
+      "exit_price": 87353.5544,
+      "stop_loss": 87353.5544,
+      "take_profit": 94484.4568,
+      "direction": "long",
+      "exit_reason": "stop_loss",
+      "pnl_gross": -1782.73,
+      "pnl_net": -1871.86,
+      "pnl_pct": -2.1,
+      "cost": 89.14
+    }
+  ],
+  "total_pnl": -1871.8618800000052,
+  "total_costs": 89.13628,
+  "warmup_done": true,
+  "last_signal_time": "2026-01-27T20:00:00",
+  "stale_alert_sent": false
+}

@@ -1,0 +1,64 @@
+{
+  "strategy_id": "H019",
+  "archetype": "dual_momentum_consensus",
+  "params": {
+    "channel_period": 20,
+    "roc_fast": 5,
+    "roc_med": 15,
+    "roc_slow": 30,
+    "stop_pct": 2.0,
+    "target_pct": 6.0
+  },
+  "started": "2026-02-24",
+  "position": null,
+  "last_bar_time": "2026-02-23T20:00:00",
+  "trades": [
+    {
+      "entry_time": "2026-01-28T08:00:00",
+      "entry_price": 89972.09,
+      "exit_time": "2026-01-29T00:00:00",
+      "exit_price": 88172.6482,
+      "stop_loss": 88172.6482,
+      "take_profit": 95370.4154,
+      "direction": "long",
+      "exit_reason": "stop_loss",
+      "pnl_gross": -1799.44,
+      "pnl_net": -1889.41,
+      "pnl_pct": -2.1,
+      "cost": 89.97
+    },
+    {
+      "entry_time": "2026-02-14T08:00:00",
+      "entry_price": 70477.48,
+      "exit_time": "2026-02-15T12:00:00",
+      "exit_price": 69067.9304,
+      "stop_loss": 69067.9304,
+      "take_profit": 74706.1288,
+      "direction": "long",
+      "exit_reason": "stop_loss",
+      "pnl_gross": -1409.55,
+      "pnl_net": -1480.03,
+      "pnl_pct": -2.1,
+      "cost": 70.48
+    },
+    {
+      "entry_time": "2026-02-21T12:00:00",
+      "entry_price": 68605.02,
+      "exit_time": "2026-02-22T16:00:00",
+      "exit_price": 67232.91960000001,
+      "stop_loss": 67232.91960000001,
+      "take_profit": 72721.3212,
+      "direction": "long",
+      "exit_reason": "stop_loss",
+      "pnl_gross": -1372.1,
+      "pnl_net": -1440.71,
+      "pnl_pct": -2.1,
+      "cost": 68.61
+    }
+  ],
+  "total_pnl": -4810.146389999994,
+  "total_costs": 229.05459000000002,
+  "warmup_done": true,
+  "last_signal_time": "2026-02-21T12:00:00",
+  "stale_alert_sent": false
+}

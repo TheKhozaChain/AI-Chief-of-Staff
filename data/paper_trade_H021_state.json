@@ -1,0 +1,49 @@
+{
+  "strategy_id": "H021",
+  "archetype": "trend_strength_breakout",
+  "params": {
+    "channel_period": 20,
+    "adx_period": 14,
+    "adx_threshold": 25,
+    "stop_pct": 2.0,
+    "target_pct": 6.0
+  },
+  "started": "2026-02-24",
+  "position": null,
+  "last_bar_time": "2026-02-23T20:00:00",
+  "trades": [
+    {
+      "entry_time": "2026-01-28T08:00:00",
+      "entry_price": 89972.09,
+      "exit_time": "2026-01-29T00:00:00",
+      "exit_price": 88172.6482,
+      "stop_loss": 88172.6482,
+      "take_profit": 95370.4154,
+      "direction": "long",
+      "exit_reason": "stop_loss",
+      "pnl_gross": -1799.44,
+      "pnl_net": -1889.41,
+      "pnl_pct": -2.1,
+      "cost": 89.97
+    },
+    {
+      "entry_time": "2026-02-14T08:00:00",
+      "entry_price": 70477.48,
+      "exit_time": "2026-02-15T12:00:00",
+      "exit_price": 69067.9304,
+      "stop_loss": 69067.9304,
+      "take_profit": 74706.1288,
+      "direction": "long",
+      "exit_reason": "stop_loss",
+      "pnl_gross": -1409.55,
+      "pnl_net": -1480.03,
+      "pnl_pct": -2.1,
+      "cost": 70.48
+    }
+  ],
+  "total_pnl": -3369.4409699999987,
+  "total_costs": 160.44957,
+  "warmup_done": true,
+  "last_signal_time": "2026-02-14T08:00:00",
+  "stale_alert_sent": false
+}
