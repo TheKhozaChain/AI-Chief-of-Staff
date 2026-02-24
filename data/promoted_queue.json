@@ -1,45 +1,5 @@
 {
-  "pending_validation": [
-    {
-      "hypothesis_id": "H017",
-      "research_id": "R021",
-      "name": "Range Compression Expansion (RCE)",
-      "archetype": "range_compression_expansion",
-      "timeframe_hours": 4,
-      "params": {
-        "atr_period": 20,
-        "atr_lookback": 60,
-        "compression_percentile": 10,
-        "breakout_atr_mult": 1.5,
-        "confirmation_bars": 2,
-        "stop_pct": 2.0,
-        "target_pct": 6.0,
-        "long_only": true
-      },
-      "promoted_date": "2026-02-17",
-      "screen_pf": 2.49,
-      "screen_trades": 48
-    },
-    {
-      "hypothesis_id": "H018",
-      "research_id": "R022",
-      "name": "Momentum Exhaustion Reversal to Trend (MERT)",
-      "archetype": "momentum_exhaustion_reversal",
-      "timeframe_hours": 4,
-      "params": {
-        "ma_period": 50,
-        "rsi_period": 14,
-        "rsi_threshold": 30,
-        "bounce_min_pct": 1.0,
-        "stop_pct": 2.0,
-        "target_pct": 6.0,
-        "long_only": true
-      },
-      "promoted_date": "2026-02-17",
-      "screen_pf": 1.61,
-      "screen_trades": 29
-    }
-  ],
+  "pending_validation": [],
   "validated": [
     {
       "hypothesis_id": "H007",
@@ -208,6 +168,111 @@
       "validated_date": "2026-02-12",
       "validation_passed_tests": 4,
       "validation_overall": true
+    },
+    {
+      "hypothesis_id": "H017",
+      "research_id": "R021",
+      "name": "Range Compression Expansion (RCE)",
+      "archetype": "range_compression_expansion",
+      "timeframe_hours": 4,
+      "params": {
+        "atr_period": 20,
+        "atr_lookback": 60,
+        "compression_percentile": 10,
+        "breakout_atr_mult": 1.5,
+        "confirmation_bars": 2,
+        "stop_pct": 2.0,
+        "target_pct": 6.0,
+        "long_only": true
+      },
+      "promoted_date": "2026-02-17",
+      "screen_pf": 2.49,
+      "screen_trades": 48,
+      "validated_date": "2026-02-24",
+      "validation_passed_tests": 4,
+      "validation_overall": true
+    },
+    {
+      "hypothesis_id": "H019",
+      "research_id": "R027",
+      "name": "Volatility Breakout with Momentum Confirmation (VBMC)",
+      "archetype": "dual_momentum_consensus",
+      "timeframe_hours": 4,
+      "params": {
+        "channel_period": 20,
+        "roc_fast": 5,
+        "roc_med": 15,
+        "roc_slow": 30,
+        "stop_pct": 2.0,
+        "target_pct": 6.0
+      },
+      "promoted_date": "2026-02-22",
+      "screen_pf": 1.37,
+      "screen_trades": 126,
+      "validated_date": "2026-02-24",
+      "validation_passed_tests": 3,
+      "validation_overall": true
+    },
+    {
+      "hypothesis_id": "H020",
+      "research_id": "R029",
+      "name": "High ATR Regime Trend Following (HARTF)",
+      "archetype": "atr_regime_adaptive",
+      "timeframe_hours": 4,
+      "params": {
+        "ma_period": 20,
+        "atr_period": 14,
+        "atr_history": 120,
+        "base_stop_pct": 3.0,
+        "base_target_pct": 12.0,
+        "trend_filter_period": 80
+      },
+      "promoted_date": "2026-02-22",
+      "screen_pf": 1.31,
+      "screen_trades": 72,
+      "validated_date": "2026-02-24",
+      "validation_passed_tests": 3,
+      "validation_overall": true
+    },
+    {
+      "hypothesis_id": "H021",
+      "research_id": "R035",
+      "name": "Trending Strength Continuation (TSC)",
+      "archetype": "trend_strength_breakout",
+      "timeframe_hours": 4,
+      "params": {
+        "channel_period": 20,
+        "adx_period": 14,
+        "adx_threshold": 25,
+        "stop_pct": 2.0,
+        "target_pct": 6.0
+      },
+      "promoted_date": "2026-02-22",
+      "screen_pf": 1.56,
+      "screen_trades": 103,
+      "validated_date": "2026-02-24",
+      "validation_passed_tests": 4,
+      "validation_overall": true
+    },
+    {
+      "hypothesis_id": "H022",
+      "research_id": "R037",
+      "name": "Acceleration Breakout With Volume Confirmation (ABVC)",
+      "archetype": "volume_breakout",
+      "timeframe_hours": 4,
+      "params": {
+        "channel_period": 15,
+        "vol_period": 20,
+        "vol_mult": 1.5,
+        "stop_pct": 2.0,
+        "target_pct": 6.0
+      },
+      "promoted_date": "2026-02-22",
+      "screen_pf": 1.32,
+      "screen_trades": 129,
+      "validated_date": "2026-02-24",
+      "validation_passed_tests": 4,
+      "validation_overall": true
     }
   ],
   "failed": [
@@ -248,6 +313,28 @@
       "screen_pf": 1.31,
       "screen_trades": 134,
       "validated_date": "2026-02-12",
+      "validation_passed_tests": 2,
+      "validation_overall": false
+    },
+    {
+      "hypothesis_id": "H018",
+      "research_id": "R022",
+      "name": "Momentum Exhaustion Reversal to Trend (MERT)",
+      "archetype": "momentum_exhaustion_reversal",
+      "timeframe_hours": 4,
+      "params": {
+        "ma_period": 50,
+        "rsi_period": 14,
+        "rsi_threshold": 30,
+        "bounce_min_pct": 1.0,
+        "stop_pct": 2.0,
+        "target_pct": 6.0,
+        "long_only": true
+      },
+      "promoted_date": "2026-02-17",
+      "screen_pf": 1.61,
+      "screen_trades": 29,
+      "validated_date": "2026-02-24",
       "validation_passed_tests": 2,
       "validation_overall": false
     }
