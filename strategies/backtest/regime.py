@@ -82,6 +82,27 @@ def split_by_regime(bars: List[Dict]) -> Dict[str, List[Dict]]:
     return regimes
 
 
+def _detect_strategy_direction(bars: List[Dict], strategy_factory: Callable) -> str:
+    """Run strategy on a sample of bars to detect if it's long-only, short-only, or both.
+
+    Returns 'long', 'short', or 'both'.
+    """
+    from engine import Direction
+    strategy = strategy_factory()
+    bt = Backtest(bars, cost_pct=0.0)
+    bt.run(strategy)
+
+    if not bt.result.trades:
+        return 'both'  # No trades — can't tell, assume both
+
+    directions = set(t.direction for t in bt.result.trades)
+    if directions == {Direction.LONG}:
+        return 'long'
+    elif directions == {Direction.SHORT}:
+        return 'short'
+    return 'both'
+
+
 def run_regime_coverage_check(
     bars: List[Dict],
     strategy_factory: Callable,
@@ -90,6 +111,10 @@ def run_regime_coverage_check(
     min_bars_per_regime: int = 50,
 ) -> Dict:
     """Run sub-backtests per regime and check trade coverage.
+
+    Direction-aware: long-only strategies must trade in bear+sideways (not just bull).
+    Short-only strategies must trade in bull+sideways (not just bear).
+    This prevents the filter from penalizing a short strategy for not trading in bull.
 
     Args:
         bars: Full OHLCV bar list (already resampled to target timeframe).
@@ -100,14 +125,44 @@ def run_regime_coverage_check(
 
     Returns:
         Dict with keys:
-            pass: bool (True if all non-skipped regimes have enough trades)
+            pass: bool (True if all required regimes have enough trades)
+            direction: detected strategy direction
             regimes: {regime_name: {bars, trades, pf, skipped}}
             failed_regimes: list of regime names that failed
             reason: human-readable explanation
     """
+    # Detect strategy direction from its actual trades
+    direction = _detect_strategy_direction(bars, strategy_factory)
+
+    # Determine which regimes to check based on direction:
+    # - Long-only: must also work in bear and sideways (not just bull)
+    # - Short-only: must also work in bull and sideways (not just bear)
+    # - Both: check all regimes
+    # For directional strategies, the "opposite" regime gets a relaxed threshold.
+    # A short strategy in bull won't have many trades — that's fine, we just want
+    # to see it's not completely blind outside its primary regime.
+    opposite_min_trades = max(3, min_trades_per_regime // 3)
+
+    # Sideways is typically a small slice of data (~15-20%), so use relaxed threshold
+    sideways_min = max(3, min_trades_per_regime // 2)
+
+    if direction == 'long':
+        # Long strategy: must show activity in bear (adverse) and sideways
+        required_regimes = {'bear': min_trades_per_regime, 'sideways': sideways_min}
+    elif direction == 'short':
+        # Short strategy: must show activity in bull (adverse) and sideways
+        required_regimes = {'bull': opposite_min_trades, 'sideways': sideways_min}
+    else:
+        required_regimes = {
+            'bull': min_trades_per_regime,
+            'bear': min_trades_per_regime,
+            'sideways': sideways_min,
+        }
+
     regime_labels = _label_bars(bars)
     result = {
         'pass': True,
+        'direction': direction,
         'regimes': {},
         'failed_regimes': [],
         'reason': '',
@@ -116,6 +171,8 @@ def run_regime_coverage_check(
     for regime_name in ('bull', 'bear', 'sideways'):
         regime_bars = [bars[i] for i, label in enumerate(regime_labels) if label == regime_name]
         n_bars = len(regime_bars)
+        regime_threshold = required_regimes.get(regime_name)
+        is_required = regime_threshold is not None
 
         if n_bars < min_bars_per_regime:
             result['regimes'][regime_name] = {
@@ -123,6 +180,7 @@ def run_regime_coverage_check(
                 'trades': 0,
                 'pf': 0.0,
                 'skipped': True,
+                'required': is_required,
                 'reason': f'Only {n_bars} bars (need {min_bars_per_regime})',
             }
             continue
@@ -134,17 +192,18 @@ def run_regime_coverage_check(
         trades = bt.result.total_trades
         pf = bt.result.profit_factor
 
-        passed = trades >= min_trades_per_regime
+        passed = trades >= regime_threshold if is_required else True
         regime_info = {
             'bars': n_bars,
             'trades': trades,
             'pf': round(pf, 2),
             'skipped': False,
+            'required': is_required,
             'passed': passed,
         }
 
         if not passed:
-            regime_info['reason'] = f'{trades} trades (need {min_trades_per_regime})'
+            regime_info['reason'] = f'{trades} trades (need {regime_threshold})'
             result['failed_regimes'].append(regime_name)
             result['pass'] = False
 
@@ -156,7 +215,7 @@ def run_regime_coverage_check(
             f"Strategy may only work in specific market conditions."
         )
     else:
-        result['reason'] = 'All non-skipped regimes have sufficient trades.'
+        result['reason'] = f'Regime coverage OK (direction: {direction}).'
 
     return result
 
