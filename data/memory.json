@@ -1,10 +1,10 @@
 {
-  "version": 27,
-  "last_updated": "2026-03-01T08:28:04.365398+11:00",
+  "version": 28,
+  "last_updated": "2026-03-01T15:06:41.477931+11:00",
   "schema_note": "Optimized for AI context retrieval, not human reading",
   "active_context": {
     "current_focus": "H004_validated_paper_trading_next_screen_new_ideas",
-    "status": "pipeline_ran_2026-03-01_3_new_ideas_sourced",
+    "status": "pipeline_ran_2026-03-01_24_screened_18_promoted_6_killed_3_new_ideas_sourced",
     "blockers": [],
     "next_action": "walk_forward_validate_newly_promoted_strategies",
     "execution_model": "autonomous_execute_then_inform",
@@ -13,8 +13,33 @@
   "session_log": [
     {
       "date": "2026-03-01",
-      "summary": "New ideas sourced: R065, R066, R067.",
-      "decisions": [],
+      "summary": "Pipeline screened 24 ideas. Promoted: R044 (PF 2.44), R045 (PF 1.36), R046 (PF 1.3), R047 (PF 2.44), R048 (PF 1.39), R049 (PF 1.3), R050 (PF 2.44), R051 (PF 1.39), R053 (PF 1.39), R055 (PF 1.48), R057 (PF 1.31), R058 (PF 1.3), R059 (PF 1.3), R061 (PF 1.36), R062 (PF 2.44), R063 (PF 1.36), R064 (PF 1.3), R065 (PF 1.31). Killed: R052 (PF 1.3), R054 (PF 1.3), R056 (PF 1.3), R060 (PF 1.3), R066 (PF 1.06), R067 (PF 1.3). New ideas sourced: R068, R069, R070.",
+      "decisions": [
+        "R044_promoted",
+        "R045_promoted",
+        "R046_promoted",
+        "R047_promoted",
+        "R048_promoted",
+        "R049_promoted",
+        "R050_promoted",
+        "R051_promoted",
+        "R053_promoted",
+        "R055_promoted",
+        "R057_promoted",
+        "R058_promoted",
+        "R059_promoted",
+        "R061_promoted",
+        "R062_promoted",
+        "R063_promoted",
+        "R064_promoted",
+        "R065_promoted",
+        "R052_killed",
+        "R054_killed",
+        "R056_killed",
+        "R060_killed",
+        "R066_killed",
+        "R067_killed"
+      ],
       "artifacts": [],
       "source": "automated_rbi_pipeline"
     },
@@ -246,148 +271,22 @@
         "note": "Auto-sourced. Archetype: trend_pullback."
       },
       {
-        "id": "R044",
-        "name": "Volatility Regime Shift Breakout (VRSB)",
-        "status": "new",
-        "note": "Auto-sourced. Archetype: range_compression_expansion."
-      },
-      {
-        "id": "R045",
-        "name": "Momentum Persistence Stacking (MPS)",
-        "status": "new",
-        "note": "Auto-sourced. Archetype: dual_momentum_consensus."
-      },
-      {
-        "id": "R046",
-        "name": "Post-Pullback Acceleration Surge (PPAS)",
+        "id": "R068",
+        "name": "Breakout Retest Continuation (BRC)",
         "status": "new",
         "note": "Auto-sourced. Archetype: trend_pullback."
       },
       {
-        "id": "R047",
-        "name": "Volatility Regime Shift Breakout (VRSB)",
-        "status": "new",
-        "note": "Auto-sourced. Archetype: range_compression_expansion."
-      },
-      {
-        "id": "R048",
-        "name": "Multi-Leg Momentum Cascade (MLMC)",
-        "status": "new",
-        "note": "Auto-sourced. Archetype: consecutive_momentum."
-      },
-      {
-        "id": "R049",
-        "name": "Trend Acceleration After Pause (TAAP)",
-        "status": "new",
-        "note": "Auto-sourced. Archetype: trend_pullback."
-      },
-      {
-        "id": "R050",
-        "name": "Asymmetric Volatility Breakout (AVB)",
-        "status": "new",
-        "note": "Auto-sourced. Archetype: range_compression_expansion."
-      },
-      {
-        "id": "R051",
-        "name": "Momentum Persistence After Consolidation (MPAC)",
-        "status": "new",
-        "note": "Auto-sourced. Archetype: consecutive_momentum."
-      },
-      {
-        "id": "R052",
-        "name": "High-Volatility Regime Momentum Surge (HVRMS)",
-        "status": "new",
-        "note": "Auto-sourced. Archetype: atr_regime_adaptive."
-      },
-      {
-        "id": "R053",
-        "name": "Momentum Persistence After Strong Trend Days",
-        "status": "new",
-        "note": "Auto-sourced. Archetype: consecutive_momentum."
-      },
-      {
-        "id": "R054",
-        "name": "Volatility Expansion Continuation",
-        "status": "new",
-        "note": "Auto-sourced. Archetype: atr_regime_adaptive."
-      },
-      {
-        "id": "R055",
-        "name": "Multi-Timeframe Trend Alignment Breakout",
-        "status": "new",
-        "note": "Auto-sourced. Archetype: mtf_breakout."
-      },
-      {
-        "id": "R056",
-        "name": "Volatility Spike Trend Continuation (VSTC)",
-        "status": "new",
-        "note": "Auto-sourced. Archetype: atr_regime_adaptive."
-      },
-      {
-        "id": "R057",
-        "name": "Multi-Timeframe Volume Surge Breakout (MTVSB)",
+        "id": "R069",
+        "name": "Volatility Contraction Followed By Directional Volume Spike (VCVS)",
         "status": "new",
         "note": "Auto-sourced. Archetype: volume_breakout."
       },
       {
-        "id": "R058",
-        "name": "Trend Resumption After Shallow Pullback (TRASP)",
-        "status": "new",
-        "note": "Auto-sourced. Archetype: trend_pullback."
-      },
-      {
-        "id": "R059",
-        "name": "Post-Breakout Momentum Continuation (PBMC)",
-        "status": "new",
-        "note": "Auto-sourced. Archetype: trend_pullback."
-      },
-      {
-        "id": "R060",
-        "name": "Volatility Regime Transition Breakout (VRTB)",
-        "status": "new",
-        "note": "Auto-sourced. Archetype: atr_regime_adaptive."
-      },
-      {
-        "id": "R061",
-        "name": "Multi-Timeframe Momentum Alignment (MTMA)",
-        "status": "new",
-        "note": "Auto-sourced. Archetype: dual_momentum_consensus."
-      },
-      {
-        "id": "R062",
-        "name": "Volatility Regime Shift Breakout (VRSB)",
-        "status": "new",
-        "note": "Auto-sourced. Archetype: range_compression_expansion."
-      },
-      {
-        "id": "R063",
-        "name": "Momentum Alignment Breakout (MAB)",
-        "status": "new",
-        "note": "Auto-sourced. Archetype: dual_momentum_consensus."
-      },
-      {
-        "id": "R064",
-        "name": "Trend Reversion After Exhaustion (TRAE)",
-        "status": "new",
-        "note": "Auto-sourced. Archetype: trend_pullback."
-      },
-      {
-        "id": "R065",
-        "name": "Volume-Weighted Breakout Persistence (VWBP)",
-        "status": "new",
-        "note": "Auto-sourced. Archetype: volume_breakout."
-      },
-      {
-        "id": "R066",
-        "name": "Post-Consolidation Momentum Cascade (PCMC)",
+        "id": "R070",
+        "name": "Momentum\u968e\u68af Acceleration (Stepped Momentum)",
         "status": "new",
         "note": "Auto-sourced. Archetype: acceleration_breakout."
-      },
-      {
-        "id": "R067",
-        "name": "Multi-Timeframe Volatility Alignment (MTVA)",
-        "status": "new",
-        "note": "Auto-sourced. Archetype: atr_regime_adaptive."
       }
     ],
     "parked": [
@@ -414,7 +313,13 @@
       "R028 (Trend Acceleration Breakout (TAB), PF 1.08)",
       "R031 (Acceleration Surge After Consolidation (ASAC), PF 1.08)",
       "R034 (Momentum Divergence Acceleration (MDA), PF 1.08)",
-      "R039 (Volatility Breakout with Momentum Confirmation, PF 1.08)"
+      "R039 (Volatility Breakout with Momentum Confirmation, PF 1.08)",
+      "R052 (High-Volatility Regime Momentum Surge (HVRMS), PF 1.3)",
+      "R054 (Volatility Expansion Continuation, PF 1.3)",
+      "R056 (Volatility Spike Trend Continuation (VSTC), PF 1.3)",
+      "R060 (Volatility Regime Transition Breakout (VRTB), PF 1.3)",
+      "R066 (Post-Consolidation Momentum Cascade (PCMC), PF 1.06)",
+      "R067 (Multi-Timeframe Volatility Alignment (MTVA), PF 1.3)"
     ],
     "archived": [
       "HYPOTHESIS_001",
@@ -566,6 +471,297 @@
           "base_stop_pct": 3.0,
           "base_target_pct": 12.0,
           "trend_filter_period": 80
+        },
+        "next_step": "walk_forward_validation"
+      },
+      {
+        "research_id": "R044",
+        "name": "Volatility Regime Shift Breakout (VRSB)",
+        "gross_pf": 2.44,
+        "trades": 47,
+        "win_rate": "42.6%",
+        "params": {
+          "atr_period": 20,
+          "atr_lookback": 60,
+          "compression_percentile": 10,
+          "breakout_atr_mult": 1.5,
+          "confirmation_bars": 2,
+          "stop_pct": 2.0,
+          "target_pct": 6.0,
+          "long_only": true
+        },
+        "next_step": "walk_forward_validation"
+      },
+      {
+        "research_id": "R045",
+        "name": "Momentum Persistence Stacking (MPS)",
+        "gross_pf": 1.36,
+        "trades": 127,
+        "win_rate": "34.6%",
+        "params": {
+          "channel_period": 20,
+          "roc_fast": 5,
+          "roc_med": 15,
+          "roc_slow": 30,
+          "stop_pct": 2.0,
+          "target_pct": 6.0
+        },
+        "next_step": "walk_forward_validation"
+      },
+      {
+        "research_id": "R046",
+        "name": "Post-Pullback Acceleration Surge (PPAS)",
+        "gross_pf": 1.3,
+        "trades": 80,
+        "win_rate": "40.0%",
+        "params": {
+          "ma_period": 30,
+          "ma_slope_bars": 5,
+          "pullback_pct": 2.0,
+          "roc_period": 3,
+          "min_roc": 0.5,
+          "stop_pct": 3.0,
+          "target_pct": 6.0
+        },
+        "next_step": "walk_forward_validation"
+      },
+      {
+        "research_id": "R047",
+        "name": "Volatility Regime Shift Breakout (VRSB)",
+        "gross_pf": 2.44,
+        "trades": 47,
+        "win_rate": "42.6%",
+        "params": {
+          "atr_period": 20,
+          "atr_lookback": 60,
+          "compression_percentile": 10,
+          "breakout_atr_mult": 1.5,
+          "confirmation_bars": 2,
+          "stop_pct": 2.0,
+          "target_pct": 6.0,
+          "long_only": true
+        },
+        "next_step": "walk_forward_validation"
+      },
+      {
+        "research_id": "R048",
+        "name": "Multi-Leg Momentum Cascade (MLMC)",
+        "gross_pf": 1.39,
+        "trades": 80,
+        "win_rate": "21.2%",
+        "params": {
+          "channel_period": 20,
+          "consec_bars": 3,
+          "stop_pct": 2.0,
+          "target_pct": 12.0
+        },
+        "next_step": "walk_forward_validation"
+      },
+      {
+        "research_id": "R049",
+        "name": "Trend Acceleration After Pause (TAAP)",
+        "gross_pf": 1.3,
+        "trades": 80,
+        "win_rate": "40.0%",
+        "params": {
+          "ma_period": 30,
+          "ma_slope_bars": 5,
+          "pullback_pct": 2.0,
+          "roc_period": 3,
+          "min_roc": 0.5,
+          "stop_pct": 3.0,
+          "target_pct": 6.0
+        },
+        "next_step": "walk_forward_validation"
+      },
+      {
+        "research_id": "R050",
+        "name": "Asymmetric Volatility Breakout (AVB)",
+        "gross_pf": 2.44,
+        "trades": 47,
+        "win_rate": "42.6%",
+        "params": {
+          "atr_period": 20,
+          "atr_lookback": 60,
+          "compression_percentile": 10,
+          "breakout_atr_mult": 1.5,
+          "confirmation_bars": 2,
+          "stop_pct": 2.0,
+          "target_pct": 6.0,
+          "long_only": true
+        },
+        "next_step": "walk_forward_validation"
+      },
+      {
+        "research_id": "R051",
+        "name": "Momentum Persistence After Consolidation (MPAC)",
+        "gross_pf": 1.39,
+        "trades": 80,
+        "win_rate": "21.2%",
+        "params": {
+          "channel_period": 20,
+          "consec_bars": 3,
+          "stop_pct": 2.0,
+          "target_pct": 12.0
+        },
+        "next_step": "walk_forward_validation"
+      },
+      {
+        "research_id": "R053",
+        "name": "Momentum Persistence After Strong Trend Days",
+        "gross_pf": 1.39,
+        "trades": 80,
+        "win_rate": "21.2%",
+        "params": {
+          "channel_period": 20,
+          "consec_bars": 3,
+          "stop_pct": 2.0,
+          "target_pct": 12.0
+        },
+        "next_step": "walk_forward_validation"
+      },
+      {
+        "research_id": "R055",
+        "name": "Multi-Timeframe Trend Alignment Breakout",
+        "gross_pf": 1.48,
+        "trades": 116,
+        "win_rate": "36.2%",
+        "params": {
+          "channel_period": 20,
+          "trend_ma_period": 90,
+          "stop_pct": 2.0,
+          "target_pct": 6.0
+        },
+        "next_step": "walk_forward_validation"
+      },
+      {
+        "research_id": "R057",
+        "name": "Multi-Timeframe Volume Surge Breakout (MTVSB)",
+        "gross_pf": 1.31,
+        "trades": 130,
+        "win_rate": "33.1%",
+        "params": {
+          "channel_period": 15,
+          "vol_period": 20,
+          "vol_mult": 1.5,
+          "stop_pct": 2.0,
+          "target_pct": 6.0
+        },
+        "next_step": "walk_forward_validation"
+      },
+      {
+        "research_id": "R058",
+        "name": "Trend Resumption After Shallow Pullback (TRASP)",
+        "gross_pf": 1.3,
+        "trades": 80,
+        "win_rate": "40.0%",
+        "params": {
+          "ma_period": 30,
+          "ma_slope_bars": 5,
+          "pullback_pct": 2.0,
+          "roc_period": 3,
+          "min_roc": 0.5,
+          "stop_pct": 3.0,
+          "target_pct": 6.0
+        },
+        "next_step": "walk_forward_validation"
+      },
+      {
+        "research_id": "R059",
+        "name": "Post-Breakout Momentum Continuation (PBMC)",
+        "gross_pf": 1.3,
+        "trades": 80,
+        "win_rate": "40.0%",
+        "params": {
+          "ma_period": 30,
+          "ma_slope_bars": 5,
+          "pullback_pct": 2.0,
+          "roc_period": 3,
+          "min_roc": 0.5,
+          "stop_pct": 3.0,
+          "target_pct": 6.0
+        },
+        "next_step": "walk_forward_validation"
+      },
+      {
+        "research_id": "R061",
+        "name": "Multi-Timeframe Momentum Alignment (MTMA)",
+        "gross_pf": 1.36,
+        "trades": 127,
+        "win_rate": "34.6%",
+        "params": {
+          "channel_period": 20,
+          "roc_fast": 5,
+          "roc_med": 15,
+          "roc_slow": 30,
+          "stop_pct": 2.0,
+          "target_pct": 6.0
+        },
+        "next_step": "walk_forward_validation"
+      },
+      {
+        "research_id": "R062",
+        "name": "Volatility Regime Shift Breakout (VRSB)",
+        "gross_pf": 2.44,
+        "trades": 47,
+        "win_rate": "42.6%",
+        "params": {
+          "atr_period": 20,
+          "atr_lookback": 60,
+          "compression_percentile": 10,
+          "breakout_atr_mult": 1.5,
+          "confirmation_bars": 2,
+          "stop_pct": 2.0,
+          "target_pct": 6.0,
+          "long_only": true
+        },
+        "next_step": "walk_forward_validation"
+      },
+      {
+        "research_id": "R063",
+        "name": "Momentum Alignment Breakout (MAB)",
+        "gross_pf": 1.36,
+        "trades": 127,
+        "win_rate": "34.6%",
+        "params": {
+          "channel_period": 20,
+          "roc_fast": 5,
+          "roc_med": 15,
+          "roc_slow": 30,
+          "stop_pct": 2.0,
+          "target_pct": 6.0
+        },
+        "next_step": "walk_forward_validation"
+      },
+      {
+        "research_id": "R064",
+        "name": "Trend Reversion After Exhaustion (TRAE)",
+        "gross_pf": 1.3,
+        "trades": 80,
+        "win_rate": "40.0%",
+        "params": {
+          "ma_period": 30,
+          "ma_slope_bars": 5,
+          "pullback_pct": 2.0,
+          "roc_period": 3,
+          "min_roc": 0.5,
+          "stop_pct": 3.0,
+          "target_pct": 6.0
+        },
+        "next_step": "walk_forward_validation"
+      },
+      {
+        "research_id": "R065",
+        "name": "Volume-Weighted Breakout Persistence (VWBP)",
+        "gross_pf": 1.31,
+        "trades": 130,
+        "win_rate": "33.1%",
+        "params": {
+          "channel_period": 15,
+          "vol_period": 20,
+          "vol_mult": 1.5,
+          "stop_pct": 2.0,
+          "target_pct": 6.0
         },
         "next_step": "walk_forward_validation"
       }
