@@ -1,16 +1,23 @@
 {
-  "version": 29,
-  "last_updated": "2026-03-02T08:30:07.152914+11:00",
+  "version": 30,
+  "last_updated": "2026-03-03T08:41:02.884859+11:00",
   "schema_note": "Optimized for AI context retrieval, not human reading",
   "active_context": {
     "current_focus": "H004_validated_paper_trading_next_screen_new_ideas",
-    "status": "pipeline_ran_2026-03-02_3_new_ideas_sourced",
+    "status": "pipeline_ran_2026-03-03_3_new_ideas_sourced",
     "blockers": [],
     "next_action": "walk_forward_validate_newly_promoted_strategies",
     "execution_model": "autonomous_execute_then_inform",
     "rbi_phase": "implement_paper_trading"
   },
   "session_log": [
+    {
+      "date": "2026-03-03",
+      "summary": "New ideas sourced: R074, R075, R076.",
+      "decisions": [],
+      "artifacts": [],
+      "source": "automated_rbi_pipeline"
+    },
     {
       "date": "2026-03-02",
       "summary": "New ideas sourced: R071, R072, R073.",
@@ -108,13 +115,6 @@
         "R034_killed",
         "R039_killed"
       ],
-      "artifacts": [],
-      "source": "automated_rbi_pipeline"
-    },
-    {
-      "date": "2026-02-21",
-      "summary": "New ideas sourced: R036, R037, R038.",
-      "decisions": [],
       "artifacts": [],
       "source": "automated_rbi_pipeline"
     }
@@ -305,6 +305,24 @@
         "name": "Multi-Timeframe Compression Alignment Breakout (MTCAB)",
         "status": "new",
         "note": "Auto-sourced. Archetype: range_compression_expansion."
+      },
+      {
+        "id": "R074",
+        "name": "Volatility Breakout After Failed Breakdown (VBAFD)",
+        "status": "new",
+        "note": "Auto-sourced. Archetype: range_compression_expansion."
+      },
+      {
+        "id": "R075",
+        "name": "Multi-Timeframe Volatility Convergence Breakout (MTVCB)",
+        "status": "new",
+        "note": "Auto-sourced. Archetype: range_compression_expansion."
+      },
+      {
+        "id": "R076",
+        "name": "Momentum Surge After Volume Drought (MSAVD)",
+        "status": "new",
+        "note": "Auto-sourced. Archetype: volume_breakout."
       }
     ],
     "parked": [
