@@ -9,10 +9,17 @@
     "long_only": true
   },
   "started": "2026-02-10T22:56:06.579671",
-  "position": null,
-  "last_bar_time": "2026-03-02T12:00:00",
+  "position": {
+    "entry_time": "2026-03-02T16:00:00",
+    "entry_price": 68896.77,
+    "stop_loss": 64398.319500000005,
+    "take_profit": 77893.671,
+    "direction": "long"
+  },
+  "last_bar_time": "2026-03-02T16:00:00",
   "trades": [],
   "total_pnl": 0.0,
   "total_costs": 0.0,
-  "stale_alert_sent": true
+  "stale_alert_sent": false,
+  "last_signal_time": "2026-03-02T16:00:00"
 }
