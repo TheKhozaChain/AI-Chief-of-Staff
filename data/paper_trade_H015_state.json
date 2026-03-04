@@ -10,10 +10,17 @@
     "trend_filter_period": 80
   },
   "started": "2026-02-15",
-  "position": null,
-  "last_bar_time": "2026-03-03T08:00:00",
+  "position": {
+    "entry_time": "2026-03-03T12:00:00",
+    "entry_price": 67729.28,
+    "stop_loss": 64681.4624,
+    "take_profit": 75856.7936,
+    "direction": "long"
+  },
+  "last_bar_time": "2026-03-03T12:00:00",
   "trades": [],
   "total_pnl": 0.0,
   "total_costs": 0.0,
-  "stale_alert_sent": true
+  "stale_alert_sent": false,
+  "last_signal_time": "2026-03-03T12:00:00"
 }
