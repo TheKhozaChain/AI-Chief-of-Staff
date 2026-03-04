@@ -39,7 +39,7 @@ def call_anthropic(prompt: str, system: str, api_key: str) -> str:
 
     client = anthropic.Anthropic(api_key=api_key)
 
-    model = os.environ.get("ANTHROPIC_MODEL", "claude-sonnet-4-5-20250929")
+    model = os.environ.get("ANTHROPIC_MODEL", "claude-sonnet-4-6")
 
     message = client.messages.create(
         model=model,
