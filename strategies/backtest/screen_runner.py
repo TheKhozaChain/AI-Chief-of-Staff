@@ -37,7 +37,7 @@ from regime import run_regime_coverage_check
 
 
 COST_PCT = 0.1  # Standard transaction cost
-PF_THRESHOLD = 1.3  # Minimum gross PF to promote
+PF_THRESHOLD = 1.5  # Minimum gross PF to promote (raised from 1.3, Mar 2026)
 
 
 def run_screen(

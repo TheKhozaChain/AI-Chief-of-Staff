@@ -83,7 +83,19 @@ def source_ideas(pipeline_results=None):
     next_r_num = max(int(e['id'][1:]) for e in entries) + 1 if entries else 1
 
     # Build LLM prompt
-    system = """You are a quantitative trading researcher specializing in cryptocurrency markets.
+    # Rotate archetype focus to diversify sourcing and reduce duplicates
+    archetype_groups = [
+        ['trend_pullback', 'momentum_exhaustion_reversal', 'atr_regime_adaptive'],
+        ['range_compression_expansion', 'acceleration_breakout', 'volume_breakout'],
+        ['donchian_breakout', 'trend_strength_breakout', 'consecutive_momentum'],
+        ['adaptive_momentum_burst', 'dual_momentum_consensus', 'mtf_breakout'],
+        ['mean_reversion_short', 'breakdown_momentum', 'ma_crossover'],
+    ]
+    day_of_year = datetime.now().timetuple().tm_yday
+    focus_group = archetype_groups[day_of_year % len(archetype_groups)]
+    focus_str = ', '.join(focus_group)
+
+    system = f"""You are a quantitative trading researcher specializing in cryptocurrency markets.
 Your job is to propose NEW trading strategy ideas for BTCUSD backtesting.
 
 Rules:
@@ -93,7 +105,10 @@ Rules:
 - Design around wide targets (4%+) to absorb transaction costs (0.1% round-trip)
 - BTC has a structural uptrend (+200% over 3 years) — long-only or long-biased is preferred
 - Do NOT propose ideas that require external data (funding rates, order book, sentiment, etc.)
-- Generate exactly 3 new ideas"""
+- Generate exactly 3 new ideas
+- IMPORTANT: Each idea MUST use DIFFERENT archetypes. Do NOT generate duplicates.
+- Today's focus archetypes (prefer these): {focus_str}
+- IMPORTANT: Vary parameters significantly from existing promoted strategies. Do NOT just rename an existing strategy."""
 
     killed_str = "\n".join(f"- {e['id']} {e['idea']}: {e['notes']}" for e in killed)
     promoted_str = "\n".join(f"- {e['id']} {e['idea']}: {e['notes']}" for e in promoted) if promoted else "None yet"
@@ -169,13 +184,46 @@ Suggested params: [key parameters to test]
     ideas = _parse_llm_ideas(response, next_r_num)
 
     if ideas:
-        _append_ideas_to_backlog(ideas, BACKLOG_FILE)
-        print(f"Added {len(ideas)} new ideas to backlog: {', '.join(i['id'] for i in ideas)}")
+        # Dedup: check if archetype already has promoted/validated strategies
+        ideas = _dedup_sourced_ideas(ideas, entries)
+        if ideas:
+            _append_ideas_to_backlog(ideas, BACKLOG_FILE)
+            print(f"Added {len(ideas)} new ideas to backlog: {', '.join(i['id'] for i in ideas)}")
+        else:
+            print("All sourced ideas were duplicates of existing strategies. None added.")
     else:
         print("No parseable ideas in LLM response.")
         print(f"Raw response:\n{response[:500]}")
 
     return ideas
+
+
+def _dedup_sourced_ideas(ideas: list, existing_entries: list) -> list:
+    """Filter out ideas whose archetype already has 3+ promoted/validated entries.
+
+    Prevents the pipeline from generating more ideas for saturated archetypes.
+    """
+    archetype_counts = {}
+    for entry in existing_entries:
+        if entry['status'] in ('promoted', 'validated'):
+            # Extract archetype from notes
+            notes = entry.get('notes', '')
+            match = re.search(r'[Aa]rchetype:\s*(\w+)', notes)
+            if match:
+                arch = match.group(1)
+                archetype_counts[arch] = archetype_counts.get(arch, 0) + 1
+
+    filtered = []
+    for idea in ideas:
+        arch = idea.get('archetype', 'custom')
+        count = archetype_counts.get(arch, 0)
+        if count >= 3:
+            print(f"  Skipping {idea['id']} ({idea['idea']}): archetype '{arch}' "
+                  f"already has {count} promoted/validated entries.")
+        else:
+            filtered.append(idea)
+
+    return filtered
 
 
 def _parse_llm_ideas(response: str, start_num: int) -> list:

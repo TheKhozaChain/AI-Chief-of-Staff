@@ -27,6 +27,13 @@ Review the user profile and mission documents provided. Consider:
 
 **If the system is in a monitoring phase (e.g., paper trading running, no new screens needed), say so explicitly.** Don't invent phantom tasks. It's OK for the brief to be short if there's genuinely little to do.
 
+### Staleness Detection:
+6. If you find yourself recommending the SAME action for 3+ consecutive briefs, **escalate differently**:
+   - Flag it explicitly: "This recommendation has appeared 3+ times without action."
+   - Propose a DIFFERENT approach to resolve the underlying blocker.
+   - Consider if the recommendation is actually wrong or if there's a structural issue preventing it.
+   - Do NOT just repeat the same recommendation verbatim — that means it's not actionable as written.
+
 ## Output Format
 
 Generate a briefing with these sections:

@@ -383,10 +383,50 @@ def _queue_has_research_id(queue: Dict, research_id: str) -> bool:
     return False
 
 
+def _queue_has_duplicate_params(queue: Dict, archetype: str, params: Dict) -> Optional[str]:
+    """Check if an identical archetype+params combo already exists in the queue.
+
+    Returns the research_id of the duplicate if found, None otherwise.
+    """
+    for section in ('pending_validation', 'validated', 'failed'):
+        for item in queue.get(section, []):
+            if item.get('archetype') != archetype:
+                continue
+            existing_params = item.get('params', {})
+            # Compare params ignoring key order — match on values
+            if _params_match(existing_params, params):
+                return item.get('research_id', item.get('hypothesis_id', '?'))
+    return None
+
+
+def _params_match(p1: Dict, p2: Dict) -> bool:
+    """Check if two param dicts are functionally identical."""
+    # Ignore path-like params (aux_data_dir etc.) that vary by machine
+    skip_keys = {'aux_data_dir'}
+    k1 = {k: v for k, v in p1.items() if k not in skip_keys}
+    k2 = {k: v for k, v in p2.items() if k not in skip_keys}
+    if set(k1.keys()) != set(k2.keys()):
+        return False
+    for key in k1:
+        if isinstance(k1[key], float) and isinstance(k2[key], float):
+            if abs(k1[key] - k2[key]) > 1e-6:
+                return False
+        elif k1[key] != k2[key]:
+            return False
+    return True
+
+
 def _queue_promoted_strategy(idea_id: str, idea_name: str, best: Dict, config: Dict):
     queue = _load_promoted_queue()
     if _queue_has_research_id(queue, idea_id):
         print(f"  Queue: {idea_id} already tracked, skipping.")
+        return
+
+    # Dedup check: reject if identical archetype+params already in queue
+    params = best.get('params', {})
+    dup_id = _queue_has_duplicate_params(queue, config['archetype'], params)
+    if dup_id:
+        print(f"  Queue: {idea_id} DUPLICATE of {dup_id} (same archetype+params). Skipping.")
         return
 
     queue['pending_validation'].append({
@@ -395,7 +435,7 @@ def _queue_promoted_strategy(idea_id: str, idea_name: str, best: Dict, config: D
         'name': idea_name,
         'archetype': config['archetype'],
         'timeframe_hours': config.get('timeframe_hours', 4),
-        'params': best.get('params', {}),
+        'params': params,
         'promoted_date': datetime.now().strftime('%Y-%m-%d'),
         'screen_pf': best.get('gross_pf', best.get('profit_factor', 0)),
         'screen_trades': best.get('total_trades', 0),
