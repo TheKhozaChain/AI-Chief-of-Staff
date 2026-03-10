@@ -13,9 +13,10 @@
   },
   "started": "2026-02-24",
   "position": null,
-  "last_bar_time": "2026-03-09T08:00:00",
+  "last_bar_time": "2026-03-09T12:00:00",
   "trades": [],
   "total_pnl": 0.0,
   "total_costs": 0.0,
-  "warmup_done": true
+  "warmup_done": true,
+  "stale_alert_sent": true
 }

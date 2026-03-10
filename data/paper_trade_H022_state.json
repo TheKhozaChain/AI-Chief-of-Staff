@@ -9,8 +9,14 @@
     "target_pct": 6.0
   },
   "started": "2026-02-24",
-  "position": null,
-  "last_bar_time": "2026-03-09T08:00:00",
+  "position": {
+    "entry_time": "2026-03-09T12:00:00",
+    "entry_price": 68889.97,
+    "stop_loss": 67512.1706,
+    "take_profit": 73023.36820000001,
+    "direction": "long"
+  },
+  "last_bar_time": "2026-03-09T12:00:00",
   "trades": [
     {
       "entry_time": "2026-01-27T20:00:00",
@@ -72,6 +78,6 @@
   "total_pnl": -6322.295699999996,
   "total_costs": 301.06170000000003,
   "warmup_done": true,
-  "last_signal_time": "2026-03-04T12:00:00",
+  "last_signal_time": "2026-03-09T12:00:00",
   "stale_alert_sent": false
 }
