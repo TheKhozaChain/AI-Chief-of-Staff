@@ -1,16 +1,23 @@
 {
-  "version": 40,
-  "last_updated": "2026-03-13T08:40:12.116095+11:00",
+  "version": 41,
+  "last_updated": "2026-03-14T08:39:50.145408+11:00",
   "schema_note": "Optimized for AI context retrieval, not human reading",
   "active_context": {
     "current_focus": "H004_validated_paper_trading_next_screen_new_ideas",
-    "status": "pipeline_ran_2026-03-13_3_new_ideas_sourced",
+    "status": "pipeline_ran_2026-03-14_3_new_ideas_sourced",
     "blockers": [],
     "next_action": "walk_forward_validate_newly_promoted_strategies",
     "execution_model": "autonomous_execute_then_inform",
     "rbi_phase": "implement_paper_trading"
   },
   "session_log": [
+    {
+      "date": "2026-03-14",
+      "summary": "New ideas sourced: R107, R108, R109.",
+      "decisions": [],
+      "artifacts": [],
+      "source": "automated_rbi_pipeline"
+    },
     {
       "date": "2026-03-13",
       "summary": "New ideas sourced: R104, R105, R106.",
@@ -70,13 +77,6 @@
     {
       "date": "2026-03-05",
       "summary": "New ideas sourced: R080, R081, R082.",
-      "decisions": [],
-      "artifacts": [],
-      "source": "automated_rbi_pipeline"
-    },
-    {
-      "date": "2026-03-04",
-      "summary": "New ideas sourced: R077, R078, R079.",
       "decisions": [],
       "artifacts": [],
       "source": "automated_rbi_pipeline"
@@ -466,6 +466,24 @@
         "name": "Consecutive Bar Momentum Surge (CBMS)",
         "status": "new",
         "note": "Auto-sourced. Archetype: consecutive_momentum."
+      },
+      {
+        "id": "R107",
+        "name": "Adaptive Squeeze Burst with Long-Trend Gate",
+        "status": "new",
+        "note": "Auto-sourced. Archetype: adaptive_momentum_burst."
+      },
+      {
+        "id": "R108",
+        "name": "Dual Momentum Consensus Breakout (Wide Target)",
+        "status": "new",
+        "note": "Auto-sourced. Archetype: dual_momentum_consensus."
+      },
+      {
+        "id": "R109",
+        "name": "Multi-Timeframe Donchian Breakout with Macro Trend (MTF Wide)",
+        "status": "new",
+        "note": "Auto-sourced. Archetype: mtf_breakout."
       }
     ],
     "parked": [
