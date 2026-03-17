@@ -23,29 +23,6 @@
       }
     },
     {
-      "id": "H007",
-      "archetype": "multi_asset_momentum",
-      "timeframe_hours": 4,
-      "params": {
-        "roc_period": 30,
-        "min_roc": 1.0,
-        "stop_pct": 2.0,
-        "target_pct": 12.0,
-        "aux_data_dir": "data",
-        "aux_timeframe_hours": 4,
-        "long_only": true
-      },
-      "started": "2026-02-15",
-      "graduation": {
-        "min_days": 30,
-        "min_trades": 5,
-        "min_net_pf": 1.0,
-        "max_drawdown_pct": 25,
-        "kill_pf_below": 0.7,
-        "kill_min_trades": 10
-      }
-    },
-    {
       "id": "H008",
       "archetype": "adaptive_momentum_burst",
       "timeframe_hours": 4,
@@ -310,5 +287,31 @@
     }
   ],
   "graduated": [],
-  "killed": []
+  "killed": [
+    {
+      "id": "H007",
+      "archetype": "multi_asset_momentum",
+      "timeframe_hours": 4,
+      "params": {
+        "roc_period": 30,
+        "min_roc": 1.0,
+        "stop_pct": 2.0,
+        "target_pct": 12.0,
+        "aux_data_dir": "data",
+        "aux_timeframe_hours": 4,
+        "long_only": true
+      },
+      "started": "2026-02-15",
+      "graduation": {
+        "min_days": 30,
+        "min_trades": 5,
+        "min_net_pf": 1.0,
+        "max_drawdown_pct": 25,
+        "kill_pf_below": 0.7,
+        "kill_min_trades": 10
+      },
+      "ended": "2026-03-17",
+      "reason": "H007: 30 days active, 0 trades, no position. Auto-killed for zero trade production."
+    }
+  ]
 }
