@@ -105,8 +105,8 @@ Rules:
 - Design around wide targets (4%+) to absorb transaction costs (0.1% round-trip)
 - BTC has a structural uptrend (+200% over 3 years) — long-only or long-biased is preferred
 - Do NOT propose ideas that require external data (funding rates, order book, sentiment, etc.)
-- Generate exactly 3 new ideas
-- IMPORTANT: Each idea MUST use DIFFERENT archetypes. Do NOT generate duplicates.
+- Generate exactly 1 new idea
+- IMPORTANT: The idea MUST use one of today's focus archetypes. Do NOT duplicate existing strategies.
 - Today's focus archetypes (prefer these): {focus_str}
 - IMPORTANT: Vary parameters significantly from existing promoted strategies. Do NOT just rename an existing strategy."""
 
@@ -120,7 +120,7 @@ Rules:
         for r in pipeline_results['screened']:
             recent_context += f"- {r.get('idea_id', '?')} {r.get('idea_name', '?')}: PF {r.get('gross_pf', '?')}, verdict: {r.get('verdict', '?')}\n"
 
-    prompt = f"""Based on our research history, propose 3 NEW trading strategy ideas for BTCUSD.
+    prompt = f"""Based on our research history, propose 1 NEW trading strategy idea for BTCUSD.
 
 ## What's been killed (didn't work):
 {killed_str}

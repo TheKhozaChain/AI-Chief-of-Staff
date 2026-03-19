@@ -1,19 +1,19 @@
 # RBI Pipeline - Automated Strategy Screening
-# Runs weekly on Sunday at 12:00 AEDT (01:00 UTC)
+# Runs daily at 14:00 AEDT (03:00 UTC)
 # Also runs on manual trigger (workflow_dispatch)
 #
 # What it does:
 # 1. Refreshes BTCUSD data from Binance
 # 2. Screens all 'new' ideas in RESEARCH_BACKLOG.md
-# 3. Optionally sources new ideas via LLM
+# 3. Sources new ideas via LLM (Mon/Wed/Fri only)
 # 4. Commits updated backlog and results
 
 name: RBI Pipeline
 
 on:
-  # Weekly: Sunday 12:00 AEDT = Saturday 01:00 UTC
+  # Daily: 14:00 AEDT = 03:00 UTC
   schedule:
-    - cron: '0 1 * * 0'
+    - cron: '0 3 * * *'
 
   # Manual trigger with options
   workflow_dispatch:
@@ -87,10 +87,15 @@ jobs:
             ARGS="$ARGS --refresh-data"
           fi
 
-          # Source ideas: always on for scheduled runs (keeps funnel fed),
+          # Source ideas: Mon/Wed/Fri on scheduled runs (3 ideas/week),
           # configurable for dispatch
-          if [ "${{ github.event_name }}" = "schedule" ] || [ "${{ inputs.source_ideas }}" = "true" ]; then
+          if [ "${{ inputs.source_ideas }}" = "true" ]; then
             ARGS="$ARGS --source-ideas"
+          elif [ "${{ github.event_name }}" = "schedule" ]; then
+            DOW=$(date +%u)
+            if [ "$DOW" = "1" ] || [ "$DOW" = "3" ] || [ "$DOW" = "5" ]; then
+              ARGS="$ARGS --source-ideas"
+            fi
           fi
 
           # Specific IDs
@@ -108,5 +113,5 @@ jobs:
           git add strategies/RESEARCH_BACKLOG.md
           git add data/rbi_*.json data/rbi_*.md
           git add data/memory.json
-          git diff --staged --quiet || git commit -m "RBI screening session — $(date +%Y-%m-%d)"
+          git diff --staged --quiet || git commit -m "RBI daily screen — $(date +%Y-%m-%d)"
           git push

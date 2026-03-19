@@ -91,8 +91,7 @@ def parse_kanban() -> Dict:
 # Recurring items: patterns that should be re-added to Up Next after completion.
 # Each tuple is (match_pattern, regenerated_item_text, rbi_phase, notes).
 RECURRING_ITEMS = [
-    (r"[Ss]ource.*research ideas|[Ss]ource.*ideas.*LLM|[Ss]ource.*new.*ideas",
-     "Source new research ideas R{next}+ via LLM", "R", "Keep funnel fed — recurring weekly"),
+    # Idea sourcing moved to daily RBI screen (Mon/Wed/Fri). No longer recurring here.
     (r"[Pp]aper.*trad.*health|[Pp]aper.*trad.*check|[Cc]heck.*early.*kill",
      "Weekly paper trading health check (check for early kills)", "I", "Recurring weekly"),
 ]

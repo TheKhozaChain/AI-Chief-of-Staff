@@ -434,8 +434,8 @@ def evaluate_graduation(strategy_id, state, config):
     min_trades = criteria.get('min_trades', 5)
     min_net_pf = criteria.get('min_net_pf', 1.0)
     max_dd_pct = criteria.get('max_drawdown_pct', 25)
-    kill_pf = criteria.get('kill_pf_below', 0.7)
-    kill_min_trades = criteria.get('kill_min_trades', 10)
+    kill_pf = criteria.get('kill_pf_below', 0.8)
+    kill_min_trades = criteria.get('kill_min_trades', 5)
 
     started = datetime.fromisoformat(state.get('started', datetime.utcnow().isoformat()[:10]))
     days_active = (datetime.utcnow() - started).days
@@ -482,7 +482,8 @@ def evaluate_graduation(strategy_id, state, config):
         return 'graduated', reason
 
     # Failed graduation criteria but not killed yet
-    if days_active >= min_days * 2 and n_trades >= min_trades:
+    max_days = criteria.get('max_days', 45)
+    if days_active >= max_days and n_trades >= min_trades:
         # Extended period, still not graduating — kill it
         reason = (f"Killed after {n_trades} trades, {days_active} days. "
                   f"Net PF {net_pf:.2f}, max DD {max_dd_pct_actual:.1f}%. "
