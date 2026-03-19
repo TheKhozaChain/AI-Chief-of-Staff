@@ -1,16 +1,23 @@
 {
-  "version": 46,
-  "last_updated": "2026-03-19T08:41:49.119269+11:00",
+  "version": 47,
+  "last_updated": "2026-03-20T08:42:26.768294+11:00",
   "schema_note": "Optimized for AI context retrieval, not human reading",
   "active_context": {
     "current_focus": "H004_validated_paper_trading_next_screen_new_ideas",
-    "status": "pipeline_ran_2026-03-19_3_new_ideas_sourced",
+    "status": "pipeline_ran_2026-03-20_3_new_ideas_sourced",
     "blockers": [],
     "next_action": "walk_forward_validate_newly_promoted_strategies",
     "execution_model": "autonomous_execute_then_inform",
     "rbi_phase": "implement_paper_trading"
   },
   "session_log": [
+    {
+      "date": "2026-03-20",
+      "summary": "New ideas sourced: R125, R126, R127.",
+      "decisions": [],
+      "artifacts": [],
+      "source": "automated_rbi_pipeline"
+    },
     {
       "date": "2026-03-19",
       "summary": "New ideas sourced: R122, R123, R124.",
@@ -70,13 +77,6 @@
     {
       "date": "2026-03-11",
       "summary": "New ideas sourced: R098, R099, R100.",
-      "decisions": [],
-      "artifacts": [],
-      "source": "automated_rbi_pipeline"
-    },
-    {
-      "date": "2026-03-10",
-      "summary": "New ideas sourced: R095, R096, R097.",
       "decisions": [],
       "artifacts": [],
       "source": "automated_rbi_pipeline"
@@ -574,6 +574,24 @@
         "name": "Adaptive Momentum Burst with Tight Squeeze Filter (AMBSF)",
         "status": "new",
         "note": "Auto-sourced. Archetype: adaptive_momentum_burst."
+      },
+      {
+        "id": "R125",
+        "name": "Bear Trap Reversal Long (BTRL)",
+        "status": "new",
+        "note": "Auto-sourced. Archetype: momentum_exhaustion_reversal."
+      },
+      {
+        "id": "R126",
+        "name": "Slow/Fast MA Golden Cross Trend Rider (GCTR)",
+        "status": "new",
+        "note": "Auto-sourced. Archetype: ma_crossover."
+      },
+      {
+        "id": "R127",
+        "name": "Breakdown Momentum Short with Trend Confirmation (BMSTC)",
+        "status": "new",
+        "note": "Auto-sourced. Archetype: mtf_breakout."
       }
     ],
     "parked": [
