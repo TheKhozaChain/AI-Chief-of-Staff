@@ -10,14 +10,8 @@
     "trend_filter_period": 80
   },
   "started": "2026-02-24",
-  "position": {
-    "entry_time": "2026-03-17T12:00:00",
-    "entry_price": 73940.03,
-    "stop_loss": 72253.3602590566,
-    "take_profit": 82812.83360000001,
-    "direction": "long"
-  },
-  "last_bar_time": "2026-03-18T08:00:00",
+  "position": null,
+  "last_bar_time": "2026-03-18T16:00:00",
   "trades": [
     {
       "entry_time": "2026-03-03T12:00:00",
@@ -46,10 +40,24 @@
       "pnl_net": -1654.35,
       "pnl_pct": -2.2,
       "cost": 75.2
+    },
+    {
+      "entry_time": "2026-03-17T12:00:00",
+      "entry_price": 73940.03,
+      "exit_time": "2026-03-18T12:00:00",
+      "exit_price": 72253.3602590566,
+      "stop_loss": 72253.3602590566,
+      "take_profit": 82812.83360000001,
+      "direction": "long",
+      "exit_reason": "stop_loss",
+      "pnl_gross": -1686.67,
+      "pnl_net": -1760.61,
+      "pnl_pct": -2.3811,
+      "cost": 73.94
     }
   ],
-  "total_pnl": 6405.431400000001,
-  "total_costs": 142.92714,
+  "total_pnl": 4644.821629056603,
+  "total_costs": 216.86717000000002,
   "warmup_done": true,
   "last_signal_time": "2026-03-17T12:00:00",
   "stale_alert_sent": false
