@@ -1,6 +1,6 @@
 # AI Chief of Staff — Work Board
 
-> Last updated: 2026-03-20 by AI Chief of Staff (auto-execution)
+> Last updated: 2026-03-21 by AI Chief of Staff (auto-execution)
 
 ---
 
@@ -19,8 +19,7 @@
 | # | Item | RBI Phase | Notes |
 |:-:|------|:---------:|-------|
 | 1 | Review paper trading results after 30 days (target: Mar 17) | I | Evaluate graduation candidates |
-| 2 | Source new research ideas R058+ via LLM | R | Keep funnel fed — recurring weekly |
-| 3 | Weekly paper trading health check (check for early kills) | I | Recurring weekly |
+| 2 | Weekly paper trading health check (check for early kills) | I | Recurring weekly |
 
 ---
 
@@ -28,8 +27,9 @@
 
 | Item | Completed |
 |------|-----------|
+| Source new research ideas R058+ via LLM | 2026-03-21 |
+| Weekly paper trading health check (check for early kills) | 2026-03-21 |
 | Source new research ideas R057+ via LLM | 2026-03-20 |
-| Weekly paper trading health check (check for early kills) | 2026-03-20 |
 | Source new research ideas R056+ via LLM | 2026-03-19 |
 | Source new research ideas R055+ via LLM | 2026-03-18 |
 | Source new research ideas R054+ via LLM | 2026-03-17 |
