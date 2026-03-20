@@ -72,28 +72,6 @@
       }
     },
     {
-      "id": "H011",
-      "archetype": "volume_breakout",
-      "timeframe_hours": 4,
-      "params": {
-        "channel_period": 20,
-        "vol_period": 20,
-        "vol_mult": 1.5,
-        "stop_pct": 2.0,
-        "target_pct": 12.0
-      },
-      "started": "2026-02-15",
-      "graduation": {
-        "min_days": 30,
-        "min_trades": 5,
-        "min_net_pf": 1.0,
-        "max_drawdown_pct": 25,
-        "kill_pf_below": 0.8,
-        "kill_min_trades": 5,
-        "max_days": 45
-      }
-    },
-    {
       "id": "H013",
       "archetype": "trend_strength_breakout",
       "timeframe_hours": 4,
@@ -326,6 +304,30 @@
       },
       "ended": "2026-03-17",
       "reason": "H007: 30 days active, 0 trades, no position. Auto-killed for zero trade production."
+    },
+    {
+      "id": "H011",
+      "archetype": "volume_breakout",
+      "timeframe_hours": 4,
+      "params": {
+        "channel_period": 20,
+        "vol_period": 20,
+        "vol_mult": 1.5,
+        "stop_pct": 2.0,
+        "target_pct": 12.0
+      },
+      "started": "2026-02-15",
+      "graduation": {
+        "min_days": 30,
+        "min_trades": 5,
+        "min_net_pf": 1.0,
+        "max_drawdown_pct": 25,
+        "kill_pf_below": 0.8,
+        "kill_min_trades": 5,
+        "max_days": 45
+      },
+      "ended": "2026-03-20",
+      "reason": "Killed after 5 trades, 33 days. Net PF 0.00 < 0.8 threshold."
     }
   ]
 }

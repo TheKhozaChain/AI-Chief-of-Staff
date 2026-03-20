@@ -14,3 +14,4 @@ Started: 2026-02-26
 - **2026-03-11 05:15 UTC** — [H011] SL HIT: Exited @ $69,941.83 (entry $71,369.21, P&L $-1,498.75 / -2.10%)
 - **2026-03-17 13:45 UTC** — [H011] ENTRY: LONG @ $75,197.86 (SL: $73,693.90, TP: $84,221.60)
 - **2026-03-18 03:15 UTC** — [H011] SL HIT: Exited @ $73,693.90 (entry $75,197.86, P&L $-1,579.16 / -2.10%)
+- **2026-03-20 02:50 UTC** — GRADUATION: KILLED — Killed after 5 trades, 33 days. Net PF 0.00 < 0.8 threshold.
