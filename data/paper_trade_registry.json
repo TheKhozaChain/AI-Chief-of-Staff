@@ -187,29 +187,6 @@
       }
     },
     {
-      "id": "H019",
-      "archetype": "dual_momentum_consensus",
-      "timeframe_hours": 4,
-      "params": {
-        "channel_period": 20,
-        "roc_fast": 5,
-        "roc_med": 15,
-        "roc_slow": 30,
-        "stop_pct": 2.0,
-        "target_pct": 6.0
-      },
-      "started": "2026-02-24",
-      "graduation": {
-        "min_days": 30,
-        "min_trades": 5,
-        "min_net_pf": 1.0,
-        "max_drawdown_pct": 25,
-        "kill_pf_below": 0.8,
-        "kill_min_trades": 5,
-        "max_days": 45
-      }
-    },
-    {
       "id": "H020",
       "archetype": "atr_regime_adaptive",
       "timeframe_hours": 4,
@@ -220,50 +197,6 @@
         "base_stop_pct": 3.0,
         "base_target_pct": 12.0,
         "trend_filter_period": 80
-      },
-      "started": "2026-02-24",
-      "graduation": {
-        "min_days": 30,
-        "min_trades": 5,
-        "min_net_pf": 1.0,
-        "max_drawdown_pct": 25,
-        "kill_pf_below": 0.8,
-        "kill_min_trades": 5,
-        "max_days": 45
-      }
-    },
-    {
-      "id": "H021",
-      "archetype": "trend_strength_breakout",
-      "timeframe_hours": 4,
-      "params": {
-        "channel_period": 20,
-        "adx_period": 14,
-        "adx_threshold": 25,
-        "stop_pct": 2.0,
-        "target_pct": 6.0
-      },
-      "started": "2026-02-24",
-      "graduation": {
-        "min_days": 30,
-        "min_trades": 5,
-        "min_net_pf": 1.0,
-        "max_drawdown_pct": 25,
-        "kill_pf_below": 0.8,
-        "kill_min_trades": 5,
-        "max_days": 45
-      }
-    },
-    {
-      "id": "H022",
-      "archetype": "volume_breakout",
-      "timeframe_hours": 4,
-      "params": {
-        "channel_period": 15,
-        "vol_period": 20,
-        "vol_mult": 1.5,
-        "stop_pct": 2.0,
-        "target_pct": 6.0
       },
       "started": "2026-02-24",
       "graduation": {
@@ -328,6 +261,79 @@
       },
       "ended": "2026-03-20",
       "reason": "Killed after 5 trades, 33 days. Net PF 0.00 < 0.8 threshold."
+    },
+    {
+      "id": "H019",
+      "archetype": "dual_momentum_consensus",
+      "timeframe_hours": 4,
+      "params": {
+        "channel_period": 20,
+        "roc_fast": 5,
+        "roc_med": 15,
+        "roc_slow": 30,
+        "stop_pct": 2.0,
+        "target_pct": 6.0
+      },
+      "started": "2026-02-24",
+      "graduation": {
+        "min_days": 30,
+        "min_trades": 5,
+        "min_net_pf": 1.0,
+        "max_drawdown_pct": 25,
+        "kill_pf_below": 0.8,
+        "kill_min_trades": 5,
+        "max_days": 45
+      },
+      "ended": "2026-03-26",
+      "reason": "Killed after 7 trades, 30 days. Net PF 0.00 < 0.8 threshold."
+    },
+    {
+      "id": "H021",
+      "archetype": "trend_strength_breakout",
+      "timeframe_hours": 4,
+      "params": {
+        "channel_period": 20,
+        "adx_period": 14,
+        "adx_threshold": 25,
+        "stop_pct": 2.0,
+        "target_pct": 6.0
+      },
+      "started": "2026-02-24",
+      "graduation": {
+        "min_days": 30,
+        "min_trades": 5,
+        "min_net_pf": 1.0,
+        "max_drawdown_pct": 25,
+        "kill_pf_below": 0.8,
+        "kill_min_trades": 5,
+        "max_days": 45
+      },
+      "ended": "2026-03-26",
+      "reason": "Killed after 7 trades, 30 days. Net PF 0.00 < 0.8 threshold."
+    },
+    {
+      "id": "H022",
+      "archetype": "volume_breakout",
+      "timeframe_hours": 4,
+      "params": {
+        "channel_period": 15,
+        "vol_period": 20,
+        "vol_mult": 1.5,
+        "stop_pct": 2.0,
+        "target_pct": 6.0
+      },
+      "started": "2026-02-24",
+      "graduation": {
+        "min_days": 30,
+        "min_trades": 5,
+        "min_net_pf": 1.0,
+        "max_drawdown_pct": 25,
+        "kill_pf_below": 0.8,
+        "kill_min_trades": 5,
+        "max_days": 45
+      },
+      "ended": "2026-03-26",
+      "reason": "Killed after 6 trades, 30 days. Net PF 0.55 < 0.8 threshold."
     }
   ]
 }
