@@ -10,7 +10,7 @@
   },
   "started": "2026-02-15",
   "position": null,
-  "last_bar_time": "2026-03-27T00:00:00",
+  "last_bar_time": "2026-03-27T04:00:00",
   "trades": [
     {
       "entry_time": "2026-02-25T16:00:00",
@@ -30,5 +30,5 @@
   "total_pnl": -1456.5770099999952,
   "total_costs": 69.36081,
   "last_signal_time": "2026-02-25T16:00:00",
-  "stale_alert_sent": false
+  "stale_alert_sent": true
 }
