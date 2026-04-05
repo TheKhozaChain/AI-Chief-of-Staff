@@ -125,12 +125,20 @@ def run_screen(
         verdict = 'kill'
         reason = f'Gross PF {gross_pf:.2f} — negative expectancy.'
 
+    # Simplicity scoring (autoresearch criterion: prefer fewer params at same PF)
+    param_count = sum(
+        1 for k, v in params.items()
+        if k not in ('aux_data_dir', 'aux_timeframe_hours')
+        and not isinstance(v, bool)
+    )
+
     # Build result
     result = {
         'idea_id': idea_id,
         'idea_name': idea_name,
         'archetype': archetype,
         'params': params,
+        'param_count': param_count,
         'timeframe': f'{timeframe_hours}H' if timeframe_hours < 24 else 'D',
         'data_bars': len(data),
         'data_period': f"{data[0]['datetime'].strftime('%Y-%m-%d')} → {data[-1]['datetime'].strftime('%Y-%m-%d')}",
@@ -204,7 +212,8 @@ def run_param_sweep(
         )
         results.append(result)
 
-    results.sort(key=lambda r: r.get('gross_pf', 0), reverse=True)
+    # Sort by gross PF desc, then by simplicity (fewer params = better) as tiebreaker
+    results.sort(key=lambda r: (-r.get('gross_pf', 0), r.get('param_count', 99)))
     return results
 
 

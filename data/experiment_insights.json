@@ -1,0 +1,509 @@
+{
+  "generated": "2026-04-05T14:30:55.073076",
+  "total_experiments": 66,
+  "archetype_leaderboard": [
+    {
+      "archetype": "range_compression_expansion",
+      "total_screens": 7,
+      "promoted": 7,
+      "killed": 0,
+      "parked": 0,
+      "promo_rate": 1.0,
+      "avg_pf": 2.46,
+      "max_pf": 2.49,
+      "avg_sharpe": 1.39,
+      "avg_trades": 47.0,
+      "best_idea": "R021"
+    },
+    {
+      "archetype": "daily_trend",
+      "total_screens": 1,
+      "promoted": 1,
+      "killed": 0,
+      "parked": 0,
+      "promo_rate": 1.0,
+      "avg_pf": 1.9,
+      "max_pf": 1.9,
+      "avg_sharpe": 0.79,
+      "avg_trades": 20.0,
+      "best_idea": "R011"
+    },
+    {
+      "archetype": "multi_asset_momentum",
+      "total_screens": 1,
+      "promoted": 1,
+      "killed": 0,
+      "parked": 0,
+      "promo_rate": 1.0,
+      "avg_pf": 1.62,
+      "max_pf": 1.62,
+      "avg_sharpe": 1.15,
+      "avg_trades": 82.0,
+      "best_idea": "R010"
+    },
+    {
+      "archetype": "momentum_exhaustion_reversal",
+      "total_screens": 1,
+      "promoted": 1,
+      "killed": 0,
+      "parked": 0,
+      "promo_rate": 1.0,
+      "avg_pf": 1.61,
+      "max_pf": 1.61,
+      "avg_sharpe": 0.32,
+      "avg_trades": 29.0,
+      "best_idea": "R022"
+    },
+    {
+      "archetype": "trend_strength_breakout",
+      "total_screens": 2,
+      "promoted": 2,
+      "killed": 0,
+      "parked": 0,
+      "promo_rate": 1.0,
+      "avg_pf": 1.58,
+      "max_pf": 1.59,
+      "avg_sharpe": 1.21,
+      "avg_trades": 85.0,
+      "best_idea": "R017"
+    },
+    {
+      "archetype": "vol_adjusted_trend",
+      "total_screens": 1,
+      "promoted": 1,
+      "killed": 0,
+      "parked": 0,
+      "promo_rate": 1.0,
+      "avg_pf": 1.46,
+      "max_pf": 1.46,
+      "avg_sharpe": 1.18,
+      "avg_trades": 87.0,
+      "best_idea": "R007"
+    },
+    {
+      "archetype": "mtf_breakout",
+      "total_screens": 2,
+      "promoted": 2,
+      "killed": 0,
+      "parked": 0,
+      "promo_rate": 1.0,
+      "avg_pf": 1.44,
+      "max_pf": 1.48,
+      "avg_sharpe": 1.23,
+      "avg_trades": 112.0,
+      "best_idea": "R055"
+    },
+    {
+      "archetype": "dual_momentum_consensus",
+      "total_screens": 5,
+      "promoted": 5,
+      "killed": 0,
+      "parked": 0,
+      "promo_rate": 1.0,
+      "avg_pf": 1.35,
+      "max_pf": 1.37,
+      "avg_sharpe": 1.14,
+      "avg_trades": 128.0,
+      "best_idea": "R027"
+    },
+    {
+      "archetype": "volume_breakout",
+      "total_screens": 4,
+      "promoted": 4,
+      "killed": 0,
+      "parked": 0,
+      "promo_rate": 1.0,
+      "avg_pf": 1.34,
+      "max_pf": 1.41,
+      "avg_sharpe": 0.94,
+      "avg_trades": 120.0,
+      "best_idea": "R015"
+    },
+    {
+      "archetype": "donchian_breakout",
+      "total_screens": 2,
+      "promoted": 2,
+      "killed": 0,
+      "parked": 0,
+      "promo_rate": 1.0,
+      "avg_pf": 1.31,
+      "max_pf": 1.31,
+      "avg_sharpe": 1.04,
+      "avg_trades": 134.0,
+      "best_idea": "R009"
+    },
+    {
+      "archetype": "trend_pullback",
+      "total_screens": 7,
+      "promoted": 6,
+      "killed": 0,
+      "parked": 1,
+      "promo_rate": 0.86,
+      "avg_pf": 1.49,
+      "max_pf": 2.65,
+      "avg_sharpe": 0.68,
+      "avg_trades": 72.0,
+      "best_idea": "R018"
+    },
+    {
+      "archetype": "consecutive_momentum",
+      "total_screens": 6,
+      "promoted": 4,
+      "killed": 0,
+      "parked": 2,
+      "promo_rate": 0.67,
+      "avg_pf": 1.46,
+      "max_pf": 1.74,
+      "avg_sharpe": 0.8,
+      "avg_trades": 74.0,
+      "best_idea": "R020"
+    },
+    {
+      "archetype": "adaptive_momentum_burst",
+      "total_screens": 2,
+      "promoted": 1,
+      "killed": 0,
+      "parked": 1,
+      "promo_rate": 0.5,
+      "avg_pf": 1.48,
+      "max_pf": 1.66,
+      "avg_sharpe": 0.54,
+      "avg_trades": 34.0,
+      "best_idea": "R012"
+    },
+    {
+      "archetype": "atr_regime_adaptive",
+      "total_screens": 9,
+      "promoted": 4,
+      "killed": 5,
+      "parked": 0,
+      "promo_rate": 0.44,
+      "avg_pf": 1.31,
+      "max_pf": 1.38,
+      "avg_sharpe": 0.83,
+      "avg_trades": 71.0,
+      "best_idea": "R019"
+    },
+    {
+      "archetype": "acceleration_breakout",
+      "total_screens": 6,
+      "promoted": 1,
+      "killed": 5,
+      "parked": 0,
+      "promo_rate": 0.17,
+      "avg_pf": 1.29,
+      "max_pf": 2.34,
+      "avg_sharpe": 0.25,
+      "avg_trades": 93.0,
+      "best_idea": "R013"
+    },
+    {
+      "archetype": "breakdown_momentum",
+      "total_screens": 1,
+      "promoted": 0,
+      "killed": 0,
+      "parked": 1,
+      "promo_rate": 0.0,
+      "avg_pf": 1.78,
+      "max_pf": 1.78,
+      "avg_sharpe": 0.37,
+      "avg_trades": 25.0,
+      "best_idea": "R043"
+    },
+    {
+      "archetype": "mean_reversion_short",
+      "total_screens": 1,
+      "promoted": 0,
+      "killed": 0,
+      "parked": 1,
+      "promo_rate": 0.0,
+      "avg_pf": 1.7,
+      "max_pf": 1.7,
+      "avg_sharpe": 0.41,
+      "avg_trades": 15.0,
+      "best_idea": "R042"
+    },
+    {
+      "archetype": "bollinger_breakout",
+      "total_screens": 1,
+      "promoted": 0,
+      "killed": 1,
+      "parked": 0,
+      "promo_rate": 0.0,
+      "avg_pf": 1.02,
+      "max_pf": 1.02,
+      "avg_sharpe": -0.38,
+      "avg_trades": 129.0,
+      "best_idea": "R003"
+    },
+    {
+      "archetype": "gap_and_go",
+      "total_screens": 1,
+      "promoted": 0,
+      "killed": 0,
+      "parked": 1,
+      "promo_rate": 0.0,
+      "avg_pf": 0.0,
+      "max_pf": 0,
+      "avg_sharpe": 0.0,
+      "avg_trades": 0.0,
+      "best_idea": ""
+    }
+  ],
+  "simplicity_analysis": [
+    {
+      "complexity": "0 params",
+      "count": 6,
+      "avg_pf": 0.0,
+      "promo_rate": 0.0
+    },
+    {
+      "complexity": "3 params",
+      "count": 2,
+      "avg_pf": 1.31,
+      "promo_rate": 1.0
+    },
+    {
+      "complexity": "4 params",
+      "count": 10,
+      "avg_pf": 1.51,
+      "promo_rate": 0.8
+    },
+    {
+      "complexity": "5 params",
+      "count": 14,
+      "avg_pf": 1.39,
+      "promo_rate": 0.57
+    },
+    {
+      "complexity": "6 params",
+      "count": 15,
+      "avg_pf": 1.35,
+      "promo_rate": 0.67
+    },
+    {
+      "complexity": "7 params",
+      "count": 16,
+      "avg_pf": 1.9,
+      "promo_rate": 0.81
+    },
+    {
+      "complexity": "8 params",
+      "count": 1,
+      "avg_pf": 0.0,
+      "promo_rate": 0.0
+    },
+    {
+      "complexity": "9 params",
+      "count": 2,
+      "avg_pf": 1.48,
+      "promo_rate": 0.5
+    }
+  ],
+  "parameter_insights": {
+    "ma_period": {
+      "count": 13,
+      "min": 20,
+      "max": 80,
+      "avg": 33.85,
+      "pf_weighted_avg": 37.55,
+      "best_value": 80
+    },
+    "atr_period": {
+      "count": 12,
+      "min": 14,
+      "max": 20,
+      "avg": 18.5,
+      "pf_weighted_avg": 19.02,
+      "best_value": 20
+    },
+    "trend_filter_period": {
+      "count": 5,
+      "min": 80,
+      "max": 80,
+      "avg": 80.0,
+      "pf_weighted_avg": 80.0,
+      "best_value": 80
+    },
+    "long_only": {
+      "count": 13,
+      "min": 1,
+      "max": 1,
+      "avg": 1.0,
+      "pf_weighted_avg": 1.0,
+      "best_value": 1
+    },
+    "channel_period": {
+      "count": 20,
+      "min": 15,
+      "max": 30,
+      "avg": 20.0,
+      "pf_weighted_avg": 20.44,
+      "best_value": 30
+    },
+    "stop_pct": {
+      "count": 37,
+      "min": 2.0,
+      "max": 6.0,
+      "avg": 2.3,
+      "pf_weighted_avg": 2.27,
+      "best_value": 2.0
+    },
+    "target_pct": {
+      "count": 37,
+      "min": 6.0,
+      "max": 24.0,
+      "avg": 7.86,
+      "pf_weighted_avg": 7.88,
+      "best_value": 6.0
+    },
+    "roc_period": {
+      "count": 7,
+      "min": 3,
+      "max": 30,
+      "avg": 7.14,
+      "pf_weighted_avg": 7.55,
+      "best_value": 5
+    },
+    "min_roc": {
+      "count": 7,
+      "min": 0.5,
+      "max": 1.0,
+      "avg": 0.64,
+      "pf_weighted_avg": 0.7,
+      "best_value": 1.0
+    },
+    "ma_slope_bars": {
+      "count": 7,
+      "min": 5,
+      "max": 5,
+      "avg": 5.0,
+      "pf_weighted_avg": 5.0,
+      "best_value": 5
+    },
+    "vol_period": {
+      "count": 4,
+      "min": 20,
+      "max": 20,
+      "avg": 20.0,
+      "pf_weighted_avg": 20.0,
+      "best_value": 20
+    },
+    "vol_mult": {
+      "count": 4,
+      "min": 1.5,
+      "max": 1.5,
+      "avg": 1.5,
+      "pf_weighted_avg": 1.5,
+      "best_value": 1.5
+    },
+    "roc_fast": {
+      "count": 5,
+      "min": 3,
+      "max": 5,
+      "avg": 4.6,
+      "pf_weighted_avg": 4.61,
+      "best_value": 5
+    },
+    "roc_med": {
+      "count": 5,
+      "min": 10,
+      "max": 15,
+      "avg": 14.0,
+      "pf_weighted_avg": 14.03,
+      "best_value": 15
+    },
+    "roc_slow": {
+      "count": 5,
+      "min": 20,
+      "max": 30,
+      "avg": 28.0,
+      "pf_weighted_avg": 28.06,
+      "best_value": 30
+    },
+    "pullback_pct": {
+      "count": 6,
+      "min": 1.0,
+      "max": 2.0,
+      "avg": 1.83,
+      "pf_weighted_avg": 1.71,
+      "best_value": 1.0
+    },
+    "atr_history": {
+      "count": 4,
+      "min": 90,
+      "max": 120,
+      "avg": 112.5,
+      "pf_weighted_avg": 112.2,
+      "best_value": 90
+    },
+    "base_stop_pct": {
+      "count": 4,
+      "min": 3.0,
+      "max": 3.0,
+      "avg": 3.0,
+      "pf_weighted_avg": 3.0,
+      "best_value": 3.0
+    },
+    "base_target_pct": {
+      "count": 4,
+      "min": 12.0,
+      "max": 12.0,
+      "avg": 12.0,
+      "pf_weighted_avg": 12.0,
+      "best_value": 12.0
+    },
+    "consec_bars": {
+      "count": 4,
+      "min": 3,
+      "max": 4,
+      "avg": 3.25,
+      "pf_weighted_avg": 3.29,
+      "best_value": 4
+    },
+    "atr_lookback": {
+      "count": 7,
+      "min": 60,
+      "max": 60,
+      "avg": 60.0,
+      "pf_weighted_avg": 60.0,
+      "best_value": 60
+    },
+    "compression_percentile": {
+      "count": 7,
+      "min": 10,
+      "max": 10,
+      "avg": 10.0,
+      "pf_weighted_avg": 10.0,
+      "best_value": 10
+    },
+    "breakout_atr_mult": {
+      "count": 7,
+      "min": 1.5,
+      "max": 1.5,
+      "avg": 1.5,
+      "pf_weighted_avg": 1.5,
+      "best_value": 1.5
+    },
+    "confirmation_bars": {
+      "count": 7,
+      "min": 2,
+      "max": 2,
+      "avg": 2.0,
+      "pf_weighted_avg": 2.0,
+      "best_value": 2
+    }
+  },
+  "kill_patterns": {
+    "pf_below_1.3": 6,
+    "pf_1.3_to_1.5_killed_by_threshold": 5
+  },
+  "duplicates_found": 37,
+  "recommendations": [
+    "FOCUS archetypes (high promo rate): range_compression_expansion, trend_strength_breakout, mtf_breakout",
+    "Simplicity sweet spot: 3 params (promo rate 100%)",
+    "Stop loss sweet spot: 2.27% (range 2.0-6.0%)",
+    "Target sweet spot: 7.88% (range 6.0-24.0%)",
+    "Many strategies die in 1.3-1.5 PF range \u2014 threshold is working"
+  ]
+}

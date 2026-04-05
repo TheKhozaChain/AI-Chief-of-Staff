@@ -27,6 +27,13 @@ from backlog_parser import (
 from screen_runner import run_screen, run_param_sweep
 from archetypes import ARCHETYPES
 
+# Experiment journal (autoresearch-inspired append-only TSV log)
+sys.path.insert(0, str(Path(__file__).parent.parent.parent / 'scripts'))
+try:
+    from build_experiment_journal import append_screens as _journal_append
+except ImportError:
+    _journal_append = None
+
 
 # Default data file path (relative to this file)
 DEFAULT_DATA = str(Path(__file__).parent.parent.parent / 'data' / 'BTCUSD_1h.csv')
@@ -595,6 +602,11 @@ def run_pipeline(
             parked.append(idea_id)
             if update_backlog:
                 update_backlog_entry(idea_id, 'parked', best.get('reason', ''))
+
+    # Log all screen results to experiment journal (autoresearch pattern)
+    if _journal_append:
+        screenable = [r for r in results if r.get('archetype')]
+        _journal_append(screenable)
 
     # Generate summary report
     summary = _build_summary(results, promoted, killed, parked)

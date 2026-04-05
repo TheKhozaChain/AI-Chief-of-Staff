@@ -120,6 +120,29 @@ Rules:
         for r in pipeline_results['screened']:
             recent_context += f"- {r.get('idea_id', '?')} {r.get('idea_name', '?')}: PF {r.get('gross_pf', '?')}, verdict: {r.get('verdict', '?')}\n"
 
+    # Load meta-analysis insights (autoresearch pattern: feed experiment history into sourcing)
+    insights_context = ""
+    insights_file = REPO_ROOT / 'data' / 'experiment_insights.json'
+    if insights_file.exists():
+        try:
+            insights = json.loads(insights_file.read_text())
+            recs = insights.get('recommendations', [])
+            if recs:
+                insights_context = "\n\n## Meta-analysis insights (from experiment history):\n"
+                for rec in recs:
+                    insights_context += f"- {rec}\n"
+            # Add top archetypes info
+            board = insights.get('archetype_leaderboard', [])
+            top_archs = [a for a in board[:5] if a.get('promo_rate', 0) > 0]
+            if top_archs:
+                insights_context += "\nArchetype performance ranking:\n"
+                for a in top_archs:
+                    insights_context += (f"- {a['archetype']}: {a['promo_rate']:.0%} promo rate, "
+                                        f"avg PF {a['avg_pf']}, max PF {a['max_pf']} "
+                                        f"({a['total_screens']} screens)\n")
+        except (json.JSONDecodeError, KeyError):
+            pass
+
     prompt = f"""Based on our research history, propose 1 NEW trading strategy idea for BTCUSD.
 
 ## What's been killed (didn't work):
@@ -131,6 +154,7 @@ Rules:
 ## What's parked (can't test yet):
 {parked_str}
 {recent_context}
+{insights_context}
 
 ## Key learnings:
 - Mean reversion doesn't work in crypto (too much momentum)
