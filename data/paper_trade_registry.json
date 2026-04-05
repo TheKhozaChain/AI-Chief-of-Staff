@@ -1,167 +1,6 @@
 {
   "active": [
     {
-      "id": "H004",
-      "archetype": "vol_adjusted_trend",
-      "timeframe_hours": 4,
-      "params": {
-        "ma_period": 30,
-        "atr_period": 20,
-        "stop_atr_mult": 3.0,
-        "target_atr_mult": 6.0,
-        "trend_filter_period": 80,
-        "long_only": true
-      },
-      "started": "2026-02-15",
-      "graduation": {
-        "min_days": 30,
-        "min_trades": 5,
-        "min_net_pf": 1.0,
-        "max_drawdown_pct": 25,
-        "kill_pf_below": 0.8,
-        "kill_min_trades": 5,
-        "max_days": 45
-      }
-    },
-    {
-      "id": "H008",
-      "archetype": "adaptive_momentum_burst",
-      "timeframe_hours": 4,
-      "params": {
-        "bb_period": 20,
-        "bb_std": 2.0,
-        "squeeze_lookback": 50,
-        "squeeze_pct": 20,
-        "min_squeeze_bars": 3,
-        "ma_period": 50,
-        "ma_slope_bars": 5,
-        "stop_pct": 2.0,
-        "target_pct": 12.0
-      },
-      "started": "2026-02-15",
-      "graduation": {
-        "min_days": 30,
-        "min_trades": 5,
-        "min_net_pf": 1.0,
-        "max_drawdown_pct": 25,
-        "kill_pf_below": 0.8,
-        "kill_min_trades": 5,
-        "max_days": 45
-      }
-    },
-    {
-      "id": "H009",
-      "archetype": "acceleration_breakout",
-      "timeframe_hours": 4,
-      "params": {
-        "channel_period": 30,
-        "roc_short": 5,
-        "roc_long": 15,
-        "stop_pct": 2.0,
-        "target_pct": 12.0
-      },
-      "started": "2026-02-15",
-      "graduation": {
-        "min_days": 30,
-        "min_trades": 5,
-        "min_net_pf": 1.0,
-        "max_drawdown_pct": 25,
-        "kill_pf_below": 0.8,
-        "kill_min_trades": 5,
-        "max_days": 45
-      }
-    },
-    {
-      "id": "H013",
-      "archetype": "trend_strength_breakout",
-      "timeframe_hours": 4,
-      "params": {
-        "channel_period": 30,
-        "adx_period": 20,
-        "adx_threshold": 30,
-        "stop_pct": 2.0,
-        "target_pct": 9.0
-      },
-      "started": "2026-02-15",
-      "graduation": {
-        "min_days": 30,
-        "min_trades": 5,
-        "min_net_pf": 1.0,
-        "max_drawdown_pct": 25,
-        "kill_pf_below": 0.8,
-        "kill_min_trades": 5,
-        "max_days": 45
-      }
-    },
-    {
-      "id": "H014",
-      "archetype": "trend_pullback",
-      "timeframe_hours": 4,
-      "params": {
-        "ma_period": 80,
-        "ma_slope_bars": 5,
-        "pullback_pct": 1.0,
-        "roc_period": 5,
-        "min_roc": 1.0,
-        "stop_pct": 2.0,
-        "target_pct": 6.0
-      },
-      "started": "2026-02-15",
-      "graduation": {
-        "min_days": 30,
-        "min_trades": 5,
-        "min_net_pf": 1.0,
-        "max_drawdown_pct": 25,
-        "kill_pf_below": 0.8,
-        "kill_min_trades": 5,
-        "max_days": 45
-      }
-    },
-    {
-      "id": "H015",
-      "archetype": "atr_regime_adaptive",
-      "timeframe_hours": 4,
-      "params": {
-        "ma_period": 20,
-        "atr_period": 20,
-        "atr_history": 90,
-        "base_stop_pct": 3.0,
-        "base_target_pct": 12.0,
-        "trend_filter_period": 80
-      },
-      "started": "2026-02-15",
-      "graduation": {
-        "min_days": 30,
-        "min_trades": 5,
-        "min_net_pf": 1.0,
-        "max_drawdown_pct": 25,
-        "kill_pf_below": 0.8,
-        "kill_min_trades": 5,
-        "max_days": 45
-      }
-    },
-    {
-      "id": "H016",
-      "archetype": "consecutive_momentum",
-      "timeframe_hours": 4,
-      "params": {
-        "channel_period": 20,
-        "consec_bars": 4,
-        "stop_pct": 2.0,
-        "target_pct": 12.0
-      },
-      "started": "2026-02-15",
-      "graduation": {
-        "min_days": 30,
-        "min_trades": 5,
-        "min_net_pf": 1.0,
-        "max_drawdown_pct": 25,
-        "kill_pf_below": 0.8,
-        "kill_min_trades": 5,
-        "max_days": 45
-      }
-    },
-    {
       "id": "H017",
       "archetype": "range_compression_expansion",
       "timeframe_hours": 4,
@@ -334,6 +173,181 @@
       },
       "ended": "2026-03-26",
       "reason": "Killed after 6 trades, 30 days. Net PF 0.55 < 0.8 threshold."
+    },
+    {
+      "id": "H004",
+      "archetype": "vol_adjusted_trend",
+      "timeframe_hours": 4,
+      "params": {
+        "ma_period": 30,
+        "atr_period": 20,
+        "stop_atr_mult": 3.0,
+        "target_atr_mult": 6.0,
+        "trend_filter_period": 80,
+        "long_only": true
+      },
+      "started": "2026-02-15",
+      "graduation": {
+        "min_days": 30,
+        "min_trades": 5,
+        "min_net_pf": 1.0,
+        "max_drawdown_pct": 25,
+        "kill_pf_below": 0.8,
+        "kill_min_trades": 5,
+        "max_days": 45
+      },
+      "ended": "2026-04-05",
+      "reason": "Killed after 53 days with only 0 trades (needed 5). Insufficient trade production."
+    },
+    {
+      "id": "H008",
+      "archetype": "adaptive_momentum_burst",
+      "timeframe_hours": 4,
+      "params": {
+        "bb_period": 20,
+        "bb_std": 2.0,
+        "squeeze_lookback": 50,
+        "squeeze_pct": 20,
+        "min_squeeze_bars": 3,
+        "ma_period": 50,
+        "ma_slope_bars": 5,
+        "stop_pct": 2.0,
+        "target_pct": 12.0
+      },
+      "started": "2026-02-15",
+      "graduation": {
+        "min_days": 30,
+        "min_trades": 5,
+        "min_net_pf": 1.0,
+        "max_drawdown_pct": 25,
+        "kill_pf_below": 0.8,
+        "kill_min_trades": 5,
+        "max_days": 45
+      },
+      "ended": "2026-04-05",
+      "reason": "Killed after 49 days with only 3 trades (needed 5). Insufficient trade production."
+    },
+    {
+      "id": "H009",
+      "archetype": "acceleration_breakout",
+      "timeframe_hours": 4,
+      "params": {
+        "channel_period": 30,
+        "roc_short": 5,
+        "roc_long": 15,
+        "stop_pct": 2.0,
+        "target_pct": 12.0
+      },
+      "started": "2026-02-15",
+      "graduation": {
+        "min_days": 30,
+        "min_trades": 5,
+        "min_net_pf": 1.0,
+        "max_drawdown_pct": 25,
+        "kill_pf_below": 0.8,
+        "kill_min_trades": 5,
+        "max_days": 45
+      },
+      "ended": "2026-04-05",
+      "reason": "Killed after 49 days with only 1 trades (needed 5). Insufficient trade production."
+    },
+    {
+      "id": "H013",
+      "archetype": "trend_strength_breakout",
+      "timeframe_hours": 4,
+      "params": {
+        "channel_period": 30,
+        "adx_period": 20,
+        "adx_threshold": 30,
+        "stop_pct": 2.0,
+        "target_pct": 9.0
+      },
+      "started": "2026-02-15",
+      "graduation": {
+        "min_days": 30,
+        "min_trades": 5,
+        "min_net_pf": 1.0,
+        "max_drawdown_pct": 25,
+        "kill_pf_below": 0.8,
+        "kill_min_trades": 5,
+        "max_days": 45
+      },
+      "ended": "2026-04-05",
+      "reason": "Killed after 49 days with only 2 trades (needed 5). Insufficient trade production."
+    },
+    {
+      "id": "H014",
+      "archetype": "trend_pullback",
+      "timeframe_hours": 4,
+      "params": {
+        "ma_period": 80,
+        "ma_slope_bars": 5,
+        "pullback_pct": 1.0,
+        "roc_period": 5,
+        "min_roc": 1.0,
+        "stop_pct": 2.0,
+        "target_pct": 6.0
+      },
+      "started": "2026-02-15",
+      "graduation": {
+        "min_days": 30,
+        "min_trades": 5,
+        "min_net_pf": 1.0,
+        "max_drawdown_pct": 25,
+        "kill_pf_below": 0.8,
+        "kill_min_trades": 5,
+        "max_days": 45
+      },
+      "ended": "2026-04-05",
+      "reason": "Killed after 49 days with only 3 trades (needed 5). Insufficient trade production."
+    },
+    {
+      "id": "H015",
+      "archetype": "atr_regime_adaptive",
+      "timeframe_hours": 4,
+      "params": {
+        "ma_period": 20,
+        "atr_period": 20,
+        "atr_history": 90,
+        "base_stop_pct": 3.0,
+        "base_target_pct": 12.0,
+        "trend_filter_period": 80
+      },
+      "started": "2026-02-15",
+      "graduation": {
+        "min_days": 30,
+        "min_trades": 5,
+        "min_net_pf": 1.0,
+        "max_drawdown_pct": 25,
+        "kill_pf_below": 0.8,
+        "kill_min_trades": 5,
+        "max_days": 45
+      },
+      "ended": "2026-04-05",
+      "reason": "Killed after 49 days with only 3 trades (needed 5). Insufficient trade production."
+    },
+    {
+      "id": "H016",
+      "archetype": "consecutive_momentum",
+      "timeframe_hours": 4,
+      "params": {
+        "channel_period": 20,
+        "consec_bars": 4,
+        "stop_pct": 2.0,
+        "target_pct": 12.0
+      },
+      "started": "2026-02-15",
+      "graduation": {
+        "min_days": 30,
+        "min_trades": 5,
+        "min_net_pf": 1.0,
+        "max_drawdown_pct": 25,
+        "kill_pf_below": 0.8,
+        "kill_min_trades": 5,
+        "max_days": 45
+      },
+      "ended": "2026-04-05",
+      "reason": "Killed after 49 days with only 2 trades (needed 5). Insufficient trade production."
     }
   ]
 }
