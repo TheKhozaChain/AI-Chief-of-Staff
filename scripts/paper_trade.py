@@ -442,8 +442,13 @@ def evaluate_graduation(strategy_id, state, config):
     trades = state.get('trades', [])
     n_trades = len(trades)
 
-    # Not enough data yet
-    if days_active < min_days or n_trades < min_trades:
+    # Not enough data yet — BUT kill if way past max_days with insufficient trades
+    max_days = criteria.get('max_days', 45)
+    if n_trades < min_trades:
+        if days_active >= max_days:
+            reason = (f"Killed after {days_active} days with only {n_trades} trades "
+                      f"(needed {min_trades}). Insufficient trade production.")
+            return 'killed', reason
         return None, None
 
     # Calculate profit factor
@@ -510,7 +515,17 @@ def check_staleness(strategy_id, state, config):
     has_position = state.get('position') is not None
     stale_alert_sent = state.get('stale_alert_sent', False)
 
-    # Skip if in a position — strategy is active
+    # If in a position but well past max_days with 0 completed trades,
+    # the strategy is in limbo — waiting indefinitely for one trade to close.
+    # Force-kill it. (H004 was stuck 49+ days this way.)
+    max_days = 45  # match graduation default
+    if has_position and days_active >= max_days and n_trades == 0:
+        reason = (f"{strategy_id}: {days_active} days active, 0 completed trades, "
+                  f"stuck in open position since day 1. "
+                  f"Auto-killed for exceeding max hold time.")
+        return 'zero_trade_kill', reason
+
+    # Skip if in a position — strategy is active (for reasonable durations)
     if has_position:
         return None, None
 

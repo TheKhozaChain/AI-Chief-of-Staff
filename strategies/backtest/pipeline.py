@@ -451,10 +451,36 @@ def _queue_promoted_strategy(idea_id: str, idea_name: str, best: Dict, config: D
     print(f"  Queue: added {idea_id} for validation.")
 
 
+def _is_prescreen_duplicate(entry: Dict, config: Dict) -> bool:
+    """Check if an idea's best params would be a duplicate BEFORE running the sweep.
+
+    Avoids wasting 5+ minutes on a param sweep that will be rejected as a duplicate.
+    This is the single biggest throughput fix — previously duplicates consumed ~50% of
+    screening time only to be discarded after the sweep completed.
+    """
+    queue = _load_promoted_queue()
+    archetype = config['archetype']
+    param_grid = config.get('param_grid', {})
+
+    # Check if any combo in the grid matches an existing queue entry
+    # Only check the "default" combo (first value of each param) as a fast pre-check
+    default_params = {k: v[0] for k, v in param_grid.items()}
+    dup = _queue_has_duplicate_params(queue, archetype, default_params)
+    if dup:
+        return True
+
+    # Also check if this research_id is already tracked
+    if _queue_has_research_id(queue, entry['id']):
+        return True
+
+    return False
+
+
 def run_pipeline(
     data_file: str = DEFAULT_DATA,
     idea_ids: Optional[List[str]] = None,
     update_backlog: bool = True,
+    batch_size: int = 10,
 ) -> Dict:
     """Run the full RBI screening pipeline.
 
@@ -462,6 +488,7 @@ def run_pipeline(
         data_file: Path to OHLCV CSV data file
         idea_ids: Specific idea IDs to screen (None = all 'new' ideas)
         update_backlog: Whether to update RESEARCH_BACKLOG.md with results
+        batch_size: Max ideas to screen per run (prevents CI timeout)
 
     Returns:
         Dict with keys:
@@ -488,7 +515,14 @@ def run_pipeline(
             'parked': [], 'summary': 'No ideas to screen.',
         }
 
-    print(f"Screening {len(entries)} ideas:")
+    # Apply batch size limit (prevents GitHub Actions 30min timeout)
+    total_available = len(entries)
+    if batch_size and len(entries) > batch_size:
+        entries = entries[:batch_size]
+        print(f"Batch: screening {len(entries)} of {total_available} ideas (batch_size={batch_size})")
+    else:
+        print(f"Screening {len(entries)} ideas:")
+
     for e in entries:
         print(f"  {e['id']} — {e['idea']}")
     print()
@@ -508,6 +542,19 @@ def run_pipeline(
         # Auto-map: if no hardcoded config, try to infer from backlog notes
         if not config:
             config = _auto_map_from_backlog(entry)
+
+        # Pre-screen duplicate check: skip sweep if params already in queue
+        if config and _is_prescreen_duplicate(entry, config):
+            print(f"  SKIP: {idea_id} is a pre-screen duplicate (archetype+params already in queue).")
+            killed.append(idea_id)
+            if update_backlog:
+                update_backlog_entry(idea_id, 'killed',
+                    f"Pre-screen duplicate — same archetype+params already promoted.")
+            results.append({
+                'idea_id': idea_id, 'idea_name': idea_name,
+                'verdict': 'kill', 'reason': 'Pre-screen duplicate.',
+            })
+            continue
 
         if not config:
             print(f"  No strategy mapping for {idea_id}. Parking.")
@@ -693,6 +740,8 @@ if __name__ == '__main__':
     parser.add_argument('--ids', default='', help='Comma-separated idea IDs to screen')
     parser.add_argument('--no-update', action='store_true', help='Skip updating RESEARCH_BACKLOG.md')
     parser.add_argument('--save', action='store_true', help='Save results to JSON')
+    parser.add_argument('--batch-size', type=int, default=10,
+                       help='Max ideas to screen per run (default 10, prevents CI timeout)')
     args = parser.parse_args()
 
     idea_ids = [x.strip() for x in args.ids.split(',') if x.strip()] if args.ids else None
@@ -701,6 +750,7 @@ if __name__ == '__main__':
         data_file=args.data,
         idea_ids=idea_ids,
         update_backlog=not args.no_update,
+        batch_size=args.batch_size,
     )
 
     if args.save:

@@ -1,9 +1,15 @@
 name: Validate Promoted Strategies
 
 on:
+  # Own schedule: run daily at 04:00 UTC (15:00 AEDT), 1 hour after RBI screening
+  schedule:
+    - cron: '0 4 * * *'
+
+  # Still trigger on RBI success for immediate follow-up
   workflow_run:
     workflows: ["RBI Pipeline"]
     types: [completed]
+
   workflow_dispatch:
 
 concurrency:
@@ -12,7 +18,7 @@ concurrency:
 
 jobs:
   validate-promoted:
-    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'schedule' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     permissions:

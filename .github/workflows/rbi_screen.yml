@@ -49,7 +49,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    timeout-minutes: 30
+    timeout-minutes: 45
 
     env:
       TZ: Australia/Sydney
@@ -103,8 +103,8 @@ jobs:
             ARGS="$ARGS --ids ${{ inputs.specific_ids }}"
           fi
 
-          echo "Running: python scripts/run_rbi.py $ARGS"
-          python scripts/run_rbi.py $ARGS
+          echo "Running: python scripts/run_rbi.py $ARGS --batch-size 10"
+          python scripts/run_rbi.py $ARGS --batch-size 10
 
       - name: Commit results
         run: |
@@ -113,5 +113,6 @@ jobs:
           git add strategies/RESEARCH_BACKLOG.md
           git add data/rbi_*.json data/rbi_*.md
           git add data/memory.json
+          git add data/experiment_journal.tsv data/experiment_insights.json || true
           git diff --staged --quiet || git commit -m "RBI daily screen — $(date +%Y-%m-%d)"
           git push

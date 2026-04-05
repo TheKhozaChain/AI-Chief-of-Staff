@@ -44,7 +44,7 @@ def refresh_data(include_15m=False):
     print("Data refresh complete.\n")
 
 
-def run_screens(idea_ids=None):
+def run_screens(idea_ids=None, batch_size=10):
     """Run the RBI screening pipeline."""
     print("\n=== RBI SCREENING ===")
     from pipeline import run_pipeline, save_results
@@ -53,6 +53,7 @@ def run_screens(idea_ids=None):
         data_file=DATA_FILE,
         idea_ids=idea_ids,
         update_backlog=True,
+        batch_size=batch_size,
     )
 
     # Save results JSON
@@ -492,6 +493,8 @@ def main():
                        help='Skip screening step (useful for source-only runs)')
     parser.add_argument('--ids', default='',
                        help='Comma-separated idea IDs to screen')
+    parser.add_argument('--batch-size', type=int, default=10,
+                       help='Max ideas to screen per run (default 10)')
     args = parser.parse_args()
 
     print("=" * 60)
@@ -507,7 +510,7 @@ def main():
                         'summary': 'Screening skipped.'}
     if not args.skip_screens:
         idea_ids = [x.strip() for x in args.ids.split(',') if x.strip()] if args.ids else None
-        pipeline_results = run_screens(idea_ids)
+        pipeline_results = run_screens(idea_ids, batch_size=args.batch_size)
 
     # Step 3: Source new ideas (optional)
     new_ideas = []
