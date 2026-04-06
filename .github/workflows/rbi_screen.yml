@@ -87,15 +87,12 @@ jobs:
             ARGS="$ARGS --refresh-data"
           fi
 
-          # Source ideas: Mon/Wed/Fri on scheduled runs (3 ideas/week),
-          # configurable for dispatch
+          # Source ideas: DISABLED 2026-04-06 (backlog has 5 new ideas + 3 promoted;
+          # pipeline was generating duplicates faster than screening could clear them).
+          # Re-enable when backlog has < 3 new ideas AND promoted queue is clear.
+          # Manual dispatch can still force sourcing via source_ideas=true.
           if [ "${{ inputs.source_ideas }}" = "true" ]; then
             ARGS="$ARGS --source-ideas"
-          elif [ "${{ github.event_name }}" = "schedule" ]; then
-            DOW=$(date +%u)
-            if [ "$DOW" = "1" ] || [ "$DOW" = "3" ] || [ "$DOW" = "5" ]; then
-              ARGS="$ARGS --source-ideas"
-            fi
           fi
 
           # Specific IDs
