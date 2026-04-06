@@ -1,16 +1,29 @@
 {
-  "version": 48,
-  "last_updated": "2026-03-21T08:37:21.042650+11:00",
+  "version": 49,
+  "last_updated": "2026-04-06T15:15:55.193500+10:00",
   "schema_note": "Optimized for AI context retrieval, not human reading",
   "active_context": {
     "current_focus": "H004_validated_paper_trading_next_screen_new_ideas",
-    "status": "pipeline_ran_2026-03-21_1_new_ideas_sourced",
+    "status": "pipeline_ran_2026-04-06_5_screened_5_killed",
     "blockers": [],
     "next_action": "walk_forward_validate_newly_promoted_strategies",
     "execution_model": "autonomous_execute_then_inform",
     "rbi_phase": "implement_paper_trading"
   },
   "session_log": [
+    {
+      "date": "2026-04-06",
+      "summary": "Pipeline screened 5 ideas. Killed: R089 (PF 1.36), R096 (PF 1.36), R097 (PF 1.42), R110 (PF 1.42), R111 (PF 1.33).",
+      "decisions": [
+        "R089_killed",
+        "R096_killed",
+        "R097_killed",
+        "R110_killed",
+        "R111_killed"
+      ],
+      "artifacts": [],
+      "source": "automated_rbi_pipeline"
+    },
     {
       "date": "2026-03-21",
       "summary": "New ideas sourced: R128.",
@@ -70,13 +83,6 @@
     {
       "date": "2026-03-13",
       "summary": "New ideas sourced: R104, R105, R106.",
-      "decisions": [],
-      "artifacts": [],
-      "source": "automated_rbi_pipeline"
-    },
-    {
-      "date": "2026-03-12",
-      "summary": "New ideas sourced: R101, R102, R103.",
       "decisions": [],
       "artifacts": [],
       "source": "automated_rbi_pipeline"
@@ -360,12 +366,6 @@
         "note": "Auto-sourced. Archetype: acceleration_breakout."
       },
       {
-        "id": "R089",
-        "name": "Extended Donchian Breakout with Trend Gate",
-        "status": "new",
-        "note": "Auto-sourced. Archetype: donchian_breakout."
-      },
-      {
         "id": "R090",
         "name": "ADX Strength Breakout with Wide Targets",
         "status": "new",
@@ -398,18 +398,6 @@
       {
         "id": "R095",
         "name": "Bear Momentum Short via MA Crossover",
-        "status": "new",
-        "note": "Auto-sourced. Archetype: ma_crossover."
-      },
-      {
-        "id": "R096",
-        "name": "Donchian Breakdown Momentum Short (DBMS)",
-        "status": "new",
-        "note": "Auto-sourced. Archetype: donchian_breakout."
-      },
-      {
-        "id": "R097",
-        "name": "Slow Death Cross Trend Reversal (SDCTR)",
         "status": "new",
         "note": "Auto-sourced. Archetype: ma_crossover."
       },
@@ -484,18 +472,6 @@
         "name": "Multi-Timeframe Donchian Breakout with Macro Trend (MTF Wide)",
         "status": "new",
         "note": "Auto-sourced. Archetype: mtf_breakout."
-      },
-      {
-        "id": "R110",
-        "name": "MA Crossover Long-Bias Trend Rider",
-        "status": "new",
-        "note": "Auto-sourced. Archetype: ma_crossover."
-      },
-      {
-        "id": "R111",
-        "name": "Breakdown Momentum Short (Bear Regime)",
-        "status": "new",
-        "note": "Auto-sourced. Archetype: consecutive_momentum."
       },
       {
         "id": "R112",
@@ -630,7 +606,12 @@
       "R056 (Volatility Spike Trend Continuation (VSTC), PF 1.3)",
       "R060 (Volatility Regime Transition Breakout (VRTB), PF 1.3)",
       "R066 (Post-Consolidation Momentum Cascade (PCMC), PF 1.06)",
-      "R067 (Multi-Timeframe Volatility Alignment (MTVA), PF 1.3)"
+      "R067 (Multi-Timeframe Volatility Alignment (MTVA), PF 1.3)",
+      "R089 (Extended Donchian Breakout with Trend Gate, PF 1.36)",
+      "R096 (Donchian Breakdown Momentum Short (DBMS), PF 1.36)",
+      "R097 (Slow Death Cross Trend Reversal (SDCTR), PF 1.42)",
+      "R110 (MA Crossover Long-Bias Trend Rider, PF 1.42)",
+      "R111 (Breakdown Momentum Short (Bear Regime), PF 1.33)"
     ],
     "archived": [
       "HYPOTHESIS_001",
