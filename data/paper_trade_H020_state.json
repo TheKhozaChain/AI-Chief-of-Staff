@@ -10,8 +10,14 @@
     "trend_filter_period": 80
   },
   "started": "2026-02-24",
-  "position": null,
-  "last_bar_time": "2026-04-06T20:00:00",
+  "position": {
+    "entry_time": "2026-04-07T00:00:00",
+    "entry_price": 68776.6,
+    "stop_loss": 67192.14285660378,
+    "take_profit": 77029.79200000002,
+    "direction": "long"
+  },
+  "last_bar_time": "2026-04-07T00:00:00",
   "trades": [
     {
       "entry_time": "2026-03-03T12:00:00",
@@ -59,6 +65,6 @@
   "total_pnl": 4644.821629056603,
   "total_costs": 216.86717000000002,
   "warmup_done": true,
-  "last_signal_time": "2026-03-17T12:00:00",
+  "last_signal_time": "2026-04-07T00:00:00",
   "stale_alert_sent": false
 }
