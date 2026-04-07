@@ -25,6 +25,7 @@ import json
 import sys
 import os
 from datetime import datetime
+from pathlib import Path
 from typing import Dict, List, Optional
 
 # Add parent dir to path for imports when run as script
@@ -35,9 +36,18 @@ from engine import Backtest
 from archetypes import ARCHETYPES
 from regime import run_regime_coverage_check
 
-
-COST_PCT = 0.1  # Standard transaction cost
-PF_THRESHOLD = 1.5  # Minimum gross PF to promote (raised from 1.3, Mar 2026)
+# Load thresholds from policies/ (single source of truth)
+sys.path.insert(0, str(Path(__file__).parent.parent.parent / 'scripts'))
+try:
+    from policy_loader import load_kill_criteria, load_promotion_criteria
+    _kill = load_kill_criteria()
+    COST_PCT = load_promotion_criteria()['screening']['cost_pct']
+    PF_THRESHOLD = _kill['screening']['min_gross_pf']
+    MIN_TRADES = _kill['screening']['min_trades']
+except (ImportError, FileNotFoundError):
+    COST_PCT = 0.1
+    PF_THRESHOLD = 1.5
+    MIN_TRADES = 20
 
 
 def run_screen(
@@ -101,9 +111,9 @@ def run_screen(
     # Determine verdict
     gross_pf = gross.profit_factor
     regime_coverage = None
-    if gross.total_trades < 20:
+    if gross.total_trades < MIN_TRADES:
         verdict = 'park'
-        reason = f'Insufficient trades ({gross.total_trades}). Need 20+ for meaningful screen.'
+        reason = f'Insufficient trades ({gross.total_trades}). Need {MIN_TRADES}+ for meaningful screen.'
     elif gross_pf >= PF_THRESHOLD:
         # Base criteria pass — run regime coverage check before promoting
         regime_coverage = run_regime_coverage_check(

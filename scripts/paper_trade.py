@@ -34,6 +34,30 @@ sys.path.insert(0, str(REPO_ROOT / 'scripts'))
 from archetypes import ARCHETYPES
 from data_loader import resample
 
+# Load policy thresholds (single source of truth)
+try:
+    from policy_loader import load_kill_criteria
+    _policy = load_kill_criteria()
+    _pt = _policy['paper_trading']
+    _st = _policy['staleness']
+    POLICY_KILL_PF = _pt['kill_pf_below']
+    POLICY_KILL_MIN_TRADES = _pt['kill_min_trades']
+    POLICY_MAX_DAYS = _pt['max_days']
+    POLICY_MIN_TRADES = _pt['min_trades_for_eval']
+    POLICY_ZERO_TRADE_KILL_DAYS = _pt['zero_trade_kill_days']
+    POLICY_ZERO_TRADE_LIMBO_DAYS = _pt['zero_trade_limbo_days']
+    POLICY_STALE_WARNING_DAYS = _st['warning_days_no_trades']
+    POLICY_STALE_SILENT_DAYS = _st['warning_days_silent']
+except (ImportError, FileNotFoundError):
+    POLICY_KILL_PF = 0.8
+    POLICY_KILL_MIN_TRADES = 5
+    POLICY_MAX_DAYS = 45
+    POLICY_MIN_TRADES = 5
+    POLICY_ZERO_TRADE_KILL_DAYS = 30
+    POLICY_ZERO_TRADE_LIMBO_DAYS = 45
+    POLICY_STALE_WARNING_DAYS = 14
+    POLICY_STALE_SILENT_DAYS = 30
+
 DATA_DIR = REPO_ROOT / 'data'
 REGISTRY_FILE = DATA_DIR / 'paper_trade_registry.json'
 COST_PCT = 0.1  # 0.1% round-trip
@@ -431,11 +455,11 @@ def evaluate_graduation(strategy_id, state, config):
     """
     criteria = config.get('graduation', {})
     min_days = criteria.get('min_days', 30)
-    min_trades = criteria.get('min_trades', 5)
+    min_trades = criteria.get('min_trades', POLICY_MIN_TRADES)
     min_net_pf = criteria.get('min_net_pf', 1.0)
     max_dd_pct = criteria.get('max_drawdown_pct', 25)
-    kill_pf = criteria.get('kill_pf_below', 0.8)
-    kill_min_trades = criteria.get('kill_min_trades', 5)
+    kill_pf = criteria.get('kill_pf_below', POLICY_KILL_PF)
+    kill_min_trades = criteria.get('kill_min_trades', POLICY_KILL_MIN_TRADES)
 
     started = datetime.fromisoformat(state.get('started', datetime.utcnow().isoformat()[:10]))
     days_active = (datetime.utcnow() - started).days
@@ -443,7 +467,7 @@ def evaluate_graduation(strategy_id, state, config):
     n_trades = len(trades)
 
     # Not enough data yet — BUT kill if way past max_days with insufficient trades
-    max_days = criteria.get('max_days', 45)
+    max_days = criteria.get('max_days', POLICY_MAX_DAYS)
     if n_trades < min_trades:
         if days_active >= max_days:
             reason = (f"Killed after {days_active} days with only {n_trades} trades "
@@ -487,7 +511,7 @@ def evaluate_graduation(strategy_id, state, config):
         return 'graduated', reason
 
     # Failed graduation criteria but not killed yet
-    max_days = criteria.get('max_days', 45)
+    max_days = criteria.get('max_days', POLICY_MAX_DAYS)
     if days_active >= max_days and n_trades >= min_trades:
         # Extended period, still not graduating — kill it
         reason = (f"Killed after {n_trades} trades, {days_active} days. "
@@ -518,8 +542,7 @@ def check_staleness(strategy_id, state, config):
     # If in a position but well past max_days with 0 completed trades,
     # the strategy is in limbo — waiting indefinitely for one trade to close.
     # Force-kill it. (H004 was stuck 49+ days this way.)
-    max_days = 45  # match graduation default
-    if has_position and days_active >= max_days and n_trades == 0:
+    if has_position and days_active >= POLICY_ZERO_TRADE_LIMBO_DAYS and n_trades == 0:
         reason = (f"{strategy_id}: {days_active} days active, 0 completed trades, "
                   f"stuck in open position since day 1. "
                   f"Auto-killed for exceeding max hold time.")
@@ -529,14 +552,14 @@ def check_staleness(strategy_id, state, config):
     if has_position:
         return None, None
 
-    # 30+ days, 0 trades → auto-kill (don't wait 60 days)
-    if days_active >= 30 and n_trades == 0:
+    # Zero-trade kill: no trades for extended period
+    if days_active >= POLICY_ZERO_TRADE_KILL_DAYS and n_trades == 0:
         reason = (f"{strategy_id}: {days_active} days active, 0 trades, no position. "
                   f"Auto-killed for zero trade production.")
         return 'zero_trade_kill', reason
 
-    # 14+ days, 0 trades → stale warning (once)
-    if days_active >= 14 and n_trades == 0 and not stale_alert_sent:
+    # Stale warning: no trades for warning period
+    if days_active >= POLICY_STALE_WARNING_DAYS and n_trades == 0 and not stale_alert_sent:
         state['stale_alert_sent'] = True
         reason = (f"{strategy_id}: {days_active} days active, 0 trades, no position. "
                   f"Strategy may be mismatched with current market regime.")
@@ -547,7 +570,7 @@ def check_staleness(strategy_id, state, config):
     if last_signal and n_trades > 0:
         last_dt = datetime.fromisoformat(last_signal) if isinstance(last_signal, str) else last_signal
         silent_days = (datetime.utcnow() - last_dt).days
-        if silent_days >= 30 and not stale_alert_sent:
+        if silent_days >= POLICY_STALE_SILENT_DAYS and not stale_alert_sent:
             state['stale_alert_sent'] = True
             reason = (f"{strategy_id}: Last signal was {silent_days} days ago. "
                       f"Strategy may have stopped generating signals.")

@@ -32,8 +32,17 @@ from data_loader import load_csv, resample
 REPO_ROOT = Path(__file__).parent.parent.parent
 DATA_FILE = str(REPO_ROOT / 'data' / 'BTCUSD_1h.csv')
 PROMOTED_QUEUE_FILE = REPO_ROOT / 'data' / 'promoted_queue.json'
-COST_PCT = 0.1
-COST_STRESS = 0.15
+
+# Load thresholds from policies/ (single source of truth)
+sys.path.insert(0, str(REPO_ROOT / 'scripts'))
+try:
+    from policy_loader import load_kill_criteria
+    _val = load_kill_criteria()['validation']
+    COST_PCT = 0.1  # base cost
+    COST_STRESS = _val['cost_stress_pct']
+except (ImportError, FileNotFoundError):
+    COST_PCT = 0.1
+    COST_STRESS = 0.15
 
 
 # ── Strategy configs ─────────────────────────────────────────────
@@ -222,7 +231,13 @@ def validate_strategy(hypothesis_id, data_1h, report_lines):
     report_lines.append(f"- Mean PF across windows: {wf_mean_pf:.2f}")
     report_lines.append(f"- Worst window PF: {wf_min_pf:.2f}")
 
-    wf_pass = profitable_windows >= (total_windows * 0.6) and wf_mean_pf > 1.1
+    try:
+        _wf_pct = _val['wf_profitable_pct']
+        _wf_pf = _val['wf_mean_pf_min']
+    except NameError:
+        _wf_pct = 0.6
+        _wf_pf = 1.1
+    wf_pass = profitable_windows >= (total_windows * _wf_pct) and wf_mean_pf > _wf_pf
     report_lines.append(f"- **Walk-forward verdict: {'PASS' if wf_pass else 'FAIL'}**")
     report_lines.append("")
 
@@ -244,7 +259,13 @@ def validate_strategy(hypothesis_id, data_1h, report_lines):
     else:
         pf_decay = 0
 
-    oos_pass = oos.profit_factor >= 1.2 and pf_decay > -30
+    try:
+        _oos_min = _val['full_oos_pf_min']
+        _oos_decay = _val['full_oos_decay_max']
+    except NameError:
+        _oos_min = 1.2
+        _oos_decay = 30.0
+    oos_pass = oos.profit_factor >= _oos_min and pf_decay > -_oos_decay
     report_lines.append(f"- OOS Profit Factor: {oos.profit_factor:.2f}")
     report_lines.append(f"- PF degradation: {pf_decay:+.1f}%")
     report_lines.append(f"- **OOS verdict: {'PASS' if oos_pass else 'FAIL'}** "
@@ -272,7 +293,13 @@ def validate_strategy(hypothesis_id, data_1h, report_lines):
     non_base_pfs = [s['pf'] for s in sens_results if not s['is_base']]
     min_sens_pf = min(non_base_pfs) if non_base_pfs else 0
     above_1 = sum(1 for pf in non_base_pfs if pf > 1.0)
-    sens_pass = above_1 >= len(non_base_pfs) * 0.8 and min_sens_pf > 0.9
+    try:
+        _sens_pct = _val['sensitivity_pass_pct']
+        _sens_worst = _val['sensitivity_worst_pf']
+    except NameError:
+        _sens_pct = 0.8
+        _sens_worst = 0.9
+    sens_pass = above_1 >= len(non_base_pfs) * _sens_pct and min_sens_pf > _sens_worst
 
     report_lines.append(f"- Variants with PF > 1.0: {above_1}/{len(non_base_pfs)}")
     report_lines.append(f"- Worst variant PF: {min_sens_pf:.2f}")
@@ -293,7 +320,11 @@ def validate_strategy(hypothesis_id, data_1h, report_lines):
     report_lines.append(f"| Costs | ${baseline.total_costs:,.0f} | ${stress.total_costs:,.0f} |")
     report_lines.append("")
 
-    cost_pass = stress.profit_factor >= 1.15
+    try:
+        _cost_min = _val['cost_stress_pf_min']
+    except NameError:
+        _cost_min = 1.15
+    cost_pass = stress.profit_factor >= _cost_min
     report_lines.append(f"- **Cost stress verdict: {'PASS' if cost_pass else 'FAIL'}** "
                        f"(need PF >= 1.15 at {COST_STRESS}% costs)")
     report_lines.append("")
@@ -306,7 +337,11 @@ def validate_strategy(hypothesis_id, data_1h, report_lines):
         'cost_stress': cost_pass,
     }
     passed_count = sum(1 for v in verdicts.values() if v)
-    overall = passed_count >= 3
+    try:
+        _min_pass = _val['min_tests_passed']
+    except NameError:
+        _min_pass = 3
+    overall = passed_count >= _min_pass
 
     report_lines.append("### Overall Verdict\n")
     report_lines.append(f"| Test | Result |")

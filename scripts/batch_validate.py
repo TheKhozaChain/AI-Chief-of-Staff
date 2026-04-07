@@ -33,14 +33,21 @@ DATA_FILE = str(REPO_ROOT / 'data' / 'BTCUSD_1h.csv')
 PROMOTED_QUEUE_FILE = REPO_ROOT / 'data' / 'promoted_queue.json'
 BACKLOG_FILE = REPO_ROOT / 'strategies' / 'RESEARCH_BACKLOG.md'
 
-# Quick-screen thresholds (fast kill before full validation)
-QUICK_OOS_PF_MIN = 1.0       # OOS PF below this = instant kill
-QUICK_OOS_DECAY_MAX = 50.0   # OOS PF decay > 50% = instant kill
-
-# Full validation thresholds
-FULL_OOS_PF_MIN = 1.2
-FULL_OOS_DECAY_MAX = 30.0
-COST_PCT = 0.1
+# Load thresholds from policies/ (single source of truth)
+try:
+    from policy_loader import load_kill_criteria
+    _val = load_kill_criteria()['validation']
+    QUICK_OOS_PF_MIN = _val['quick_oos_pf_min']
+    QUICK_OOS_DECAY_MAX = _val['quick_oos_decay_max']
+    FULL_OOS_PF_MIN = _val['full_oos_pf_min']
+    FULL_OOS_DECAY_MAX = _val['full_oos_decay_max']
+    COST_PCT = 0.1  # base cost always 0.1%
+except (ImportError, FileNotFoundError):
+    QUICK_OOS_PF_MIN = 1.0
+    QUICK_OOS_DECAY_MAX = 50.0
+    FULL_OOS_PF_MIN = 1.2
+    FULL_OOS_DECAY_MAX = 30.0
+    COST_PCT = 0.1
 
 
 def load_promoted_queue():
