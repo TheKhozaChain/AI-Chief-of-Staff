@@ -12,14 +12,8 @@
     "long_only": true
   },
   "started": "2026-02-24",
-  "position": {
-    "entry_time": "2026-04-06T00:00:00",
-    "entry_price": 69104.77,
-    "stop_loss": 67722.6746,
-    "take_profit": 73251.0562,
-    "direction": "long"
-  },
-  "last_bar_time": "2026-04-07T08:00:00",
+  "position": null,
+  "last_bar_time": "2026-04-07T16:00:00",
   "trades": [
     {
       "entry_time": "2026-03-16T20:00:00",
@@ -62,10 +56,24 @@
       "pnl_net": -1412.45,
       "pnl_pct": -2.1,
       "cost": 67.26
+    },
+    {
+      "entry_time": "2026-04-06T00:00:00",
+      "entry_price": 69104.77,
+      "exit_time": "2026-04-07T12:00:00",
+      "exit_price": 67722.6746,
+      "stop_loss": 67722.6746,
+      "take_profit": 73251.0562,
+      "direction": "long",
+      "exit_reason": "stop_loss",
+      "pnl_gross": -1382.1,
+      "pnl_net": -1451.2,
+      "pnl_pct": -2.1,
+      "cost": 69.1
     }
   ],
-  "total_pnl": -4454.822399999995,
-  "total_costs": 212.13440000000003,
+  "total_pnl": -5906.02257,
+  "total_costs": 281.23917000000006,
   "warmup_done": true,
   "stale_alert_sent": false,
   "last_signal_time": "2026-04-06T00:00:00"
