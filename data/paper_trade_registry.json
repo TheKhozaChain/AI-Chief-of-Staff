@@ -1,54 +1,5 @@
 {
-  "active": [
-    {
-      "id": "H017",
-      "archetype": "range_compression_expansion",
-      "timeframe_hours": 4,
-      "params": {
-        "atr_period": 20,
-        "atr_lookback": 60,
-        "compression_percentile": 10,
-        "breakout_atr_mult": 1.5,
-        "confirmation_bars": 2,
-        "stop_pct": 2.0,
-        "target_pct": 6.0,
-        "long_only": true
-      },
-      "started": "2026-02-24",
-      "graduation": {
-        "min_days": 30,
-        "min_trades": 5,
-        "min_net_pf": 1.0,
-        "max_drawdown_pct": 25,
-        "kill_pf_below": 0.8,
-        "kill_min_trades": 5,
-        "max_days": 45
-      }
-    },
-    {
-      "id": "H020",
-      "archetype": "atr_regime_adaptive",
-      "timeframe_hours": 4,
-      "params": {
-        "ma_period": 20,
-        "atr_period": 14,
-        "atr_history": 120,
-        "base_stop_pct": 3.0,
-        "base_target_pct": 12.0,
-        "trend_filter_period": 80
-      },
-      "started": "2026-02-24",
-      "graduation": {
-        "min_days": 30,
-        "min_trades": 5,
-        "min_net_pf": 1.0,
-        "max_drawdown_pct": 25,
-        "kill_pf_below": 0.8,
-        "kill_min_trades": 5,
-        "max_days": 45
-      }
-    }
-  ],
+  "active": [],
   "graduated": [],
   "killed": [
     {
@@ -348,6 +299,58 @@
       },
       "ended": "2026-04-05",
       "reason": "Killed after 49 days with only 2 trades (needed 5). Insufficient trade production."
+    },
+    {
+      "id": "H017",
+      "archetype": "range_compression_expansion",
+      "timeframe_hours": 4,
+      "params": {
+        "atr_period": 20,
+        "atr_lookback": 60,
+        "compression_percentile": 10,
+        "breakout_atr_mult": 1.5,
+        "confirmation_bars": 2,
+        "stop_pct": 2.0,
+        "target_pct": 6.0,
+        "long_only": true
+      },
+      "started": "2026-02-24",
+      "graduation": {
+        "min_days": 30,
+        "min_trades": 5,
+        "min_net_pf": 1.0,
+        "max_drawdown_pct": 25,
+        "kill_pf_below": 0.8,
+        "kill_min_trades": 5,
+        "max_days": 45
+      },
+      "ended": "2026-04-10",
+      "reason": "Killed after 45 days with only 4 trades (needed 5). Insufficient trade production."
+    },
+    {
+      "id": "H020",
+      "archetype": "atr_regime_adaptive",
+      "timeframe_hours": 4,
+      "params": {
+        "ma_period": 20,
+        "atr_period": 14,
+        "atr_history": 120,
+        "base_stop_pct": 3.0,
+        "base_target_pct": 12.0,
+        "trend_filter_period": 80
+      },
+      "started": "2026-02-24",
+      "graduation": {
+        "min_days": 30,
+        "min_trades": 5,
+        "min_net_pf": 1.0,
+        "max_drawdown_pct": 25,
+        "kill_pf_below": 0.8,
+        "kill_min_trades": 5,
+        "max_days": 45
+      },
+      "ended": "2026-04-10",
+      "reason": "Killed after 45 days with only 3 trades (needed 5). Insufficient trade production."
     }
   ]
 }
